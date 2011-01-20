@@ -22,7 +22,7 @@
 
 //using namespace std;
 
-SchedulerRR::SchedulerRR()
+SchedulerRR::SchedulerRR(Processor &proc)
 {
     //output = proc.output;
 }

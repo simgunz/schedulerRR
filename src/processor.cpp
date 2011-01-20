@@ -18,16 +18,31 @@
 
 #include "processor.h"
 
+
 #include <iostream>
+#include <string>
+//#include <sstring>
+
 
 //using namespace std;
 
 Processor::Processor(char *outputFile)
 {
     output = new ofstream(outputFile);
+    clock = 0.0;
 }
 
 void Processor::execute(Job j)
 {
     cout << "Ciao\n";
+}
+
+void Processor::print()
+{
+    string out = "";
+    stringstream sout(out);
+    sout << clock << " " << "Banana";
+    out = sout.str();
+    cout << out;
+    output << const_cast<char*>(out.c_str()) <<endl;
 }

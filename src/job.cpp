@@ -24,6 +24,7 @@
 
 //using namespace std;
 
+
 Job::Job(char* fileName)
 {
     ifstream file(fileName);

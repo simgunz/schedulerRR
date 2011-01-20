@@ -30,7 +30,7 @@ using namespace std;
 class SchedulerRR
 {
 public:
-    SchedulerRR();
+    SchedulerRR(Processor &proc);
 
 
 

@@ -43,4 +43,12 @@ private:
     float el;   //Elapsed time
 };
 
+enum JobState{
+        START,
+        STOP,
+        DEADLINE,
+        EXECB,
+        EXECE,
+};
+
 #endif // JOB_H

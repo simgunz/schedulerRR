@@ -23,6 +23,7 @@
 //#include "schedulerRR.h"
 
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -32,8 +33,10 @@ public:
     Processor(char *outputFile);
     //friend SchedulerRR::SchedulerRR(Processor proc)
     void execute(Job j);
+    void print();
 
 private:
+    float clock;
     ofstream *output;
 };
 
