@@ -25,5 +25,6 @@ using namespace std;
 int main (int argc, char *argv[])
 {
     Job j("Task");
+    cout << "Ciao";
     return 0;
 }
