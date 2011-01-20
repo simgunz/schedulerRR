@@ -1,0 +1,13 @@
+From the top directory
+
+Compile with:
+  
+  make -C ./src all
+
+Remove object files with:
+
+  make -C ./src clean
+
+Run with:
+
+  ./schedulerTest
