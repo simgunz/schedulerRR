@@ -19,10 +19,23 @@
 #ifndef SCHEDULERRR_H
 #define SCHEDULERRR_H
 
+#include "job.h"
+#include "processor.h"
+
+
+#include <fstream>
+
+using namespace std;
+
 class SchedulerRR
 {
 public:
     SchedulerRR();
+
+
+
+private:
+    ofstream *output;
 };
 
 #endif // SCHEDULERRR_H

@@ -19,10 +19,22 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
 
+#include "job.h"
+//#include "schedulerRR.h"
+
+#include <fstream>
+
+using namespace std;
+
 class Processor
 {
 public:
-    Processor();
+    Processor(char *outputFile);
+    //friend SchedulerRR::SchedulerRR(Processor proc)
+    void execute(Job j);
+
+private:
+    ofstream *output;
 };
 
 #endif // PROCESSOR_H

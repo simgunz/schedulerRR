@@ -18,11 +18,16 @@
 
 #include "processor.h"
 
-#include<iostream>
+#include <iostream>
 
-using namespace std;
+//using namespace std;
 
-Processor::Processor()
+Processor::Processor(char *outputFile)
+{
+    output = new ofstream(outputFile);
+}
+
+void Processor::execute(Job j)
 {
     cout << "Ciao\n";
 }

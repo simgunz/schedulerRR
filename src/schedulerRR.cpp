@@ -18,11 +18,11 @@
 
 #include "schedulerRR.h"
 
-#include<iostream>
+#include <iostream>
 
-using namespace std;
+//using namespace std;
 
 SchedulerRR::SchedulerRR()
 {
-    cout << "Ciao\n";
+    //output = proc.output;
 }
