@@ -18,31 +18,42 @@
 
 #include "processor.h"
 
-
 #include <iostream>
 #include <string>
 //#include <sstring>
 
 
-//using namespace std;
 
 Processor::Processor(char *outputFile)
 {
-    output = new ofstream(outputFile);
-    clock = 0.0;
+    output.open(outputFile);
+    clock = 0.3;
 }
 
-void Processor::execute(Job j)
+Processor::~Processor()
 {
-    cout << "Ciao\n";
+    output.close();
+    cout << "chiuso";
 }
 
-void Processor::print()
+void Processor::execute(Job *j = NULL)
+{
+//    if (j!=NULL)
+//    {
+//        print(EXECB,j.getID());
+//        t++;
+//        print(EXECE,j.getID());
+//    }
+//    else
+//        t++;
+}
+
+void Processor::print(JobState state, int jobID)
 {
     string out = "";
     stringstream sout(out);
-    sout << clock << " " << "Banana";
+    sout << clock << " " << state << " " << jobID << endl;
     out = sout.str();
-    cout << out;
-    output << const_cast<char*>(out.c_str()) <<endl;
+    output << out;
+    output.flush();
 }

@@ -19,17 +19,28 @@
 #ifndef JOB_H
 #define JOB_H
 
+using namespace std;
+
 #include <string>
 
-using namespace std;
+
+enum JobState{
+        START,
+        STOP,
+        DEADLINE,
+        EXECB,
+        EXECE,
+};
+
 
 class Job
 {
 public:
-    Job(char *data);
+    Job(string data);
+    bool operator<(const Job &j) const;  //Used for comparing release time
     int getID();
     float getReleaseTime();
-    float getDeadline();
+    float getDeadLine();
     float getExecTime();
     float getElapsedTime();
 
@@ -41,14 +52,6 @@ private:
     float d;    //Deadline
     float ex;    //Execution time
     float el;   //Elapsed time
-};
-
-enum JobState{
-        START,
-        STOP,
-        DEADLINE,
-        EXECB,
-        EXECE,
 };
 
 #endif // JOB_H

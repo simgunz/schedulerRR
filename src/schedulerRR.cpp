@@ -16,6 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+#include "job.h"
+#include "processor.h"
 #include "schedulerRR.h"
 
 #include <iostream>
@@ -24,5 +26,21 @@
 
 SchedulerRR::SchedulerRR(Processor &proc)
 {
-    //output = proc.output;
+
+}
+
+void SchedulerRR::loadTask(Task t){
+
+    for (int i = 0; i < t.size; i++)
+        ready.push(t.jobs[i]);
+
+    for (int i = 0; i < t.size; i++)
+    {
+        Job a = ready.top();
+        ready.pop();
+        cout <<  a.getReleaseTime();
+
+    }
+
+
 }

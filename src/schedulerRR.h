@@ -19,23 +19,30 @@
 #ifndef SCHEDULERRR_H
 #define SCHEDULERRR_H
 
+using namespace std;
+
 #include "job.h"
+#include "task.h"
 #include "processor.h"
 
 
 #include <fstream>
+#include <queue>
 
-using namespace std;
+
 
 class SchedulerRR
 {
 public:
     SchedulerRR(Processor &proc);
+    void loadTask(Task t);
 
 
 
 private:
-    ofstream *output;
+    //priority_queue<Job,vector<Job>,greater> ready;
+    priority_queue<Job> ready;
+    //priority_queue<Job> waiting;
 };
 
 #endif // SCHEDULERRR_H

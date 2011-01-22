@@ -16,15 +16,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+using namespace std;
+
 #include <iostream>
 
 #include "job.h"
+#include "task.h"
+#include "processor.h"
+#include "schedulerRR.h"
 
-using namespace std;
+
 
 int main (int argc, char *argv[])
 {
-    Job j((char *)"Task");
-    cout << "Ciao";
+    Task t("Task");
+    Processor proc("Out");
+    SchedulerRR rr(proc);
+    rr.loadTask(t);
     return 0;
+
 }

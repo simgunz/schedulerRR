@@ -22,22 +22,10 @@
 #include <fstream>
 #include <sstream>
 
-//using namespace std;
 
-
-Job::Job(char* fileName)
+Job::Job(string data)
 {
-    ifstream file(fileName);
-    string data;
-
-    getline(file,data);
-    getline(file,data);
-
-    while (!file.eof())
-    {
-        getline(file,data);
-        init(data);
-    }
+    init(data);
 }
 
 void Job::init (string data)
@@ -52,13 +40,20 @@ void Job::init (string data)
        ex = token;
 }
 
+bool Job::operator<(const Job &j) const{
+    return (r > j.r);
+}
 
 int Job::getID()
 {
     return id;
 }
 
-float Job::getDeadline()
+float Job::getReleaseTime(){
+    return r;
+}
+
+float Job::getDeadLine()
 {
     return d;
 }
