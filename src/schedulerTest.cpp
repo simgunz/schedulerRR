@@ -32,8 +32,9 @@ int main (int argc, char *argv[])
 {
     Task t("Task");
     Processor proc("Out");
-    SchedulerRR rr(proc);
+    SchedulerRR rr(proc,3);
     rr.loadTask(t);
+    rr.schedule();
     return 0;
 
 }

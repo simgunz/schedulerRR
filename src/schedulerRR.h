@@ -29,20 +29,23 @@ using namespace std;
 #include <fstream>
 #include <queue>
 #include <list>
-#include <deque>
+
+static int lastID = 0;
 
 class SchedulerRR
 {
-public:
-    SchedulerRR(Processor &proc);
+public:    
+    SchedulerRR(Processor &p,float timeslice);
     void loadTask(Task t);
-
-
-
+    void schedule();
 private:
-    //priority_queue<Job,vector<Job>,greater> ready;
-    priority_queue<Job,deque<Job> > waiting;
-    priority_queue< Job,deque<Job>,greater<Job> > ready;
+    Job& popJob();
+    void enqueueJob(Job& j);
+
+    list<Job> ready;
+    priority_queue<Job,vector<Job> > waiting;
+    //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
+    Processor& proc;
     float T; //Timeslice
 };
 

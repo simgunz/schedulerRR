@@ -25,10 +25,10 @@
 
 
 
-Processor::Processor(char *outputFile)
+Processor::Processor(string outputFile)
 {
-    output.open(outputFile);
-    clock = 0.3;
+    output.open(outputFile.c_str());
+    clock = 0.0;
 }
 
 Processor::~Processor()
@@ -37,24 +37,32 @@ Processor::~Processor()
     cout << "chiuso\n";
 }
 
-void Processor::execute(Job *j = NULL)
+void Processor::execute(Job &j,float T)
 {
 //    if (j!=NULL)
 //    {
-//        print(EXECB,j.getID());
-//        t++;
-//        print(EXECE,j.getID());
+        print(EXECB,j.getID());
+        clock+=T;
+        cout << "Clock=" << clock << endl;
+        print(EXECE,j.getID());
+        j.incrementElapsed(T);
 //    }
 //    else
 //        t++;
 }
 
-void Processor::print(JobState state, int jobID)
+void Processor::print(JobState state, int jobID, float time)
 {
     string out = "";
     stringstream sout(out);
-    sout << clock << " " << state << " " << jobID << endl;
+    if(time == -1)
+        time = clock;
+    sout << time << " " << state << " " << jobID << endl;
     out = sout.str();
     output << out;
     output.flush();
+}
+
+float Processor::getClock(){
+    return clock;
 }

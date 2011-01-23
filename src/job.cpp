@@ -33,9 +33,9 @@ bool Job::operator<(const Job &j) const{
     return (r > j.r);
 }
 
-bool Job::operator>(const Job &j) const{
-    return (p < j.p);
-}
+//bool Job::operator>(const Job &j) const{
+//    return (p < j.p);
+//}
 
 int Job::getID()
 {
@@ -63,4 +63,12 @@ float Job::getElapsedTime()
 
 int Job::getPriority(){
     return p;
+}
+
+void Job::setID(int ID){
+    id = ID;
+}
+
+void Job::incrementElapsed(float EL){
+    el += EL;
 }

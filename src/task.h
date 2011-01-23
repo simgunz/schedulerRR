@@ -25,18 +25,18 @@ using namespace std;
 #include "job.h"
 
 #include <string>
-#include <deque>
+#include <vector>
 
 
 class Task
 {
 public:
-    Task(char* fileName);
-    Job getJob(int i);
+    Task(string fileName);
+    Job& getJob(int i);
     int size();
 private:
-    Job strJob(string data);
-    deque<Job> jobs; //Self expanding
+    Job strJob(string& data);
+    vector<Job> jobs; //Self expanding
 };
 
 #endif // TASK_H

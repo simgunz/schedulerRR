@@ -28,15 +28,17 @@ using namespace std;
 #include <fstream>
 #include <sstream>//Cancellami
 
+#define STEP 1
+
 class Processor
 {
 public:
-    Processor(char *outputFile);
+    Processor(string outputFile);
     ~Processor();
     //friend SchedulerRR::SchedulerRR(Processor proc)
-    void execute(Job *j);
-    void print(JobState state, int jobID);
-
+    void execute(Job& j,float T=STEP);
+    void print(JobState state, int jobID, float time = -1);
+    float getClock();
 private:
     float clock;
     ofstream output;

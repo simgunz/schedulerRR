@@ -24,9 +24,9 @@
 #include <sstream>
 
 
-Task::Task(char* fileName)
+Task::Task(string fileName)
 {
-    ifstream file(fileName);
+    ifstream file(fileName.c_str());
     string data;
 
     getline(file,data);
@@ -39,9 +39,9 @@ Task::Task(char* fileName)
     }
 }
 
-Job Task::strJob(string data)
+Job Task::strJob(string& data)
 {
-    cout << "Data=" << data << endl;
+    //cout << "Data=" << data << endl;
     stringstream ss(data);
     float token;
     int r,d,ex,p=0;
@@ -54,11 +54,11 @@ Job Task::strJob(string data)
     if ( ss >> token )
        p = token;
 
-    cout << "*" << r << d << ex << p << endl;
+    //cout << "*" << r << d << ex << p << endl;
     return Job(r,d,ex,p);
 }
 
-Job Task::getJob(int i){
+Job& Task::getJob(int i){
     return jobs[i];
 }
 

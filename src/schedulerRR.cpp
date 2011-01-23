@@ -17,43 +17,87 @@
 *  along with SchedulerRR.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "schedulerRR.h"
 #include "job.h"
 #include "processor.h"
-#include "schedulerRR.h"
+
 
 #include <iostream>
 
 //using namespace std;
 
-SchedulerRR::SchedulerRR(Processor &proc)
+SchedulerRR::SchedulerRR(Processor &p, float timeslice): proc(p)
 {
-
+    T = timeslice;
 }
 
 void SchedulerRR::loadTask(Task t){
 
-    Job z(1,2,3);
     for (int i = 0; i < t.size(); i++)
     {
-        z = t.getJob(i);
-        waiting.push(z);
-        ready.push(z);
-        cout <<  "INS=" << z.getReleaseTime() << " " << z.getPriority() << endl;
+        Job j = t.getJob(i);
+        j.setID(lastID);
+        proc.print(DEADLINE,j.getID(),j.getDeadLine());
+        lastID++;
+        waiting.push(j);
     }
 
-    Job a(1,2,3),b(1,2,3);
-    for (int i = 0; i < t.size(); i++)
-    {
+//    Job a(1,2,3),b(1,2,3);
+//    for (int i = 0; i < t.size(); i++)
+//    {
 
-        a = waiting.top();
-        waiting.pop();
-        cout <<  "A=" << a.getReleaseTime() << " " << a.getPriority() << endl;
-    }
+//        a = waiting.top();
+//        waiting.pop();
+//        cout <<  "A=" << a.getReleaseTime() << " " << a.getPriority() << endl;
+//    }
+}
 
-    for (int i = 0; i < t.size(); i++)
+Job& SchedulerRR::popJob(){
+   Job j = ready.front();
+   cout << "test" <<endl;
+   ready.pop_front();
+   return j;
+}
+
+void SchedulerRR::enqueueJob(Job& j){
+   ready.push_back(j);
+}
+
+void SchedulerRR::schedule(){
+//int r=0;
+    while(!ready.empty() || !waiting.empty())
     {
-        b = ready.top();
-        ready.pop();
-        cout <<  "B=" << b.getReleaseTime() << " " << b.getPriority() << endl;
+//        if (r==10)
+//            break;
+//        r++;
+        if (!waiting.empty())
+        {
+            Job r = waiting.top();
+            cout << r.getReleaseTime();
+            cout <<"Size=" << waiting.size();
+            while(r.getReleaseTime() <= proc.getClock())
+            {
+                enqueueJob(r);
+                waiting.pop();
+                if(!waiting.empty())
+                    r = waiting.top();
+                else
+                    break;
+            }
+        }
+
+        if(!ready.empty())
+        {
+            Job currentJob = popJob();
+            cout <<"OK";
+            proc.execute(currentJob,T);
+        }
+        else
+        {
+            Job j(-1,-1,-1);
+            proc.execute(j);
+        }
+        cout << "SS=" << proc.getClock();
+
     }
 }

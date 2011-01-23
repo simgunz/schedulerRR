@@ -22,9 +22,6 @@
 
 using namespace std;
 
-#include <string>
-
-
 enum JobState{
         START,
         STOP,
@@ -33,19 +30,25 @@ enum JobState{
         EXECE,
 };
 
+//#include "processor.h"
+#include <string>
+
 
 class Job
 {
 public:
     Job(float R, float D, float EX,int P=-1);
     bool operator<(const Job &j) const;  //Used for comparing release time
-    bool operator>(const Job &j) const;  //Used for comparing priority
+    //bool operator>(const Job &j) const;  //Used for comparing priority
     int getID();
     float getReleaseTime();
     float getDeadLine();
     float getExecTime();
     float getElapsedTime();
     int getPriority();
+    void setID(int ID);
+    void incrementElapsed(float EL);
+    //friend::execute(Job &j,float T);
 
 private:
 
