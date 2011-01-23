@@ -24,15 +24,19 @@ using namespace std;
 
 #include "job.h"
 
-#include<deque>
+#include <string>
+#include <deque>
+
 
 class Task
 {
 public:
     Task(char* fileName);
-//private:
+    Job getJob(int i);
+    int size();
+private:
+    Job strJob(string data);
     deque<Job> jobs; //Self expanding
-    int size;
 };
 
 #endif // TASK_H

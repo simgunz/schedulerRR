@@ -37,8 +37,9 @@ enum JobState{
 class Job
 {
 public:
-    Job(string data);
+    Job(float R, float D, float EX);
     bool operator<(const Job &j) const;  //Used for comparing release time
+    bool operator>(const Job &j) const;  //Used for comparing priority
     int getID();
     float getReleaseTime();
     float getDeadLine();
@@ -47,8 +48,8 @@ public:
 
 private:
 
-    void init(std::string data);
     int id;     //Job ID
+    //Tolto il const, perchè fondamentalmente è inutile (goo.gl/13oXI)
     float r;    //Release time
     float d;    //Deadline
     float ex;    //Execution time

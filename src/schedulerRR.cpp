@@ -32,16 +32,25 @@ SchedulerRR::SchedulerRR(Processor &proc)
 
 void SchedulerRR::loadTask(Task t){
 
-    for (int i = 0; i < t.size; i++)
-        ready.push(t.jobs[i]);
-
-    for (int i = 0; i < t.size; i++)
+    for (int i = 0; i < t.size(); i++)
     {
-        Job a = ready.top();
-        ready.pop();
-        cout <<  a.getReleaseTime();
-
+        waiting.push(t.getJob(i));
+        ready.push(t.getJob(i));
     }
 
+    Job a(1,2,3),b(1,2,3);
+    for (int i = 0; i < t.size(); i++)
+    {
 
+        a = waiting.top();
+        waiting.pop();
+        cout <<  "A=" << a.getReleaseTime() << endl;
+    }
+
+    for (int i = 0; i < t.size(); i++)
+    {
+        b = ready.top();
+        ready.pop();
+        cout <<  "B=" << b.getReleaseTime() << endl;
+    }
 }

@@ -19,30 +19,22 @@
 
 #include "job.h"
 
-#include <iostream>
-#include <fstream>
+#include <iostream> //Cancellami
 #include <sstream>
 
 
-Job::Job(string data)
+Job::Job(float R, float D, float EX): r(R), d(D), ex(EX)
 {
-    init(data);
-}
-
-void Job::init (string data)
-{
-    stringstream ss(data);
-    float token;
-    if ( ss >> token );
-       r = token;
-    if ( ss >> token )
-       d = token;
-    if ( ss >> token )
-       ex = token;
+    id = -1;
+    el = -1;
 }
 
 bool Job::operator<(const Job &j) const{
     return (r > j.r);
+}
+
+bool Job::operator>(const Job &j) const{
+    return (r < j.r);
 }
 
 int Job::getID()

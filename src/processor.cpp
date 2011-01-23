@@ -34,7 +34,7 @@ Processor::Processor(char *outputFile)
 Processor::~Processor()
 {
     output.close();
-    cout << "chiuso";
+    cout << "chiuso\n";
 }
 
 void Processor::execute(Job *j = NULL)

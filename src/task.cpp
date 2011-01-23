@@ -19,9 +19,9 @@
 
 #include "task.h"
 
-#include <string>
-#include <iostream>
+#include <iostream>//Cancellami
 #include <fstream>
+#include <sstream>
 
 
 Task::Task(char* fileName)
@@ -35,11 +35,30 @@ Task::Task(char* fileName)
     while (!file.eof())
     {
         getline(file,data);
-
-        jobs.push_back(Job(data));
-
-        //cout << "R=" << jobs.front().getReleaseTime() << endl;
+        jobs.push_back(strJob(data));
     }
-    size = jobs.size();
+}
+
+Job Task::strJob(string data)
+{
+    stringstream ss(data);
+    float token;
+    int r,d,ex;
+    if ( ss >> token );
+       r = token;
+    if ( ss >> token )
+       d = token;
+    if ( ss >> token )
+       ex = token;
+    //cout << "*" << r << d << ex << endl;
+    return Job(r,d,ex);
+}
+
+Job Task::getJob(int i){
+    return jobs[i];
+}
+
+int Task::size(){
+    return jobs.size();
 }
 

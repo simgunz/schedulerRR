@@ -26,9 +26,7 @@ using namespace std;
 //#include "schedulerRR.h"
 
 #include <fstream>
-#include <sstream>
-
-
+#include <sstream>//Cancellami
 
 class Processor
 {

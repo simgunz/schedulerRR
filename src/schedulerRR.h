@@ -26,10 +26,8 @@ using namespace std;
 #include "task.h"
 #include "processor.h"
 
-
 #include <fstream>
 #include <queue>
-
 
 
 class SchedulerRR
@@ -42,8 +40,8 @@ public:
 
 private:
     //priority_queue<Job,vector<Job>,greater> ready;
-    priority_queue<Job> ready;
-    //priority_queue<Job> waiting;
+    priority_queue<Job> waiting;
+    priority_queue< Job,vector<Job>,greater<Job> > ready;
 };
 
 #endif // SCHEDULERRR_H
