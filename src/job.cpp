@@ -23,7 +23,7 @@
 #include <sstream>
 
 
-Job::Job(float R, float D, float EX): r(R), d(D), ex(EX)
+Job::Job(float R, float D, float EX,int P): r(R), d(D), ex(EX), p(P)
 {
     id = -1;
     el = -1;
@@ -34,7 +34,7 @@ bool Job::operator<(const Job &j) const{
 }
 
 bool Job::operator>(const Job &j) const{
-    return (r < j.r);
+    return (p < j.p);
 }
 
 int Job::getID()
@@ -59,4 +59,8 @@ float Job::getExecTime()
 float Job::getElapsedTime()
 {
     return el;
+}
+
+int Job::getPriority(){
+    return p;
 }

@@ -41,17 +41,21 @@ Task::Task(char* fileName)
 
 Job Task::strJob(string data)
 {
+    cout << "Data=" << data << endl;
     stringstream ss(data);
     float token;
-    int r,d,ex;
+    int r,d,ex,p=0;
     if ( ss >> token );
        r = token;
     if ( ss >> token )
        d = token;
     if ( ss >> token )
        ex = token;
-    //cout << "*" << r << d << ex << endl;
-    return Job(r,d,ex);
+    if ( ss >> token )
+       p = token;
+
+    cout << "*" << r << d << ex << p << endl;
+    return Job(r,d,ex,p);
 }
 
 Job Task::getJob(int i){

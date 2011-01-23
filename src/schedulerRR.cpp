@@ -32,10 +32,13 @@ SchedulerRR::SchedulerRR(Processor &proc)
 
 void SchedulerRR::loadTask(Task t){
 
+    Job z(1,2,3);
     for (int i = 0; i < t.size(); i++)
     {
-        waiting.push(t.getJob(i));
-        ready.push(t.getJob(i));
+        z = t.getJob(i);
+        waiting.push(z);
+        ready.push(z);
+        cout <<  "INS=" << z.getReleaseTime() << " " << z.getPriority() << endl;
     }
 
     Job a(1,2,3),b(1,2,3);
@@ -44,13 +47,13 @@ void SchedulerRR::loadTask(Task t){
 
         a = waiting.top();
         waiting.pop();
-        cout <<  "A=" << a.getReleaseTime() << endl;
+        cout <<  "A=" << a.getReleaseTime() << " " << a.getPriority() << endl;
     }
 
     for (int i = 0; i < t.size(); i++)
     {
         b = ready.top();
         ready.pop();
-        cout <<  "B=" << b.getReleaseTime() << endl;
+        cout <<  "B=" << b.getReleaseTime() << " " << b.getPriority() << endl;
     }
 }

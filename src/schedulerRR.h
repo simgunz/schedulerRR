@@ -28,7 +28,8 @@ using namespace std;
 
 #include <fstream>
 #include <queue>
-
+#include <list>
+#include <deque>
 
 class SchedulerRR
 {
@@ -40,8 +41,9 @@ public:
 
 private:
     //priority_queue<Job,vector<Job>,greater> ready;
-    priority_queue<Job> waiting;
-    priority_queue< Job,vector<Job>,greater<Job> > ready;
+    priority_queue<Job,deque<Job> > waiting;
+    priority_queue< Job,deque<Job>,greater<Job> > ready;
+    float T; //Timeslice
 };
 
 #endif // SCHEDULERRR_H
