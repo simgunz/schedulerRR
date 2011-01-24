@@ -18,86 +18,91 @@
 */
 
 #include "schedulerRR.h"
-#include "job.h"
-#include "processor.h"
 
 
-#include <iostream>
+SchedulerRR::SchedulerRR(Processor &p, float timeslice): proc(p), T(timeslice){}
 
-//using namespace std;
-
-SchedulerRR::SchedulerRR(Processor &p, float timeslice): proc(p)
+void SchedulerRR::loadTask(Task t)
 {
-    T = timeslice;
-}
 
-void SchedulerRR::loadTask(Task t){
+    Job j;
 
     for (int i = 0; i < t.size(); i++)
     {
-        Job j = t.getJob(i);
-        j.setID(lastID);
-        proc.print(DEADLINE,j.getID(),j.getDeadLine());
-        lastID++;
+        j = t.getJob(i);
+        j.setID(lastID++);
         waiting.push(j);
     }
-
-//    Job a(1,2,3),b(1,2,3);
-//    for (int i = 0; i < t.size(); i++)
-//    {
-
-//        a = waiting.top();
-//        waiting.pop();
-//        cout <<  "A=" << a.getReleaseTime() << " " << a.getPriority() << endl;
-//    }
 }
 
-Job& SchedulerRR::popJob(){
+Job SchedulerRR::popJob()
+{
    Job j = ready.front();
-   cout << "test" <<endl;
    ready.pop_front();
    return j;
 }
 
-void SchedulerRR::enqueueJob(Job& j){
+void SchedulerRR::enqueueJob(Job& j)
+{
    ready.push_back(j);
 }
 
-void SchedulerRR::schedule(){
-//int r=0;
+void SchedulerRR::schedule()
+{
+    Job r, currentJob;
+    int sliceEl = 0;
+
     while(!ready.empty() || !waiting.empty())
     {
-//        if (r==10)
-//            break;
-//        r++;
-        if (!waiting.empty())
+        while(!waiting.empty() && (r = waiting.top()).getReleaseTime() == proc.getClock())
         {
-            Job r = waiting.top();
-            cout << r.getReleaseTime();
-            cout <<"Size=" << waiting.size();
-            while(r.getReleaseTime() <= proc.getClock())
-            {
-                enqueueJob(r);
-                waiting.pop();
-                if(!waiting.empty())
-                    r = waiting.top();
-                else
-                    break;
-            }
+            proc.print(READYB,r.getID());
+            proc.print(START,r.getID());
+            enqueueJob(r);
+            waiting.pop();
         }
 
-        if(!ready.empty())
+        if( sliceEl > 0)
         {
-            Job currentJob = popJob();
-            cout <<"OK";
-            proc.execute(currentJob,T);
+            proc.execute();
+            sliceEl--;
         }
         else
         {
-            Job j(-1,-1,-1);
-            proc.execute(j);
-        }
-        cout << "SS=" << proc.getClock();
+            //Implementabile nel processore? Return TERM
+            if(!proc.idle())
+            {
+                proc.preempt();
 
+                if (!(currentJob.getElapsedTime() == currentJob.getExecTime()))
+                {
+                    enqueueJob(currentJob);
+                }
+            }
+
+            if(!ready.empty())
+            {
+                sliceEl = T;
+                currentJob = popJob();
+                proc.execute(&currentJob);
+                sliceEl--;                  //slice-=proc.STEP
+            }
+            else
+            {
+                proc.execute();
+            }
+        }
+
+        //Implementabile nel processore
+        if(!proc.idle())
+        {
+            if (currentJob.getElapsedTime() == currentJob.getExecTime())
+            {
+                sliceEl = 0;
+                proc.preempt();
+                proc.print(STOP,currentJob.getID());
+                proc.print(READYE,currentJob.getID());
+            }
+        }
     }
 }

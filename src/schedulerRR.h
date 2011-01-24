@@ -26,7 +26,6 @@ using namespace std;
 #include "task.h"
 #include "processor.h"
 
-#include <fstream>
 #include <queue>
 #include <list>
 
@@ -39,12 +38,11 @@ public:
     void loadTask(Task t);
     void schedule();
 private:
-    Job& popJob();
+    Job popJob();
     void enqueueJob(Job& j);
 
     list<Job> ready;
-    priority_queue<Job,vector<Job> > waiting;
-    //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
+    priority_queue<Job,vector<Job> > waiting;   //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
     Processor& proc;
     float T; //Timeslice
 };

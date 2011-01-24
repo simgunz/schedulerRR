@@ -23,10 +23,9 @@
 using namespace std;
 
 #include "job.h"
-//#include "schedulerRR.h"
 
 #include <fstream>
-#include <sstream>//Cancellami
+#include <sstream>
 
 #define STEP 1
 
@@ -35,13 +34,15 @@ class Processor
 public:
     Processor(string outputFile);
     ~Processor();
-    //friend SchedulerRR::SchedulerRR(Processor proc)
-    void execute(Job& j,float T=STEP);
+    void execute(Job *j = NULL);
+    void preempt();
+    bool idle();
     void print(JobState state, int jobID, float time = -1);
     float getClock();
 private:
     float clock;
     ofstream output;
+    Job *currentJob;
 };
 
 #endif // PROCESSOR_H

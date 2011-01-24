@@ -19,22 +19,20 @@
 
 using namespace std;
 
-#include <iostream>
-
-#include "job.h"
 #include "task.h"
 #include "processor.h"
 #include "schedulerRR.h"
 
+#include <iostream>
 
+#define TIMESLICE 3
 
 int main (int argc, char *argv[])
 {
     Task t("Task");
-    Processor proc("Out");
-    SchedulerRR rr(proc,3);
+    Processor proc("output.ktr");
+    SchedulerRR rr(proc,TIMESLICE);
     rr.loadTask(t);
     rr.schedule();
     return 0;
-
 }

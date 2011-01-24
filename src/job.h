@@ -22,24 +22,26 @@
 
 using namespace std;
 
+#include <string>
+
+
 enum JobState{
         START,
         STOP,
         DEADLINE,
         EXECB,
         EXECE,
+        READYB,
+        READYE
 };
-
-//#include "processor.h"
-#include <string>
 
 
 class Job
 {
 public:
+    Job();
     Job(float R, float D, float EX,int P=-1);
     bool operator<(const Job &j) const;  //Used for comparing release time
-    //bool operator>(const Job &j) const;  //Used for comparing priority
     int getID();
     float getReleaseTime();
     float getDeadLine();
@@ -48,10 +50,8 @@ public:
     int getPriority();
     void setID(int ID);
     void incrementElapsed(float EL);
-    //friend::execute(Job &j,float T);
 
 private:
-
     int id;     //Job ID
     int p;      //Priority
     //Tolto il const, perchè fondamentalmente è inutile (goo.gl/13oXI)

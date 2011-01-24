@@ -16,11 +16,11 @@ TEMPLATE = app
 
 
 SOURCES += \
-    schedulerTest.cpp \
     schedulerRR.cpp \
     processor.cpp \
     job.cpp \
-    task.cpp
+    task.cpp \
+    main.cpp
 
 HEADERS += \
     schedulerRR.h \

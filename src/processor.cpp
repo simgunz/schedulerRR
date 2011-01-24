@@ -21,34 +21,53 @@
 
 #include <iostream>
 #include <string>
-//#include <sstring>
-
 
 
 Processor::Processor(string outputFile)
 {
     output.open(outputFile.c_str());
+
+    output << "DECIMAL_DIGITS 1" << endl;
+    output << "DURATION 50" << endl;
+    output << "PALETTE Rainbow" << endl;
+    output << "ZOOM_X 4" << endl << endl;
+
+    currentJob = NULL;
     clock = 0.0;
 }
 
 Processor::~Processor()
 {
     output.close();
-    cout << "chiuso\n";
+    //cout << "Chiuso\n";
 }
 
-void Processor::execute(Job &j,float T)
+void Processor::execute(Job *j)
 {
-//    if (j!=NULL)
-//    {
-        print(EXECB,j.getID());
-        clock+=T;
-        cout << "Clock=" << clock << endl;
-        print(EXECE,j.getID());
-        j.incrementElapsed(T);
-//    }
-//    else
-//        t++;
+    if(j != NULL)
+    {
+        preempt();
+        currentJob = j;
+        print(EXECB,currentJob->getID());
+    }
+    if(currentJob != NULL)
+        currentJob->incrementElapsed(STEP);
+
+    clock+=STEP;
+}
+
+void Processor::preempt()
+{
+    if (currentJob != NULL)
+    {
+        print(EXECE,currentJob->getID());
+        currentJob = NULL;
+    }
+}
+
+bool Processor::idle()
+{
+    return (currentJob == NULL);
 }
 
 void Processor::print(JobState state, int jobID, float time)

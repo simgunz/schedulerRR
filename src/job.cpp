@@ -19,27 +19,24 @@
 
 #include "job.h"
 
-#include <iostream> //Cancellami
 #include <sstream>
 
 
-Job::Job(float R, float D, float EX,int P): r(R), d(D), ex(EX), p(P)
-{
-    id = -1;
-    el = -1;
-}
+Job::Job(): r(-1), d(-1), ex(-1), p(-1), id(-1), el(-1) {}
+
+Job::Job(float R, float D, float EX,int P): r(R), d(D), ex(EX), p(P), id(-1), el(0) {}
 
 bool Job::operator<(const Job &j) const{
     return (r > j.r);
 }
 
-//bool Job::operator>(const Job &j) const{
-//    return (p < j.p);
-//}
-
 int Job::getID()
 {
     return id;
+}
+
+int Job::getPriority(){
+    return p;
 }
 
 float Job::getReleaseTime(){
@@ -59,10 +56,6 @@ float Job::getExecTime()
 float Job::getElapsedTime()
 {
     return el;
-}
-
-int Job::getPriority(){
-    return p;
 }
 
 void Job::setID(int ID){
