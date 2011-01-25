@@ -34,7 +34,7 @@ class Processor
 public:
     Processor(string outputFile);
     ~Processor();
-    void execute(Job *j = NULL);
+    int execute(Job *j = NULL);
     void preempt();
     bool idle();
     void print(JobState state, int jobID, float time = -1);

@@ -34,7 +34,8 @@ Task::Task(string fileName)
     while (!file.eof())
     {
         getline(file,data);
-        jobs.push_back(strJob(data));
+        if (!data.empty())
+            jobs.push_back(strJob(data));
     }
 }
 

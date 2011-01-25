@@ -51,6 +51,7 @@ void SchedulerRR::schedule()
 {
     Job r, currentJob;
     int sliceEl = 0;
+    int end = -1;
 
     while(!ready.empty() || !waiting.empty() || !proc.idle())
     {
@@ -64,7 +65,7 @@ void SchedulerRR::schedule()
 
         if( sliceEl > 0)
         {
-            proc.execute();
+            end = proc.execute();
             sliceEl--;
         }
         else
@@ -84,25 +85,28 @@ void SchedulerRR::schedule()
             {
                 sliceEl = T;
                 currentJob = popJob();
-                proc.execute(&currentJob);
+                end = proc.execute(&currentJob);
                 sliceEl--;                  //slice-=proc.STEP
             }
             else
             {
-                proc.execute();
+                end = proc.execute();
             }
         }
 
         //Implementabile nel processore
-        if(!proc.idle())
-        {
-            if (currentJob.getElapsedTime() == currentJob.getExecTime())
-            {
-                sliceEl = 0;
-                proc.preempt();
-                proc.print(STOP,currentJob.getID());
-                proc.print(READYE,currentJob.getID());
-            }
-        }
+        //if(!proc.idle())
+        //{
+           if(end)
+               sliceEl = 0;
+
+//            if (currentJob.getElapsedTime() == currentJob.getExecTime())
+//            {
+//                sliceEl = 0;
+//                proc.preempt();
+//                proc.print(STOP,currentJob.getID());
+//                proc.print(READYE,currentJob.getID());
+//            }
+        //}
     }
 }

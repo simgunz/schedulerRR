@@ -42,7 +42,7 @@ Processor::~Processor()
     //cout << "Chiuso\n";
 }
 
-void Processor::execute(Job *j)
+int Processor::execute(Job *j)
 {
     if(j != NULL)
     {
@@ -54,6 +54,15 @@ void Processor::execute(Job *j)
         currentJob->incrementElapsed(STEP);
 
     clock+=STEP;
+
+    if (currentJob != NULL && currentJob->getElapsedTime() == currentJob->getExecTime())
+    {
+        print(STOP,currentJob->getID());
+        print(READYE,currentJob->getID());
+        preempt();
+        return 1;
+    }
+    return 0;
 }
 
 void Processor::preempt()
