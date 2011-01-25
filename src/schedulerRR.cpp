@@ -49,12 +49,13 @@ void SchedulerRR::enqueueJob(Job& j)
 
 void SchedulerRR::schedule()
 {
-    Job r, currentJob;
+    Job r, *currentJob = NULL;
     int sliceEl = 0;
     int end = -1;
 
     while(!ready.empty() || !waiting.empty() || !proc.idle())
     {
+        //Controlla se ci sono processi Ready e li accoda
         while(!waiting.empty() && (r = waiting.top()).getReleaseTime() == proc.getClock())
         {
             proc.print(READYB,r.getID());
@@ -63,50 +64,37 @@ void SchedulerRR::schedule()
             waiting.pop();
         }
 
-        if( sliceEl > 0)
+        //Fine della timeslice o processorre idle
+        if(sliceEl == 0)
         {
-            end = proc.execute();
-            sliceEl--;
-        }
-        else
-        {
-            //Implementabile nel processore? Return TERM
             if(!proc.idle())
             {
+                //Forza il preempt del processore visto che la time slice è finita
                 proc.preempt();
 
-                if (!(currentJob.getElapsedTime() == currentJob.getExecTime()))
-                {
-                    enqueueJob(currentJob);
-                }
+                if(!end)
+                    enqueueJob(*currentJob);
+
+                currentJob = NULL;
             }
 
             if(!ready.empty())
             {
                 sliceEl = T;
-                currentJob = popJob();
-                end = proc.execute(&currentJob);
-                sliceEl--;                  //slice-=proc.STEP
-            }
-            else
-            {
-                end = proc.execute();
+                currentJob = &(popJob());
             }
         }
 
-        //Implementabile nel processore
-        //if(!proc.idle())
-        //{
-           if(end)
-               sliceEl = 0;
+        //Eseguo un passo del processore e decremento il tempo di slice corrente solo se il processore non è idle
+        end = proc.execute(currentJob);
+        if (currentJob != NULL)
+            sliceEl--;
 
-//            if (currentJob.getElapsedTime() == currentJob.getExecTime())
-//            {
-//                sliceEl = 0;
-//                proc.preempt();
-//                proc.print(STOP,currentJob.getID());
-//                proc.print(READYE,currentJob.getID());
-//            }
-        //}
+        //Se il processo termina prima della fine della timeslice libero il processore
+        if(end)
+        {
+            sliceEl = 0;
+            currentJob = NULL;
+        }
     }
 }

@@ -46,10 +46,14 @@ int Processor::execute(Job *j)
 {
     if(j != NULL)
     {
-        preempt();
-        currentJob = j;
-        print(EXECB,currentJob->getID());
+        if (j != currentJob)
+        {
+            preempt();
+            currentJob = j;
+            print(EXECB,currentJob->getID());
+        }
     }
+
     if(currentJob != NULL)
         currentJob->incrementElapsed(STEP);
 
