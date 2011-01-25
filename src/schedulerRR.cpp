@@ -29,12 +29,16 @@ void SchedulerRR::loadTask(Task t)
     for (int i = 0; i < t.size(); i++)
     {
         j = t.getJob(i);
-        j.setID(lastID++);
-        waiting.push(j);
+        //Controllo che la deadline sia maggiore del release time
+        if((j.getDeadLine() == -1) || (j.getReleaseTime() < j.getDeadLine()))
+        {
+            j.setID(lastID++);
+            waiting.push(j);
 
-        Dead d (j.getID(),j.getDeadLine());
-        if(d.getDeadline() != -1)
-            deadline.push(d);
+            Dead d (j.getID(),j.getDeadLine());
+            if(d.getDeadline() != -1)
+                deadline.push(d);
+        }
     }
 }
 
@@ -57,7 +61,7 @@ void SchedulerRR::schedule()
     int sliceEl = 0;
     int end = -1;
 
-    while(!ready.empty() || !waiting.empty() || !proc.idle())
+    while(!waiting.empty() || !ready.empty() || !deadline.empty() || !proc.idle())
     {
         //Controlla se ci sono processi Ready e li accoda
         while(!waiting.empty() && (r = waiting.top()).getReleaseTime() == proc.getClock())

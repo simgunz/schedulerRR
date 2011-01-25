@@ -37,7 +37,7 @@ public:
     int execute(Job *j = NULL);
     void preempt();
     bool idle();
-    void print(JobState state, int jobID, float time = -1);
+    void print(JobState state, int jobID, float time = -1, string text = "");
     float getClock();
 private:
     float clock;

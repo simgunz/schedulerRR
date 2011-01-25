@@ -51,8 +51,6 @@ public:
     };
 
 private:
-
-
     Job popJob();
     void enqueueJob(Job& j);
 

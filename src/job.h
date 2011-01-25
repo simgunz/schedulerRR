@@ -32,7 +32,8 @@ enum JobState{
         EXECB,
         EXECE,
         READYB,
-        READYE
+        READYE,
+        ARROWDOWN = 9
 };
 
 

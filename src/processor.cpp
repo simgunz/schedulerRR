@@ -66,6 +66,17 @@ int Processor::execute(Job *j)
         preempt();
         return 1;
     }
+
+    if (currentJob != NULL && currentJob->getDeadLine() == clock)
+    {
+        print(READYE,currentJob->getID());
+        string failed("Failed");
+        print(ARROWDOWN,currentJob->getID(),-1,failed);
+        preempt();
+        return 1;
+    }
+
+
     return 0;
 }
 
@@ -83,13 +94,13 @@ bool Processor::idle()
     return (currentJob == NULL);
 }
 
-void Processor::print(JobState state, int jobID, float time)
+void Processor::print(JobState state, int jobID, float time, string text)
 {
     string out = "";
     stringstream sout(out);
     if(time == -1)
         time = clock;
-    sout << time << " " << state << " " << jobID << endl;
+    sout << time << " " << state << " " << jobID << " " << text << endl;
     out = sout.str();
     output << out;
     output.flush();
