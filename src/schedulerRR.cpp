@@ -52,7 +52,7 @@ void SchedulerRR::schedule()
     Job r, currentJob;
     int sliceEl = 0;
 
-    while(!ready.empty() || !waiting.empty())
+    while(!ready.empty() || !waiting.empty() || !proc.idle())
     {
         while(!waiting.empty() && (r = waiting.top()).getReleaseTime() == proc.getClock())
         {
