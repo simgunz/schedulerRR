@@ -25,7 +25,7 @@ using namespace std;
 
 #include <iostream>
 
-#define TIMESLICE 3
+#define TIMESLICE 2
 
 int main (int argc, char *argv[])
 {

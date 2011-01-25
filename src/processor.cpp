@@ -70,8 +70,8 @@ int Processor::execute(Job *j)
     if (currentJob != NULL && currentJob->getDeadLine() == clock)
     {
         print(READYE,currentJob->getID());
-        string failed("Failed");
-        print(ARROWDOWN,currentJob->getID(),-1,failed);
+        string failed("_Failed");
+        print(TEXTOVER,currentJob->getID(),-1,failed);
         preempt();
         return 1;
     }
