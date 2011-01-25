@@ -24,7 +24,6 @@ SchedulerRR::SchedulerRR(Processor &p, float timeslice): proc(p), T(timeslice){}
 
 void SchedulerRR::loadTask(Task t)
 {
-
     Job j;
 
     for (int i = 0; i < t.size(); i++)
@@ -32,6 +31,10 @@ void SchedulerRR::loadTask(Task t)
         j = t.getJob(i);
         j.setID(lastID++);
         waiting.push(j);
+
+        Dead d (j.getID(),j.getDeadLine());
+        if(d.getDeadline() != -1)
+            deadline.push(d);
     }
 }
 
@@ -49,7 +52,8 @@ void SchedulerRR::enqueueJob(Job& j)
 
 void SchedulerRR::schedule()
 {
-    Job r, *currentJob = NULL;
+    Job  r,*currentJob = NULL;
+    Dead d;
     int sliceEl = 0;
     int end = -1;
 
@@ -62,6 +66,13 @@ void SchedulerRR::schedule()
             proc.print(START,r.getID());
             enqueueJob(r);
             waiting.pop();
+        }
+
+        //Disegna le deadline sul grafico
+        while(!deadline.empty() && (d = deadline.top()).getDeadline() == proc.getClock())
+        {
+            proc.print(DEADLINE,d.getID());
+            deadline.pop();
         }
 
         //Fine della timeslice o processorre idle
@@ -97,4 +108,6 @@ void SchedulerRR::schedule()
             currentJob = NULL;
         }
     }
+
+
 }

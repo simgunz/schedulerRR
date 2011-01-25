@@ -43,13 +43,13 @@ Job Task::strJob(string& data)
 {
     stringstream ss(data);
     float token;
-    int r,d,ex,p=0;
+    int r,ex,d=-1,p=-1;
     if ( ss >> token );
        r = token;
     if ( ss >> token )
-       d = token;
-    if ( ss >> token )
        ex = token;
+    if ( ss >> token )
+       d = token;
     if ( ss >> token )
        p = token;
 
