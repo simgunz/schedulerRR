@@ -19,10 +19,12 @@
 
 #include "schedulerRR.h"
 
+#include <iostream>
+#include <typeinfo>
 
 SchedulerRR::SchedulerRR(Processor &p, float timeslice): proc(p), T(timeslice){}
 
-void SchedulerRR::loadTask(Task t)
+int SchedulerRR::loadTask(Task &t) //Il task t è polimorfico
 {
     Job j;
 
@@ -46,6 +48,7 @@ void SchedulerRR::loadTask(Task t)
             proc.print(TEXTOVER,j.getID(),-1,bad);
         }
     }
+    return 0;
 }
 
 Job SchedulerRR::popJob()
@@ -57,7 +60,17 @@ Job SchedulerRR::popJob()
 
 void SchedulerRR::enqueueJob(Job& j)
 {
-   ready.push_back(j);
+    list<Job>::reverse_iterator rit;
+    list<Job>::iterator it;
+
+    for(rit = ready.rbegin();rit != ready.rend() && j.getPriority() > rit->getPriority();rit++)
+    {
+        cout << rit->getDeadLine() << "*";
+    }
+    it = rit.base();
+
+//    cout << "N=" << ready.size() <<endl;
+    ready.insert(it,j);
 }
 
 void SchedulerRR::schedule()
@@ -69,6 +82,14 @@ void SchedulerRR::schedule()
 
     while(!waiting.empty() || !ready.empty() || !deadline.empty() || !proc.idle())
     {
+
+        list<Job>::reverse_iterator it = ready.rbegin();
+        for(;it != ready.rend();it++)
+            cout << it->getID() << " ";
+
+        cout << "*C="<< proc.getClock() <<endl;
+
+
         //Controlla se ci sono processi Ready e li accoda
         while(!waiting.empty() && (r = waiting.top()).getReleaseTime() == proc.getClock())
         {
@@ -85,7 +106,8 @@ void SchedulerRR::schedule()
             deadline.pop();
         }
 
-        //Fine della timeslice o processorre idle
+
+            //Fine della timeslice o processorre idle
         if(sliceEl == 0)
         {
             if(!proc.idle())

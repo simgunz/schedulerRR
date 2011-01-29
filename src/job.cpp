@@ -22,7 +22,7 @@
 #include <sstream>
 
 
-Job::Job(): r(-1), d(-1), ex(-1), p(-1), id(-1), el(-1) {}
+Job::Job(): r(-1), d(-1), ex(-1), p(0), id(-1), el(-1) {}
 
 Job::Job(float R, float D, float EX,int P): r(R), d(D), ex(EX), p(P), id(-1), el(0) {}
 

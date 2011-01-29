@@ -24,6 +24,7 @@ using namespace std;
 
 #include "job.h"
 #include "task.h"
+#include "periodictask.h"
 #include "processor.h"
 
 #include <queue>
@@ -35,7 +36,7 @@ class SchedulerRR
 {
 public:    
     SchedulerRR(Processor &p,float timeslice);
-    void loadTask(Task t);
+    int loadTask(Task &t);
     void schedule();
 
     class Dead{

@@ -20,10 +20,12 @@ SOURCES += \
     processor.cpp \
     job.cpp \
     task.cpp \
-    main.cpp
+    main.cpp \
+    periodictask.cpp
 
 HEADERS += \
     schedulerRR.h \
     processor.h \
     job.h \
-    task.h
+    task.h \
+    periodictask.h

@@ -41,7 +41,7 @@ class Job
 {
 public:
     Job();
-    Job(float R, float D, float EX,int P=-1);
+    Job(float R, float D, float EX,int P=0);
     bool operator<(const Job &j) const;  //Used for comparing release time
     int getID();
     float getReleaseTime();
