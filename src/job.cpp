@@ -26,8 +26,12 @@ Job::Job(): r(-1), d(-1), ex(-1), p(0), id(-1), el(-1) {}
 
 Job::Job(float R, float D, float EX,int P): r(R), d(D), ex(EX), p(P), id(-1), el(0) {}
 
-bool Job::operator<(const Job &j) const{
+bool Job::operator>(const Job &j) const{
     return (r > j.r);
+}
+
+bool Job::operator<(const Job &j) const{
+    return (d < j.d);
 }
 
 int Job::getID()

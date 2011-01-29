@@ -47,7 +47,7 @@ private:
     void enqueueJob(Job& j);
 
     list<Job> ready;
-    priority_queue<Job,vector<Job> > waiting;   //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
+    priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
     Processor& proc;
     float T; //Timeslice
     float D;

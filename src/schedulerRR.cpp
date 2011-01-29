@@ -152,13 +152,21 @@ void SchedulerRR::schedule()
     while(!waiting.empty() || !ready.empty() || !proc.idle())
     {
         //Controlla se ci sono processi Ready e li accoda
-        vector<int> vct;
+        vector<Job> vct;
+
 
         while(!waiting.empty() && (r = waiting.top()).getReleaseTime() == proc.getClock())
         {
-            vct.push_back(r.getID());
-            enqueueJob(r);
+            vct.push_back(r);
             waiting.pop();
+        }
+
+        if(!vct.empty())
+            sort(vct.begin(),vct.end());
+
+        for (int i = 0; i < vct.size(); i++)
+        {
+            enqueueJob(vct[i]);
         }
 
             //Fine della timeslice o processorre idle
@@ -197,8 +205,8 @@ void SchedulerRR::schedule()
 
         for (int i = 0; i < vct.size(); i++)
         {
-            proc.print(READYB,vct[i]);
-            proc.print(START,vct[i]);
+            proc.print(READYB,vct[i].getID());
+            proc.print(START,vct[i].getID());
         }
 
         //Eseguo un passo del processore e decremento il tempo di slice corrente solo se il processore non è idle

@@ -43,7 +43,8 @@ class Job
 public:
     Job();
     Job(float R, float D, float EX,int P=0);
-    bool operator<(const Job &j) const;  //Used for comparing release time
+    bool operator>(const Job &j) const;  //Used for comparing release time
+    bool operator<(const Job &j) const;  //Used for comparing deadline
     int getID();
     float getReleaseTime();
     float getDeadLine();
