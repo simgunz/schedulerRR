@@ -23,7 +23,7 @@
 #include <sstream>
 
 
-Task::Task(string fileName)
+Task::Task(string fileName, float priority) : pr(priority)
 {
     ifstream file(fileName.c_str());
     string data;
@@ -39,7 +39,7 @@ Task::Task(string fileName)
     }
 }
 
-Task::Task(vector<Job> &newjobs)
+Task::Task(vector<Job> &newjobs, float priority) : pr(priority)
 {
     jobs = newjobs;
 }
@@ -57,7 +57,7 @@ Job Task::strJob(string& data)
     if ( ss >> token )
        p = token;
 
-    return Job(r,d,ex,p);
+    return Job(r,d,ex,p + pr*10);
 }
 
 Job& Task::getJob(int i){

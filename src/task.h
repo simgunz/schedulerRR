@@ -31,14 +31,14 @@ using namespace std;
 class Task
 {
 public:
-    Task(string fileName);
-    Task(vector<Job> &newjobs);
+    Task(string fileName, float priority = 0);
+    Task(vector<Job> &newjobs, float priority = 0);
     Job& getJob(int i);
     int size();
 private:
     Job strJob(string& data);
     vector<Job> jobs; //Self expanding
-    float p;
+    float pr;
 };
 
 #endif // TASK_H

@@ -25,7 +25,7 @@
 class PeriodicTask : public Task
 {
 public:
-    PeriodicTask(string fileName, float period);
+    PeriodicTask(string fileName, float period, float priority = 0);
     float getPeriod();
 private:
     float p;

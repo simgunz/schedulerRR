@@ -19,7 +19,7 @@
 
 #include "periodictask.h"
 
-PeriodicTask::PeriodicTask(string fileName, float period) : Task(fileName)
+PeriodicTask::PeriodicTask(string fileName, float period, float priority) : Task(fileName,priority)
 {
     float totEx = 0;
 
