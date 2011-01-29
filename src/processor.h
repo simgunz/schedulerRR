@@ -26,14 +26,18 @@ using namespace std;
 
 #include <fstream>
 #include <sstream>
+#include <string>
+#include <map>
 
 #define STEP 1
 
 class Processor
 {
 public:
-    Processor(string outputFile);
+    Processor();
     ~Processor();
+    void finalize();
+    void setMaxDeadline(float deadline);
     int execute(Job *j = NULL);
     void preempt();
     bool idle();
@@ -41,7 +45,8 @@ public:
     float getClock();
 private:
     float clock;
-    ofstream output;
+    float maxdeadline;
+    map<float,string> out;
     Job *currentJob;
 };
 

@@ -21,16 +21,12 @@
 
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 
-Processor::Processor(string outputFile)
+Processor::Processor()
 {
-    output.open(outputFile.c_str());
 
-    output << "DECIMAL_DIGITS 1" << endl;
-    output << "DURATION 50" << endl;
-    output << "PALETTE Rainbow" << endl;
-    output << "ZOOM_X 4" << endl << endl;
 
     currentJob = NULL;
     clock = 0.0;
@@ -38,8 +34,32 @@ Processor::Processor(string outputFile)
 
 Processor::~Processor()
 {
-    output.close();
+    //output.close();
     //cout << "Chiuso\n";
+}
+
+void Processor::finalize()
+{
+    ofstream output("output.ktr");
+
+    output << "DECIMAL_DIGITS 1" << endl;
+    output << "DURATION 50" << endl;
+    output << "PALETTE Rainbow" << endl;
+    output << "ZOOM_X 4" << endl << endl;
+
+    for (int i = 0; i <= max(clock,maxdeadline); i++)
+    {
+        output << out[i];
+    }
+
+    output.flush();
+    output.close();
+}
+
+void Processor::setMaxDeadline(float deadline)
+{
+    if (deadline > maxdeadline)
+        maxdeadline = deadline;
 }
 
 int Processor::execute(Job *j)
@@ -71,7 +91,7 @@ int Processor::execute(Job *j)
     {
         print(READYE,currentJob->getID());
         string failed("_Failed");
-        print(TEXTOVER,currentJob->getID(),-1,failed);
+        print(TEXTOVER,currentJob->getID(),currentJob->getDeadLine(),failed);
         preempt();
         return 1;
     }
@@ -96,14 +116,13 @@ bool Processor::idle()
 
 void Processor::print(JobState state, int jobID, float time, string text)
 {
-    string out = "";
-    stringstream sout(out);
+    string outStr = "";
+    stringstream sout(outStr);
     if(time == -1)
         time = clock;
     sout << time << " " << state << " " << jobID << " " << text << endl;
-    out = sout.str();
-    output << out;
-    output.flush();
+    outStr = sout.str();
+    out[time] += outStr;
 }
 
 float Processor::getClock(){

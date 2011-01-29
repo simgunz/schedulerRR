@@ -35,7 +35,7 @@ int main (int argc, char *argv[])
     Task t("Task");
     PeriodicTask pt("Task1",18);
 
-    Processor proc("output.ktr");
+    Processor proc;
     SchedulerRR rr(proc,TIMESLICE);
     rr.loadTask(t);
     //rr.loadTask(pt);

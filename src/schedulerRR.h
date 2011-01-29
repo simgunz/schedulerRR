@@ -39,25 +39,12 @@ public:
     int loadTask(Task &t);
     void schedule();
 
-    class Dead{
-    public:
-        Dead() : id(-1), d(-1) {}
-        Dead (int ID, float D) : id(ID), d(D) {}
-        bool operator<(const Dead &a) const { return (d > a.d); }
-        int getID () { return id; }
-        float getDeadline () { return d; }
-    private:
-        int id;
-        float d;
-    };
-
 private:
     Job popJob();
     void enqueueJob(Job& j);
 
     list<Job> ready;
     priority_queue<Job,vector<Job> > waiting;   //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
-    priority_queue<Dead> deadline;
     Processor& proc;
     float T; //Timeslice
 };

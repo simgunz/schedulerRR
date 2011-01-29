@@ -38,9 +38,11 @@ int SchedulerRR::loadTask(Task &t) //Il task t è polimorfico
         {
             waiting.push(j);
 
-            Dead d (j.getID(),j.getDeadLine());
-            if(d.getDeadline() != -1)
-                deadline.push(d);
+            if(j.getDeadLine() != -1)
+            {
+                proc.print(DEADLINE,j.getID(),j.getDeadLine());
+                proc.setMaxDeadline(j.getDeadLine());
+            }
         }
         else
         {
@@ -76,11 +78,10 @@ void SchedulerRR::enqueueJob(Job& j)
 void SchedulerRR::schedule()
 {
     Job  r,*currentJob = NULL;
-    Dead d;
     int sliceEl = 0;
     int end = -1;
 
-    while(!waiting.empty() || !ready.empty() || !deadline.empty() || !proc.idle())
+    while(!waiting.empty() || !ready.empty() || !proc.idle())
     {
 
         list<Job>::reverse_iterator it = ready.rbegin();
@@ -97,13 +98,6 @@ void SchedulerRR::schedule()
             proc.print(START,r.getID());
             enqueueJob(r);
             waiting.pop();
-        }
-
-        //Disegna le deadline sul grafico
-        while(!deadline.empty() && (d = deadline.top()).getDeadline() == proc.getClock())
-        {
-            proc.print(DEADLINE,d.getID());
-            deadline.pop();
         }
 
 
@@ -126,11 +120,17 @@ void SchedulerRR::schedule()
                 sliceEl = T;
                 string failed("_Failed");
                 currentJob = &(popJob());
-                while(!ready.empty() && currentJob->getDeadLine() != -1 && currentJob->getDeadLine() <= proc.getClock())
+                while(currentJob->getDeadLine() != -1 && currentJob->getDeadLine() <= proc.getClock())
                 {
-                    proc.print(READYE,currentJob->getID());
-                    proc.print(TEXTOVER,currentJob->getID(),-1,failed);
-                    currentJob = &(popJob());
+                    proc.print(READYE,currentJob->getID(),currentJob->getDeadLine());
+                    proc.print(TEXTOVER,currentJob->getID(),currentJob->getDeadLine(),failed);
+                    if(!ready.empty())
+                        currentJob = &(popJob());
+                    else
+                    {
+                        currentJob = NULL;
+                        break;
+                    }
                 }
             }
         }
@@ -147,6 +147,5 @@ void SchedulerRR::schedule()
             currentJob = NULL;
         }
     }
-
-
+    proc.finalize();
 }
