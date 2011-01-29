@@ -33,12 +33,12 @@ int main (int argc, char *argv[])
 {
 
     Task t("Task");
-    PeriodicTask pt("Task1",18);
+    PeriodicTask pt("Task1",28);
 
     Processor proc;
     SchedulerRR rr(proc,TIMESLICE);
     rr.loadTask(t);
-    //rr.loadTask(pt);
+    rr.loadTask(pt);
     rr.schedule();
     return 0;
 }

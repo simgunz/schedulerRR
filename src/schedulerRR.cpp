@@ -53,6 +53,21 @@ int SchedulerRR::loadTask(Task &t) //Il task t è polimorfico
     return 0;
 }
 
+int SchedulerRR::loadTask(PeriodicTask &t) //Il task t è polimorfico
+{
+
+    loadTask(dynamic_cast<Task&>(t));
+
+    if(t.getPeriod() == 0)
+    {
+        return 1;
+    }
+
+    proc.print(VLINE,-1,t.getPeriod(),"EOP");
+
+    return 0;
+}
+
 Job SchedulerRR::popJob()
 {
    Job j = ready.front();

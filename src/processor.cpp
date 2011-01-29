@@ -120,7 +120,10 @@ void Processor::print(JobState state, int jobID, float time, string text)
     stringstream sout(outStr);
     if(time == -1)
         time = clock;
-    sout << time << " " << state << " " << jobID << " " << text << endl;
+    sout << time << " " << state << " ";
+    if(jobID != -1)
+        sout << jobID << " ";
+    sout << text << endl;
     outStr = sout.str();
     out[time] += outStr;
 }

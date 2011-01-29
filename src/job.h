@@ -33,6 +33,7 @@ enum JobState{
         EXECE,
         READYB,
         READYE,
+        VLINE = 12,
         TEXTOVER = 13
 };
 

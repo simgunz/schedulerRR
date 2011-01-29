@@ -37,6 +37,7 @@ class SchedulerRR
 public:    
     SchedulerRR(Processor &p,float timeslice);
     int loadTask(Task &t);
+    int loadTask(PeriodicTask &t);
     void schedule();
 
 private:
