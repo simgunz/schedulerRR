@@ -21,8 +21,9 @@
 
 #include <iostream>
 #include <typeinfo>
+#include <algorithm>
 
-SchedulerRR::SchedulerRR(Processor &p, float timeslice): proc(p), T(timeslice){}
+SchedulerRR::SchedulerRR(Processor &p, float timeslice, float duration): proc(p), T(timeslice), D(duration){}
 
 int SchedulerRR::loadTask(Task &t) //Il task t è polimorfico
 {
@@ -56,14 +57,34 @@ int SchedulerRR::loadTask(Task &t) //Il task t è polimorfico
 int SchedulerRR::loadTask(PeriodicTask &t) //Il task t è polimorfico
 {
 
-    loadTask(dynamic_cast<Task&>(t));
+    //loadTask(dynamic_cast<Task&>(t));
 
+    //Job non periodico
     if(t.getPeriod() == 0)
     {
         return 1;
     }
 
-    proc.print(VLINE,-1,t.getPeriod(),"EOP");
+    for (int q = 0; q < D; q+=t.getPeriod())
+    {
+        vector<Job> newJobs;
+        for (int i=0; i < t.size(); i++)
+        {
+            Job &j = t.getJob(i);
+            float dead = t.getPeriod()+q;
+            if(j.getDeadLine() != -1)
+                dead = min(dead,j.getDeadLine()+q);
+
+            Job nw(j.getReleaseTime()+q,dead,j.getExecTime(),j.getPriority());
+            newJobs.push_back(nw);
+        }
+        Task newTask(newJobs);
+
+        loadTask(newTask);
+        if(q < D)
+            lastID-=t.size();
+        proc.print(VLINE,-1,t.getPeriod()+q,"EOP");
+    }
 
     return 0;
 }
@@ -80,13 +101,12 @@ void SchedulerRR::enqueueJob(Job& j)
     list<Job>::reverse_iterator rit;
     list<Job>::iterator it;
 
-    for(rit = ready.rbegin();rit != ready.rend() && j.getPriority() > rit->getPriority();rit++)
-    {
-        cout << rit->getDeadLine() << "*";
-    }
+    rit = ready.rbegin();
+    while(rit != ready.rend() && j.getPriority() > rit->getPriority())
+        rit++;
+
     it = rit.base();
 
-//    cout << "N=" << ready.size() <<endl;
     ready.insert(it,j);
 }
 
@@ -98,14 +118,6 @@ void SchedulerRR::schedule()
 
     while(!waiting.empty() || !ready.empty() || !proc.idle())
     {
-
-        list<Job>::reverse_iterator it = ready.rbegin();
-        for(;it != ready.rend();it++)
-            cout << it->getID() << " ";
-
-        cout << "*C="<< proc.getClock() <<endl;
-
-
         //Controlla se ci sono processi Ready e li accoda
         while(!waiting.empty() && (r = waiting.top()).getReleaseTime() == proc.getClock())
         {

@@ -26,8 +26,6 @@
 
 Processor::Processor()
 {
-
-
     currentJob = NULL;
     clock = 0.0;
 }
@@ -43,7 +41,7 @@ void Processor::finalize()
     ofstream output("output.ktr");
 
     output << "DECIMAL_DIGITS 1" << endl;
-    output << "DURATION 50" << endl;
+    output << "DURATION 50"  << endl;
     output << "PALETTE Rainbow" << endl;
     output << "ZOOM_X 4" << endl << endl;
 

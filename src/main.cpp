@@ -28,15 +28,16 @@ using namespace std;
 #include <sstream>
 
 #define TIMESLICE 3
+#define DURATION 100
 
 int main (int argc, char *argv[])
 {
 
-    Task t("Task");
-    PeriodicTask pt("Task1",28);
+    Task t("Task3");
+    PeriodicTask pt("Task1",17);
 
     Processor proc;
-    SchedulerRR rr(proc,TIMESLICE);
+    SchedulerRR rr(proc,TIMESLICE,DURATION);
     rr.loadTask(t);
     rr.loadTask(pt);
     rr.schedule();

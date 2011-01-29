@@ -39,6 +39,10 @@ Task::Task(string fileName)
     }
 }
 
+Task::Task(vector<Job> &newjobs)
+{
+    jobs = newjobs;
+}
 Job Task::strJob(string& data)
 {
     stringstream ss(data);

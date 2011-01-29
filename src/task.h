@@ -32,6 +32,7 @@ class Task
 {
 public:
     Task(string fileName);
+    Task(vector<Job> &newjobs);
     Job& getJob(int i);
     int size();
 private:

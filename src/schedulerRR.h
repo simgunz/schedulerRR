@@ -35,7 +35,7 @@ static int lastID = 0;
 class SchedulerRR
 {
 public:    
-    SchedulerRR(Processor &p,float timeslice);
+    SchedulerRR(Processor &p,float timeslice = 3,float duration = 50);
     int loadTask(Task &t);
     int loadTask(PeriodicTask &t);
     void schedule();
@@ -48,6 +48,7 @@ private:
     priority_queue<Job,vector<Job> > waiting;   //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
     Processor& proc;
     float T; //Timeslice
+    float D;
 };
 
 
