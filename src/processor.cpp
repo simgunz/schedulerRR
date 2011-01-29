@@ -26,6 +26,10 @@
 
 Processor::Processor()
 {
+    initParam << "DECIMAL_DIGITS 1" << endl;
+    initParam << "PALETTE Rainbow" << endl;
+    initParam << "ZOOM_X 4" << endl;
+
     currentJob = NULL;
     clock = 0.0;
 }
@@ -36,14 +40,17 @@ Processor::~Processor()
     //cout << "Chiuso\n";
 }
 
+void Processor::addLabel(int line,string label)
+{
+    initParam << "LINE_NAME " << line << " " << label << endl;
+}
 void Processor::finalize()
 {
+    initParam << endl;
+
     ofstream output("output.ktr");
 
-    output << "DECIMAL_DIGITS 1" << endl;
-    output << "DURATION 50"  << endl;
-    output << "PALETTE Rainbow" << endl;
-    output << "ZOOM_X 4" << endl << endl;
+    output << initParam.str();
 
     for (int i = 0; i <= max(clock,maxdeadline); i++)
     {

@@ -29,14 +29,16 @@ using namespace std;
 
 #include <queue>
 #include <list>
+#include <string>
 
 static int lastID = 0;
+static int taskID = 0;
 
 class SchedulerRR
 {
 public:    
     SchedulerRR(Processor &p,float timeslice = 3,float duration = 50);
-    int loadTask(Task &t);
+    int loadTask(Task &t, string parameter = "T");
     int loadTask(PeriodicTask &t);
     void schedule();
 

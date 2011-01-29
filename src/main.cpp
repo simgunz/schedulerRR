@@ -33,13 +33,17 @@ using namespace std;
 int main (int argc, char *argv[])
 {
 
-    Task t("Task3");
-    PeriodicTask pt("Task1",17);
+    Task t1("Task3");
+    Task t("Task2");
+    PeriodicTask pt("Task1",17),pt1("Task",10);
 
     Processor proc;
     SchedulerRR rr(proc,TIMESLICE,DURATION);
     rr.loadTask(t);
+    rr.loadTask(t1);
     rr.loadTask(pt);
+    //rr.loadTask(pt1);
+    rr.loadTask(t);
     rr.schedule();
     return 0;
 }

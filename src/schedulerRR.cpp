@@ -22,12 +22,29 @@
 #include <iostream>
 #include <typeinfo>
 #include <algorithm>
+#include <sstream>
 
 SchedulerRR::SchedulerRR(Processor &p, float timeslice, float duration): proc(p), T(timeslice), D(duration){}
 
-int SchedulerRR::loadTask(Task &t) //Il task t è polimorfico
+int SchedulerRR::loadTask(Task &t, string parameter) //Il task t è polimorfico
 {
     Job j;
+    stringstream ss;
+
+    if(parameter == "T")
+    {
+        int id = lastID;
+        ss << "T" << taskID++ << "-";
+        string taskLabel = ss.str();
+        for (int i = 0; i < t.size(); i++)
+        {
+            stringstream ssc(taskLabel);
+            ssc.seekp(0,ios::end);
+            ssc << id;
+            proc.addLabel(id++,ssc.str());
+        }
+    }
+
 
     for (int i = 0; i < t.size(); i++)
     {
@@ -56,14 +73,15 @@ int SchedulerRR::loadTask(Task &t) //Il task t è polimorfico
 
 int SchedulerRR::loadTask(PeriodicTask &t) //Il task t è polimorfico
 {
-
-    //loadTask(dynamic_cast<Task&>(t));
-
+    int id = lastID;
+    stringstream ss;
+    ss << "EOP" << taskID;
     //Job non periodico
     if(t.getPeriod() == 0)
     {
         return 1;
     }
+
 
     for (int q = 0; q < D; q+=t.getPeriod())
     {
@@ -80,10 +98,24 @@ int SchedulerRR::loadTask(PeriodicTask &t) //Il task t è polimorfico
         }
         Task newTask(newJobs);
 
-        loadTask(newTask);
-        if(q < D)
-            lastID-=t.size();
-        proc.print(VLINE,-1,t.getPeriod()+q,"EOP");
+        loadTask(newTask,"PT");
+
+        lastID-=t.size();
+
+        proc.print(VLINE,-1,t.getPeriod()+q,ss.str());
+    }
+
+    lastID+=t.size();
+
+    ss.seekp(0,ios::beg);
+    ss << "PT" << taskID++ << "-";
+    string taskLabel = ss.str();
+    for (int i = 0; i < t.size(); i++)
+    {
+        stringstream ssc(taskLabel);
+        ssc.seekp(0,ios::end);
+        ssc << id;
+        proc.addLabel(id++,ssc.str());
     }
 
     return 0;
@@ -116,17 +148,18 @@ void SchedulerRR::schedule()
     int sliceEl = 0;
     int end = -1;
 
+
     while(!waiting.empty() || !ready.empty() || !proc.idle())
     {
         //Controlla se ci sono processi Ready e li accoda
+        vector<int> vct;
+
         while(!waiting.empty() && (r = waiting.top()).getReleaseTime() == proc.getClock())
         {
-            proc.print(READYB,r.getID());
-            proc.print(START,r.getID());
+            vct.push_back(r.getID());
             enqueueJob(r);
             waiting.pop();
         }
-
 
             //Fine della timeslice o processorre idle
         if(sliceEl == 0)
@@ -160,6 +193,12 @@ void SchedulerRR::schedule()
                     }
                 }
             }
+        }
+
+        for (int i = 0; i < vct.size(); i++)
+        {
+            proc.print(READYB,vct[i]);
+            proc.print(START,vct[i]);
         }
 
         //Eseguo un passo del processore e decremento il tempo di slice corrente solo se il processore non è idle

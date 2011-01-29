@@ -36,6 +36,7 @@ class Processor
 public:
     Processor();
     ~Processor();
+    void addLabel(int line,string label);
     void finalize();
     void setMaxDeadline(float deadline);
     int execute(Job *j = NULL);
@@ -46,6 +47,7 @@ public:
 private:
     float clock;
     float maxdeadline;
+    stringstream initParam;
     map<float,string> out;
     Job *currentJob;
 };
