@@ -51,6 +51,7 @@ private:
     Processor& proc;
     float T; //Timeslice
     float D;
+    float U;
 };
 
 

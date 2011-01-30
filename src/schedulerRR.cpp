@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <sstream>
 
-SchedulerRR::SchedulerRR(Processor &p, float timeslice, float duration): proc(p), T(timeslice), D(duration){}
+SchedulerRR::SchedulerRR(Processor &p, float timeslice, float duration): proc(p), T(timeslice), D(duration), U(0){}
 
 int SchedulerRR::loadTask(Task &t, string parameter) //Il task t è polimorfico
 {
@@ -76,12 +76,22 @@ int SchedulerRR::loadTask(PeriodicTask &t) //Il task t è polimorfico
     int id = lastID;
     stringstream ss;
     ss << "EOP" << taskID;
-    //Job non periodico
+
+    //Job non valido
     if(t.getPeriod() == 0)
     {
         return 1;
     }
 
+
+    float u = t.getExecTime() / t.getPeriod();
+    cout << t.getExecTime() << endl;
+    cout << t.getPeriod() << "*" <<endl;
+    //Total utilization grater then 1: system overload
+    if (u + U > 1)
+        return 2;
+
+    U += u;
 
     for (int q = 0; q < D; q+=t.getPeriod())
     {

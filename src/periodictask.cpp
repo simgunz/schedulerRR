@@ -21,15 +21,15 @@
 
 PeriodicTask::PeriodicTask(string fileName, float period, float priority) : Task(fileName,priority)
 {
-    float totEx = 0;
+    e = 0;
 
     for (int i = 0; i < size(); i++)
     {
-        totEx += getJob(i).getExecTime();
+        e += getJob(i).getExecTime();
     }
 
     //Se i job non sono eseguibili entro il periodo il job viene assunto come non periodico
-    if(totEx <= period)
+    if(e <= period)
         p = period;
     else
         p = 0;
@@ -38,4 +38,9 @@ PeriodicTask::PeriodicTask(string fileName, float period, float priority) : Task
 float PeriodicTask::getPeriod()
 {
     return p;
+}
+
+float PeriodicTask::getExecTime()
+{
+    return e;
 }
