@@ -31,8 +31,7 @@ using namespace std;
 #include <list>
 #include <string>
 
-static int lastID = 0;
-static int taskID = 0;
+
 
 class SchedulerRR
 {
@@ -52,6 +51,8 @@ private:
     float T; //Timeslice
     float D;
     float U;
+    int lastID;
+    int taskID;
 };
 
 

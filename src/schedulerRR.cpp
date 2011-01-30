@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <sstream>
 
-SchedulerRR::SchedulerRR(Processor &p, float timeslice, float duration): proc(p), T(timeslice), D(duration), U(0){}
+SchedulerRR::SchedulerRR(Processor &p, float timeslice, float duration): proc(p), T(timeslice), D(duration), U(0), lastID(0), taskID(0){}
 
 int SchedulerRR::loadTask(Task &t, string parameter) //Il task t è polimorfico
 {
