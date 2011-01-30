@@ -85,8 +85,7 @@ int SchedulerRR::loadTask(PeriodicTask &t) //Il task t è polimorfico
 
 
     float u = t.getExecTime() / t.getPeriod();
-    cout << t.getExecTime() << endl;
-    cout << t.getPeriod() << "*" <<endl;
+
     //Total utilization grater then 1: system overload
     if (u + U > 1)
         return 2;
