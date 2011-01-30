@@ -40,9 +40,10 @@ int main (int argc, char *argv[])
 
     //rr.loadTask(t1);
     rr.loadTask(pt1);
-    rr.loadTask(pt3);
+    //rr.loadTask(pt3);
     //rr.loadTask(t1);
-    rr.loadTask(pt3);
+    //rr.loadTask(pt3);
+    rr.loadTask(pt1);
     rr.loadTask(pt1);
     //rr.loadTask(t2);
     //rr.loadTask(pt2);

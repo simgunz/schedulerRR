@@ -197,17 +197,31 @@ void SchedulerRR::schedule()
                 sliceEl = T;
                 string failed("_Failed");
                 currentJob = &(popJob());
-                while(currentJob->getDeadLine() != -1 && currentJob->getDeadLine() <= proc.getClock())
+                bool d = false, s = false;
+                while(currentJob->getDeadLine() != -1 && ( ( d = ( currentJob->getDeadLine() <= proc.getClock() ) )  || ( s = ( ( currentJob->getDeadLine() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) ) ) )
                 {
-                    proc.print(READYE,currentJob->getID(),currentJob->getDeadLine());
-                    proc.print(TEXTOVER,currentJob->getID(),currentJob->getDeadLine(),failed);
+                    if(d)
+                    {
+                        proc.print(READYE,currentJob->getID(),currentJob->getDeadLine());
+                        proc.print(TEXTOVER,currentJob->getID(),currentJob->getDeadLine(),failed);
+                    }
+                    else if(s)
+                    {
+                        proc.print(READYE,currentJob->getID(),proc.getClock());
+                        proc.print(TEXTOVER,currentJob->getID(),proc.getClock(),failed);
+                    }
+
+                    d = s = false;
+
                     if(!ready.empty())
                         currentJob = &(popJob());
                     else
                     {
                         currentJob = NULL;
+                        sliceEl = 0;
                         break;
                     }
+
                 }
             }
         }
