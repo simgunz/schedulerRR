@@ -59,6 +59,7 @@ void SchedulerRR::taskLabel(bool periodic, int id, int size)
         ss << id;
         proc.rowLabel(id++,ss.str());
     }
+    proc.rowLabel(id,"A");
 }
 
 int SchedulerRR::loadTask(Task &t, bool periodic)
@@ -94,6 +95,7 @@ int SchedulerRR::loadTask(Task &t, bool periodic)
             ret = 1;
         }
     }
+    jobID++;
     return ret;
 }
 
@@ -135,14 +137,14 @@ int SchedulerRR::loadTask(PeriodicTask &t)
 
         ret = loadTask(newTask,true);
 
-        jobID-=t.size();
+        jobID-=t.size()+1;
 
         proc.print(VLINE,-1,t.getPeriod()+q,ss.str());
     }
 
     taskLabel(true,jobID,t.size());
 
-    jobID+=t.size();
+    jobID+=t.size()+1;
 
     return ret;
 }
@@ -172,6 +174,10 @@ void SchedulerRR::schedule()
         for (int i = 0; i < vct.size(); i++)
         {
             enqueueJob(vct[i]);
+
+            proc.print(READYB,vct[i].getID());
+            proc.print(START,vct[i].getID());
+
         }
 
         //Fine della timeslice o processorre idle
@@ -199,7 +205,7 @@ void SchedulerRR::schedule()
                 {
                     if(d)
                     {
-                        proc.print(READYE,currentJob->getID(),currentJob->getDeadline());
+                        proc.print(READYE,currentJob->getID(),currentJob->getDeadline(),"",true);
                         proc.print(TEXTOVER,currentJob->getID(),currentJob->getDeadline(),failed);
                     }
                     else if(s)
@@ -222,14 +228,9 @@ void SchedulerRR::schedule()
             }
         }
 
-        for (int i = 0; i < vct.size(); i++)
-        {
-            proc.print(READYB,vct[i].getID());
-            proc.print(START,vct[i].getID());
-        }
-
         //Eseguo un passo del processore e decremento il tempo di slice corrente solo se il processore non è idle
         end = proc.execute(currentJob);
+
         if (currentJob != NULL)
             sliceEl--;
 

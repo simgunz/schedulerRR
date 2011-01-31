@@ -43,10 +43,10 @@ int main (int argc, char *argv[])
     //rr.loadTask(pt3);
     //rr.loadTask(t1);
     //rr.loadTask(pt3);
-    rr.loadTask(pt3);
-    rr.loadTask(pt3);
+    //rr.loadTask(pt3);
+    //rr.loadTask(pt3);
     //rr.loadTask(t2);
-    //rr.loadTask(pt2);
+    rr.loadTask(pt3);
 
     rr.schedule();
     return 0;

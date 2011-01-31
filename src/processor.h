@@ -39,7 +39,7 @@ public:
     void preempt();
     bool idle() const;
     void setMaxDeadline(float deadline);
-    void print(JobState state, int jobID, float time = -1, string text = "");
+    void print(JobState state, int jobID, float time = -1, string text = "", bool reverse = false);
     void filePrint();
     void rowLabel(int line,string label);
 

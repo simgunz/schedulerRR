@@ -61,7 +61,6 @@ int Processor::execute(Job *j)
 
 //    if (currentJob != NULL && currentJob->getDeadline() == clock)
 //    {
-
 //        print(READYE,currentJob->getID());
 //        string failed("_Failed");
 //        print(TEXTOVER,currentJob->getID(),currentJob->getDeadline(),failed);
@@ -92,7 +91,7 @@ void Processor::setMaxDeadline(float deadline)
         maxdeadline = deadline;
 }
 
-void Processor::print(JobState state, int jobID, float time, string text)
+void Processor::print(JobState state, int jobID, float time, string text, bool reverse)
 {
     string outStr = "";
     stringstream sout(outStr);
@@ -103,7 +102,10 @@ void Processor::print(JobState state, int jobID, float time, string text)
         sout << jobID << " ";
     sout << text << endl;
     outStr = sout.str();
-    out[time] += outStr;
+    if(!reverse)
+        out[time] += outStr;
+    else
+        out[time] = outStr + out[time];
 }
 
 void Processor::filePrint()
