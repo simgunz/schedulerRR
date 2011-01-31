@@ -174,7 +174,7 @@ void SchedulerRR::schedule()
             enqueueJob(vct[i]);
         }
 
-            //Fine della timeslice o processorre idle
+        //Fine della timeslice o processorre idle
         if(sliceEl == 0)
         {
             if(!proc.idle())
@@ -194,6 +194,7 @@ void SchedulerRR::schedule()
                 string failed("_Failed");
                 currentJob = &(popJob());
                 bool d = false, s = false;
+
                 while(currentJob->getDeadline() != 0 && ( ( d = ( currentJob->getDeadline() <= proc.getClock() ) )  || ( s = ( ( currentJob->getDeadline() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) ) ) )
                 {
                     if(d)
@@ -217,7 +218,6 @@ void SchedulerRR::schedule()
                         sliceEl = 0;
                         break;
                     }
-
                 }
             }
         }
