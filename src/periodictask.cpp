@@ -42,3 +42,8 @@ float PeriodicTask::getExecTime() const
 {
     return e;
 }
+
+bool PeriodicTask::isValid()
+{
+    return ((p > 0) && Task::isValid(p));
+}

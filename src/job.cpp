@@ -19,6 +19,8 @@
 
 #include "job.h"
 
+#include <algorithm>
+
 
 Job::Job(): id(-1), p(0), r(-1), d(0), e(0), el(0) {}
 
@@ -72,4 +74,18 @@ void Job::setID(int ID)
 void Job::incElapsedTime(float EL)
 {
     el += EL;
+}
+
+bool Job::isValid(float p)
+{
+    float dead = d;
+    if (p > 0)
+        dead = min(d,p);
+
+    bool valid = (r >= 0);
+    valid = valid && (e > 0);
+    valid = valid && (d >= 0);
+    valid = valid && (p >= 0);
+    valid = valid && ((d == 0) || (r < (dead - e)));
+    return valid;
 }

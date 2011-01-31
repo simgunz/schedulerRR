@@ -64,8 +64,10 @@ void SchedulerRR::taskLabel(bool periodic, int id, int size)
 
 int SchedulerRR::loadTask(Task &t, bool periodic)
 {
+    if(!t.isValid())
+        return 1;
+
     Job j;
-    int ret = 0;
 
     if(!periodic)
     {
@@ -77,48 +79,34 @@ int SchedulerRR::loadTask(Task &t, bool periodic)
         j = t.getJob(i);
         j.setID(jobID++);
 
-        //Controllo che la deadline sia maggiore del release time
-        if((j.getDeadline() == 0) || (j.getReleaseTime() < j.getDeadline()))
-        {
-            waiting.push(j);
+        waiting.push(j);
 
-            if(j.getDeadline() != 0)
-            {
-                proc.print(DEADLINE,j.getID(),j.getDeadline());
-                proc.setMaxDeadline(j.getDeadline());
-            }
-        }
-        else
+        if(j.getDeadline() != 0)
         {
-            string bad = "Job_bad_formatted";
-            proc.print(TEXTOVER,j.getID(),-1,bad);
-            ret = 1;
+            proc.print(DEADLINE,j.getID(),j.getDeadline());
+            proc.setMaxDeadline(j.getDeadline());
         }
     }
     jobID++;
-    return ret;
+    return 0;
 }
 
 int SchedulerRR::loadTask(PeriodicTask &t)
 {
-    int id = jobID, ret = 0;
-    stringstream ss;
-    ss << "EOP" << taskID;
-
     //Job non valido
-    if(t.getPeriod() == 0)
-    {
-        return 2;
-    }
-
+    if(!t.isValid())
+        return 1;
 
     float u = t.getExecTime() / t.getPeriod();
 
     //Total utilization grater then 1: system overload
     if (u + U > 1)
-        return 3;
+        return 2;
 
     U += u;
+
+    stringstream ss;
+    ss << "EOP" << taskID;
 
     for (float q = 0; q < D; q+=t.getPeriod())
     {
@@ -135,7 +123,7 @@ int SchedulerRR::loadTask(PeriodicTask &t)
         }
         Task newTask(newJobs);
 
-        ret = loadTask(newTask,true);
+        loadTask(newTask,true);
 
         jobID-=t.size()+1;
 
@@ -146,12 +134,12 @@ int SchedulerRR::loadTask(PeriodicTask &t)
 
     jobID+=t.size()+1;
 
-    return ret;
+    return 0;
 }
 
 void SchedulerRR::schedule()
 {
-    Job  r,*currentJob = NULL;
+    Job  r,j,*currentJob = NULL;
     int sliceEl = 0;
     int end = -1;
 
@@ -198,7 +186,8 @@ void SchedulerRR::schedule()
             {
                 sliceEl = T;
                 string failed("_Failed");
-                currentJob = &(popJob());
+                j = popJob();
+                currentJob = &j;
                 bool d = false, s = false;
 
                 while(currentJob->getDeadline() != 0 && ( ( d = ( currentJob->getDeadline() <= proc.getClock() ) )  || ( s = ( ( currentJob->getDeadline() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) ) ) )
@@ -217,7 +206,10 @@ void SchedulerRR::schedule()
                     d = s = false;
 
                     if(!ready.empty())
-                        currentJob = &(popJob());
+                    {
+                        j = popJob();
+                        currentJob = &j;
+                    }
                     else
                     {
                         currentJob = NULL;

@@ -35,18 +35,13 @@ int main (int argc, char *argv[])
     Processor proc;
     SchedulerRR rr(proc,TIMESLICE,DURATION);
 
-    Task t1("T1",2),t2("T2",3);
-    PeriodicTask pt1("PT2",12),pt3("PT3",8);
+    Task t1("T1",2),t2("T2",3),invalid("INVALID");
+    PeriodicTask pt1("PT2",12),pt3("PT3",8),pt4("PT3",9);
 
-    rr.loadTask(t1);
-    rr.loadTask(pt1);
-    //rr.loadTask(pt3);
-    //rr.loadTask(t1);
-    //rr.loadTask(pt3);
-    //rr.loadTask(pt3);
-    //rr.loadTask(pt3);
-    //rr.loadTask(t2);
     rr.loadTask(pt3);
+    rr.loadTask(pt3);
+    rr.loadTask(pt4);
+
 
     rr.schedule();
     return 0;

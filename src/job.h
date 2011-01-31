@@ -51,6 +51,7 @@ public:
     float getElapsedTime() const;
     void setID(int ID);
     void incElapsedTime(float EL);
+    bool isValid(float p = 0);
 
 private:
     int id;     //Job ID

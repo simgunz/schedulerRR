@@ -48,7 +48,7 @@ Job Task::makeJob(const string& data)
 {
     stringstream ss(data);
     float token;
-    float r,e,d=0;
+    float r=-1,e=0,d=0;
     int p=0;
 
     if ( ss >> token )
@@ -69,4 +69,14 @@ Job Task::getJob(int i) const{
 
 int Task::size(){
     return jobs.size();
+}
+
+bool Task::isValid(float p)
+{
+    bool valid = true;
+    for (int i = 0; i < size(); i++)
+    {
+        valid = valid && jobs[i].isValid(p);
+    }
+    return valid;
 }

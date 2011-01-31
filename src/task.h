@@ -35,6 +35,7 @@ public:
     Task(const vector<Job> &newjobs, float priority = 0);
     Job getJob(int i) const;
     int size();
+    virtual bool isValid(float p = 0);
 
 private:
     Job makeJob(const string &data);

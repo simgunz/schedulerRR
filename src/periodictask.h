@@ -28,6 +28,7 @@ public:
     PeriodicTask(const string &fileName, float period, float priority = 0);
     float getPeriod() const;
     float getExecTime() const;
+    bool isValid();
 private:
     float p;
     float e;
