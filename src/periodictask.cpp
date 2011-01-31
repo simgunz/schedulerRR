@@ -19,28 +19,26 @@
 
 #include "periodictask.h"
 
-PeriodicTask::PeriodicTask(string fileName, float period, float priority) : Task(fileName,priority)
+PeriodicTask::PeriodicTask(const string &fileName, float period, float priority) : Task(fileName,priority), e(0)
 {
-    e = 0;
-
     for (int i = 0; i < size(); i++)
     {
         e += getJob(i).getExecTime();
     }
 
-    //Se i job non sono eseguibili entro il periodo il job viene assunto come non periodico
+    //Se i job non sono eseguibili entro il periodo il job viene marcato come non valido
     if(e <= period)
         p = period;
     else
         p = 0;
 }
 
-float PeriodicTask::getPeriod()
+float PeriodicTask::getPeriod() const
 {
     return p;
 }
 
-float PeriodicTask::getExecTime()
+float PeriodicTask::getExecTime() const
 {
     return e;
 }

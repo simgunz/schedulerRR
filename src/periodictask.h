@@ -25,9 +25,9 @@
 class PeriodicTask : public Task
 {
 public:
-    PeriodicTask(string fileName, float period, float priority = 0);
-    float getPeriod();
-    float getExecTime();
+    PeriodicTask(const string &fileName, float period, float priority = 0);
+    float getPeriod() const;
+    float getExecTime() const;
 private:
     float p;
     float e;

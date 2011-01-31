@@ -19,52 +19,19 @@
 
 #include "processor.h"
 
-#include <iostream>
-#include <string>
+#include <fstream>
 #include <algorithm>
 
 
-Processor::Processor()
+Processor::Processor() : clock(0), currentJob(NULL)
 {
     initParam << "DECIMAL_DIGITS 1" << endl;
     initParam << "PALETTE Rainbow" << endl;
     initParam << "ZOOM_X 4" << endl;
-
-    currentJob = NULL;
-    clock = 0.0;
 }
 
-Processor::~Processor()
-{
-    //output.close();
-    //cout << "Chiuso\n";
-}
-
-void Processor::addLabel(int line,string label)
-{
-    initParam << "LINE_NAME " << line << " " << label << endl;
-}
-void Processor::finalize()
-{
-    initParam << endl;
-
-    ofstream output("output.ktr");
-
-    output << initParam.str();
-
-    for (int i = 0; i <= max(clock,maxdeadline); i++)
-    {
-        output << out[i];
-    }
-
-    output.flush();
-    output.close();
-}
-
-void Processor::setMaxDeadline(float deadline)
-{
-    if (deadline > maxdeadline)
-        maxdeadline = deadline;
+float Processor::getClock() const{
+    return clock;
 }
 
 int Processor::execute(Job *j)
@@ -80,27 +47,27 @@ int Processor::execute(Job *j)
     }
 
     if(currentJob != NULL)
-        currentJob->incrementElapsed(STEP);
+        currentJob->incElapsedTime(STEP);
 
     clock+=STEP;
 
     if (currentJob != NULL && currentJob->getElapsedTime() == currentJob->getExecTime())
     {
-        print(STOP,currentJob->getID());
         print(READYE,currentJob->getID());
+        print(STOP,currentJob->getID());
         preempt();
         return 1;
     }
 
-    if (currentJob != NULL && currentJob->getDeadLine() == clock)
+    if (currentJob != NULL && currentJob->getDeadline() == clock)
     {
+
         print(READYE,currentJob->getID());
         string failed("_Failed");
-        print(TEXTOVER,currentJob->getID(),currentJob->getDeadLine(),failed);
+        print(TEXTOVER,currentJob->getID(),currentJob->getDeadline(),failed);
         preempt();
-        return 1;
+        return 2;
     }
-
 
     return 0;
 }
@@ -114,9 +81,15 @@ void Processor::preempt()
     }
 }
 
-bool Processor::idle()
+bool Processor::idle() const
 {
     return (currentJob == NULL);
+}
+
+void Processor::setMaxDeadline(float deadline)
+{
+    if (deadline > maxdeadline)
+        maxdeadline = deadline;
 }
 
 void Processor::print(JobState state, int jobID, float time, string text)
@@ -133,6 +106,24 @@ void Processor::print(JobState state, int jobID, float time, string text)
     out[time] += outStr;
 }
 
-float Processor::getClock(){
-    return clock;
+void Processor::filePrint()
+{
+    initParam << endl;
+
+    ofstream output("output.ktr");
+
+    output << initParam.str();
+
+    for (int i = 0; i <= max(clock,maxdeadline); i++)
+    {
+        output << out[i] << endl;
+    }
+
+    output.flush();
+    output.close();
+}
+
+void Processor::rowLabel(int line, string label)
+{
+    initParam << "LINE_NAME " << line << " " << label << endl;
 }

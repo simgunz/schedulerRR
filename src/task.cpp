@@ -19,11 +19,11 @@
 
 #include "task.h"
 
-#include <fstream>
 #include <sstream>
+#include <fstream>
 
 
-Task::Task(string fileName, float priority) : pr(priority)
+Task::Task(const string &fileName, float priority) : pr(priority)
 {
     ifstream file(fileName.c_str());
     string data;
@@ -35,32 +35,35 @@ Task::Task(string fileName, float priority) : pr(priority)
     {
         getline(file,data);
         if (!data.empty())
-            jobs.push_back(strJob(data));
+            jobs.push_back(makeJob(data));
     }
 }
 
-Task::Task(vector<Job> &newjobs, float priority) : pr(priority)
+Task::Task(const vector<Job> &newjobs, float priority) : pr(priority)
 {
     jobs = newjobs;
 }
-Job Task::strJob(string& data)
+
+Job Task::makeJob(const string& data)
 {
     stringstream ss(data);
     float token;
-    int r,ex,d=-1,p=0;
-    if ( ss >> token );
+    float r,e,d=-1;
+    int p=0;
+
+    if ( ss >> token )
        r = token;
     if ( ss >> token )
-       ex = token;
+       e = token;
     if ( ss >> token )
        d = token;
     if ( ss >> token )
        p = token;
 
-    return Job(r,d,ex,p + pr*10);
+    return Job(r,d,e,p + pr*10);
 }
 
-Job& Task::getJob(int i){
+Job Task::getJob(int i) const{
     return jobs[i];
 }
 

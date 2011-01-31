@@ -19,53 +19,57 @@
 
 #include "job.h"
 
-#include <sstream>
 
+Job::Job(): id(-1), p(0), r(-1), d(-1), e(-1), el(0) {}
 
-Job::Job(): r(-1), d(-1), ex(-1), p(0), id(-1), el(-1) {}
+Job::Job(float R, float D, float E,int P): id(-1), p(P), r(R), d(D), e(E), el(0) {}
 
-Job::Job(float R, float D, float EX,int P): r(R), d(D), ex(EX), p(P), id(-1), el(0) {}
-
-bool Job::operator>(const Job &j) const{
+bool Job::operator>(const Job &j) const
+{
     return (r > j.r);
 }
 
-bool Job::operator<(const Job &j) const{
+bool Job::operator<(const Job &j) const
+{
     return (d < j.d);
 }
 
-int Job::getID()
+int Job::getID() const
 {
     return id;
 }
 
-int Job::getPriority(){
+int Job::getPriority() const
+{
     return p;
 }
 
-float Job::getReleaseTime(){
+float Job::getReleaseTime() const
+{
     return r;
 }
 
-float Job::getDeadLine()
+float Job::getDeadline() const
 {
     return d;
 }
 
-float Job::getExecTime()
+float Job::getExecTime() const
 {
-    return ex;
+    return e;
 }
 
-float Job::getElapsedTime()
+float Job::getElapsedTime() const
 {
     return el;
 }
 
-void Job::setID(int ID){
+void Job::setID(int ID)
+{
     id = ID;
 }
 
-void Job::incrementElapsed(float EL){
+void Job::incElapsedTime(float EL)
+{
     el += EL;
 }

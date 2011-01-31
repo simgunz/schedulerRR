@@ -22,36 +22,34 @@
 
 using namespace std;
 
-#include "job.h"
 #include "task.h"
 #include "periodictask.h"
 #include "processor.h"
 
+#include <string>
 #include <queue>
 #include <list>
-#include <string>
-
 
 
 class SchedulerRR
 {
 public:    
     SchedulerRR(Processor &p,float timeslice = 3,float duration = 50);
-    int loadTask(Task &t, string parameter = "T");
+    int loadTask(Task &t, bool periodic = false);
     int loadTask(PeriodicTask &t);
     void schedule();
 
 private:
-    Job popJob();
     void enqueueJob(Job& j);
+    Job popJob();
 
-    list<Job> ready;
     priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
+    list<Job> ready;
     Processor& proc;
     float T; //Timeslice
-    float D;
-    float U;
-    int lastID;
+    float D; //Duration
+    float U; //Utilization
+    int jobID;
     int taskID;
 };
 

@@ -19,21 +19,20 @@
 
 #include "schedulerRR.h"
 
-#include <iostream>
-#include <typeinfo>
-#include <algorithm>
 #include <sstream>
+#include <algorithm>
 
-SchedulerRR::SchedulerRR(Processor &p, float timeslice, float duration): proc(p), T(timeslice), D(duration), U(0), lastID(0), taskID(0){}
 
-int SchedulerRR::loadTask(Task &t, string parameter) //Il task t è polimorfico
+SchedulerRR::SchedulerRR(Processor &p, float timeslice, float duration): proc(p), T(timeslice), D(duration), U(0), jobID(0), taskID(0){}
+
+int SchedulerRR::loadTask(Task &t, bool periodic)
 {
     Job j;
     stringstream ss;
 
-    if(parameter == "T")
+    if(!periodic)
     {
-        int id = lastID;
+        int id = jobID;
         ss << "T" << taskID++ << "-";
         string taskLabel = ss.str();
         for (int i = 0; i < t.size(); i++)
@@ -41,7 +40,7 @@ int SchedulerRR::loadTask(Task &t, string parameter) //Il task t è polimorfico
             stringstream ssc(taskLabel);
             ssc.seekp(0,ios::end);
             ssc << id;
-            proc.addLabel(id++,ssc.str());
+            proc.rowLabel(id++,ssc.str());
         }
     }
 
@@ -49,17 +48,17 @@ int SchedulerRR::loadTask(Task &t, string parameter) //Il task t è polimorfico
     for (int i = 0; i < t.size(); i++)
     {
         j = t.getJob(i);
-        j.setID(lastID++);
+        j.setID(jobID++);
 
         //Controllo che la deadline sia maggiore del release time
-        if((j.getDeadLine() == -1) || (j.getReleaseTime() < j.getDeadLine()))
+        if((j.getDeadline() == -1) || (j.getReleaseTime() < j.getDeadline()))
         {
             waiting.push(j);
 
-            if(j.getDeadLine() != -1)
+            if(j.getDeadline() != -1)
             {
-                proc.print(DEADLINE,j.getID(),j.getDeadLine());
-                proc.setMaxDeadline(j.getDeadLine());
+                proc.print(DEADLINE,j.getID(),j.getDeadline());
+                proc.setMaxDeadline(j.getDeadline());
             }
         }
         else
@@ -73,7 +72,7 @@ int SchedulerRR::loadTask(Task &t, string parameter) //Il task t è polimorfico
 
 int SchedulerRR::loadTask(PeriodicTask &t) //Il task t è polimorfico
 {
-    int id = lastID;
+    int id = jobID;
     stringstream ss;
     ss << "EOP" << taskID;
 
@@ -97,24 +96,24 @@ int SchedulerRR::loadTask(PeriodicTask &t) //Il task t è polimorfico
         vector<Job> newJobs;
         for (int i=0; i < t.size(); i++)
         {
-            Job &j = t.getJob(i);
+            Job j = t.getJob(i);
             float dead = t.getPeriod()+q;
-            if(j.getDeadLine() != -1)
-                dead = min(dead,j.getDeadLine()+q);
+            if(j.getDeadline() != -1)
+                dead = min(dead,j.getDeadline()+q);
 
             Job nw(j.getReleaseTime()+q,dead,j.getExecTime(),j.getPriority());
             newJobs.push_back(nw);
         }
         Task newTask(newJobs);
 
-        loadTask(newTask,"PT");
+        loadTask(newTask,true);
 
-        lastID-=t.size();
+        jobID-=t.size();
 
         proc.print(VLINE,-1,t.getPeriod()+q,ss.str());
     }
 
-    lastID+=t.size();
+    jobID+=t.size();
 
     ss.seekp(0,ios::beg);
     ss << "PT" << taskID++ << "-";
@@ -124,7 +123,7 @@ int SchedulerRR::loadTask(PeriodicTask &t) //Il task t è polimorfico
         stringstream ssc(taskLabel);
         ssc.seekp(0,ios::end);
         ssc << id;
-        proc.addLabel(id++,ssc.str());
+        proc.rowLabel(id++,ssc.str());
     }
 
     return 0;
@@ -198,12 +197,12 @@ void SchedulerRR::schedule()
                 string failed("_Failed");
                 currentJob = &(popJob());
                 bool d = false, s = false;
-                while(currentJob->getDeadLine() != -1 && ( ( d = ( currentJob->getDeadLine() <= proc.getClock() ) )  || ( s = ( ( currentJob->getDeadLine() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) ) ) )
+                while(currentJob->getDeadline() != -1 && ( ( d = ( currentJob->getDeadline() <= proc.getClock() ) )  || ( s = ( ( currentJob->getDeadline() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) ) ) )
                 {
                     if(d)
                     {
-                        proc.print(READYE,currentJob->getID(),currentJob->getDeadLine());
-                        proc.print(TEXTOVER,currentJob->getID(),currentJob->getDeadLine(),failed);
+                        proc.print(READYE,currentJob->getID(),currentJob->getDeadline());
+                        proc.print(TEXTOVER,currentJob->getID(),currentJob->getDeadline(),failed);
                     }
                     else if(s)
                     {
@@ -244,5 +243,5 @@ void SchedulerRR::schedule()
             currentJob = NULL;
         }
     }
-    proc.finalize();
+    proc.filePrint();
 }

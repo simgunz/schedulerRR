@@ -24,9 +24,8 @@ using namespace std;
 
 #include "job.h"
 
-#include <fstream>
-#include <sstream>
 #include <string>
+#include <sstream>
 #include <map>
 
 #define STEP 1
@@ -35,21 +34,21 @@ class Processor
 {
 public:
     Processor();
-    ~Processor();
-    void addLabel(int line,string label);
-    void finalize();
-    void setMaxDeadline(float deadline);
+    float getClock() const;
     int execute(Job *j = NULL);
     void preempt();
-    bool idle();
+    bool idle() const;
+    void setMaxDeadline(float deadline);
     void print(JobState state, int jobID, float time = -1, string text = "");
-    float getClock();
+    void filePrint();
+    void rowLabel(int line,string label);
+
 private:
     float clock;
-    float maxdeadline;
     stringstream initParam;
-    map<float,string> out;
     Job *currentJob;
+    float maxdeadline;
+    map<float,string> out;
 };
 
 #endif // PROCESSOR_H

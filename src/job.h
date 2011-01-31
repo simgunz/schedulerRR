@@ -22,8 +22,6 @@
 
 using namespace std;
 
-#include <string>
-
 
 enum JobState{
         START,
@@ -42,25 +40,24 @@ class Job
 {
 public:
     Job();
-    Job(float R, float D, float EX,int P=0);
-    bool operator>(const Job &j) const;  //Used for comparing release time
-    bool operator<(const Job &j) const;  //Used for comparing deadline
-    int getID();
-    float getReleaseTime();
-    float getDeadLine();
-    float getExecTime();
-    float getElapsedTime();
-    int getPriority();
+    Job(float R, float D, float E,int P=0);
+    bool operator>(const Job &j) const;  //Utilizzato per confrontare i release time
+    bool operator<(const Job &j) const;  //Utilizzato per confrontare le deadline
+    int getID() const;
+    int getPriority() const;
+    float getReleaseTime() const;
+    float getDeadline() const;
+    float getExecTime() const;
+    float getElapsedTime() const;
     void setID(int ID);
-    void incrementElapsed(float EL);
+    void incElapsedTime(float EL);
 
 private:
     int id;     //Job ID
     int p;      //Priority
-    //Tolto il const, perchè fondamentalmente è inutile (goo.gl/13oXI)
     float r;    //Release time
     float d;    //Deadline
-    float ex;    //Execution time
+    float e;    //Execution time
     float el;   //Elapsed time
 };
 
