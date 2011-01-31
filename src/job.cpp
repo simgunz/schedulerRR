@@ -20,7 +20,7 @@
 #include "job.h"
 
 
-Job::Job(): id(-1), p(0), r(-1), d(-1), e(-1), el(0) {}
+Job::Job(): id(-1), p(0), r(-1), d(0), e(0), el(0) {}
 
 Job::Job(float R, float D, float E,int P): id(-1), p(P), r(R), d(D), e(E), el(0) {}
 

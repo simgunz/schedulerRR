@@ -38,13 +38,13 @@ int main (int argc, char *argv[])
     Task t1("T1",2),t2("T2",3);
     PeriodicTask pt1("PT2",12),pt3("PT3",8);
 
-    //rr.loadTask(t1);
+    rr.loadTask(t1);
     rr.loadTask(pt1);
     //rr.loadTask(pt3);
     //rr.loadTask(t1);
     //rr.loadTask(pt3);
-    rr.loadTask(pt1);
-    rr.loadTask(pt1);
+    rr.loadTask(pt3);
+    rr.loadTask(pt3);
     //rr.loadTask(t2);
     //rr.loadTask(pt2);
 

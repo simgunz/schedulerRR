@@ -48,7 +48,7 @@ Job Task::makeJob(const string& data)
 {
     stringstream ss(data);
     float token;
-    float r,e,d=-1;
+    float r,e,d=0;
     int p=0;
 
     if ( ss >> token )

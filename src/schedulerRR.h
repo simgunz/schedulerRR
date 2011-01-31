@@ -42,6 +42,7 @@ public:
 private:
     void enqueueJob(Job& j);
     Job popJob();
+    void taskLabel(bool periodic, int id, int size);
 
     priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
     list<Job> ready;
