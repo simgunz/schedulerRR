@@ -25,24 +25,37 @@ using namespace std;
 #include "schedulerRR.h"
 
 #include <iostream>
-#include <sstream>
 
-#define TIMESLICE 3
-#define DURATION 100
 
 int main (int argc, char *argv[])
 {
     Processor proc;
-    SchedulerRR rr(proc,TIMESLICE,DURATION);
+    SchedulerRR rr(3,100);
 
-    Task t1("T1",2),t2("T2",3),invalid("INVALID");
-    PeriodicTask pt1("PT2",12),pt3("PT3",8),pt4("PT3",9);
 
-    rr.loadTask(pt3);
-    rr.loadTask(pt3);
-    rr.loadTask(pt4);
+//    Task t1("T1",2);
+//    rr.loadTask(t1);
 
+
+    PeriodicTask pt1("PT1",35);
+    if (rr.loadTask(pt1))
+        cout << "Task not loaded, system overload";
+    else
+        cout << "Processor utilization: " << rr.getUtilization() << "%" << endl;
+
+    PeriodicTask pt3("PT3",10);
+    if(rr.loadTask(pt3))
+        cout << "Task not loaded, Task not loaded, system overload";
+    else
+        cout << "Processor utilization: " << rr.getUtilization() << "%" << endl;
+
+    PeriodicTask pt2("PT1",10);
+    if (rr.loadTask(pt2))
+        cout << "Task not loaded, system overload" << endl;
+    else
+    cout << "Processor utilization: " << rr.getUtilization() << "%" << endl;
 
     rr.schedule();
+
     return 0;
 }

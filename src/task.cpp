@@ -26,6 +26,7 @@
 Task::Task(const string &fileName, float priority) : pr(priority)
 {
     ifstream file(fileName.c_str());
+
     string data;
 
     getline(file,data);
@@ -37,6 +38,7 @@ Task::Task(const string &fileName, float priority) : pr(priority)
         if (!data.empty())
             jobs.push_back(makeJob(data));
     }
+    file.close();
 }
 
 Task::Task(const vector<Job> &newjobs, float priority) : pr(priority)

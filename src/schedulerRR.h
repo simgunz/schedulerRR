@@ -34,10 +34,11 @@ using namespace std;
 class SchedulerRR
 {
 public:    
-    SchedulerRR(Processor &p,float timeslice = 3,float duration = 50);
-    int loadTask(Task &t, bool periodic = false);
-    int loadTask(PeriodicTask &t);
+    SchedulerRR(float timeslice = 3,float duration = 50);
+    int loadTask(Task t, bool periodic = false);
+    int loadTask(PeriodicTask t);
     void schedule();
+    float getUtilization();
 
 private:
     void enqueueJob(Job& j);
@@ -46,7 +47,7 @@ private:
 
     priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
     list<Job> ready;
-    Processor& proc;
+    Processor proc;
     float T; //Timeslice
     float D; //Duration
     float U; //Utilization

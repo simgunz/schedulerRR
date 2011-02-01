@@ -118,7 +118,7 @@ void Processor::filePrint()
 
     for (int i = 0; i <= max(clock,maxdeadline); i++)
     {
-        output << out[i] << endl;
+        output << out[i];
     }
 
     output.flush();

@@ -23,7 +23,12 @@
 #include <algorithm>
 
 
-SchedulerRR::SchedulerRR(Processor &p, float timeslice, float duration): proc(p), T(timeslice), D(duration), U(0), jobID(0), taskID(0){}
+SchedulerRR::SchedulerRR(float timeslice, float duration): T(timeslice), D(duration), U(0), jobID(0), taskID(0){}
+
+float SchedulerRR::getUtilization()
+{
+    return U;
+}
 
 void SchedulerRR::enqueueJob(Job& j)
 {
@@ -62,7 +67,7 @@ void SchedulerRR::taskLabel(bool periodic, int id, int size)
     proc.rowLabel(id,"A");
 }
 
-int SchedulerRR::loadTask(Task &t, bool periodic)
+int SchedulerRR::loadTask(Task t, bool periodic)
 {
     if(!t.isValid())
         return 1;
@@ -91,7 +96,7 @@ int SchedulerRR::loadTask(Task &t, bool periodic)
     return 0;
 }
 
-int SchedulerRR::loadTask(PeriodicTask &t)
+int SchedulerRR::loadTask(PeriodicTask t)
 {
     //Job non valido
     if(!t.isValid())
