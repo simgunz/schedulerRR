@@ -26,36 +26,35 @@ using namespace std;
 
 #include <iostream>
 
+void loadCheck(int loaded,int utilization);
 
 int main (int argc, char *argv[])
 {
     Processor proc;
-    SchedulerRR rr(3,100);
+    SchedulerRR rr(3,1000);
+    int loaded;
 
-
-//    Task t1("T1",2);
-//    rr.loadTask(t1);
-
-
-    PeriodicTask pt1("PT1",35);
-    if (rr.loadTask(pt1))
-        cout << "Task not loaded, system overload";
-    else
-        cout << "Processor utilization: " << rr.getUtilization() << "%" << endl;
-
-    PeriodicTask pt3("PT3",10);
-    if(rr.loadTask(pt3))
-        cout << "Task not loaded, Task not loaded, system overload";
-    else
-        cout << "Processor utilization: " << rr.getUtilization() << "%" << endl;
-
+    PeriodicTask pt1("PT1",120);
     PeriodicTask pt2("PT1",10);
-    if (rr.loadTask(pt2))
-        cout << "Task not loaded, system overload" << endl;
-    else
-    cout << "Processor utilization: " << rr.getUtilization() << "%" << endl;
+    PeriodicTask pt3("PT3",10);
+
+
+    loaded = rr.loadTask(pt2);
+    loadCheck(loaded,rr.getUtilization());
+    loaded = rr.loadTask(pt1);
+    loadCheck(loaded,rr.getUtilization());
+    loaded = rr.loadTask(pt3);
+    loadCheck(loaded,rr.getUtilization());
 
     rr.schedule();
 
     return 0;
+}
+
+void loadCheck(int loaded,int utilization)
+{
+    if (loaded)
+        cout << "Task not loaded, system overload" << endl;
+    else
+        cout << "Processor utilization: " << utilization << "%" << endl;
 }
