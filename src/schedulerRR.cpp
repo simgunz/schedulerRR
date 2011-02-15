@@ -150,34 +150,35 @@ void SchedulerRR::schedule()
     int sliceEl = 0;
     int end = -1;
 
+    if (waiting.empty() && !ready.empty() && proc.idle())
+        return;
 
-    while(!waiting.empty() || !ready.empty() || !proc.idle())
+    do
     {
         //Controlla se ci sono processi Ready e li accoda
         vector<Job> vct;
 
-
-        while(!waiting.empty() && (r = waiting.top()).getReleaseTime() == proc.getClock())
-        {
-            vct.push_back(r);
-            waiting.pop();
-        }
-
-        if(!vct.empty())
-            sort(vct.begin(),vct.end());
-
-        for (int i = 0; i < vct.size(); i++)
-        {
-            enqueueJob(vct[i]);
-
-            proc.print(READYB,vct[i].getID());
-            proc.print(START,vct[i].getID());
-
-        }
-
         //Fine della timeslice o processorre idle
         if(sliceEl == 0)
         {
+            while(!waiting.empty() && (r = waiting.top()).getReleaseTime() <= proc.getClock())
+            {
+                vct.push_back(r);
+                waiting.pop();
+            }
+
+            if(!vct.empty())
+                sort(vct.begin(),vct.end());
+
+            for (int i = 0; i < vct.size(); i++)
+            {
+                enqueueJob(vct[i]);
+
+                proc.print(READYB,vct[i].getID());
+                proc.print(START,vct[i].getID());
+
+            }
+
             if(!proc.idle())
             {
                 //Forza il preempt del processore visto che la time slice è finita
@@ -239,6 +240,8 @@ void SchedulerRR::schedule()
             sliceEl = 0;
             currentJob = NULL;
         }
-    }
+
+    }while(!waiting.empty() || !ready.empty() || !proc.idle());
+
     proc.filePrint();
 }

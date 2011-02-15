@@ -35,119 +35,88 @@ void utiliz(SchedulerRR &rr);
 int main (int argc, char *argv[])
 {
     int loaded ;
-    int input = 0;
+    int input, timeslice;
 
-    cout << "Choose (0 -10)\n\n>>";
+    cout << "Choose test (0 -10)" << endl << ">>";
     cin >> input;
+    cout << endl << "Timeslice" << endl << ">>";
+    cin >> timeslice;
 
     switch(input)
     {
+        //Testare con timeslice 2 e 3
     case 0:{
-        SchedulerRR rr0(2,1000);
+        SchedulerRR rr0(timeslice,1000);
         Task t1a("T1");
         loaded = rr0.loadTask(t1a);
         loadCheck(loaded,t1a.getName());
         rr0.schedule();
         break;
-    }
+        }
+        //Testare con timeslice 2
     case 1:{
-        SchedulerRR rr1(3,1000);
-        Task t1b("T1");
-        loaded = rr1.loadTask(t1b);
-        loadCheck(loaded,t1b.getName());
+        SchedulerRR rr1(timeslice,1000);
+        Task t1pr("T1PR");
+        loaded = rr1.loadTask(t1pr);
+        loadCheck(loaded,t1pr.getName());
         rr1.schedule();
         break;
-    }
+        }
     case 2:{
-        SchedulerRR rr2(2,1000);
-        Task t1pr("T1PR");
-        loaded = rr2.loadTask(t1pr);
-        loadCheck(loaded,t1pr.getName());
-        rr2.schedule();
-        break;
+            //Testare con timeslice 3
+            SchedulerRR rr2(timeslice,1000);
+            Task t2a("T2");
+            loaded = rr2.loadTask(t2a);
+            loadCheck(loaded,t2a.getName());
+            rr2.schedule();
+            break;
+        }
+    case 3:{
+            //Testare con timeslice 3
+            SchedulerRR rr3(timeslice,1000);
+            Task t2b("T2PR");
+            loaded = rr3.loadTask(t2b);
+            loadCheck(loaded,t2b.getName());
+            rr3.schedule();
+            break;
+        }
+    case 4:{
+            //Testare con timeslice 2 e 3
+            SchedulerRR rr4(timeslice,1000);
+            PeriodicTask pt3a("PT3A",170);
+            loaded = rr4.loadTask(pt3a);
+            loadCheck(loaded,pt3a.getName());
+            PeriodicTask pt3b("PT3B",120);
+            loaded = rr4.loadTask(pt3b);
+            loadCheck(loaded,pt3b.getName());
+            rr4.schedule();
+            break;
+        }
+    case 5:{
+            //Testare con timeslice 3
+            SchedulerRR rr5(timeslice,1000);
+            PeriodicTask pt4a("PT4A",170);
+            loaded = rr5.loadTask(pt4a);
+            loadCheck(loaded,pt4a.getName());
+            PeriodicTask pt4b("PT4B",113);
+            loaded = rr5.loadTask(pt4b);
+            loadCheck(loaded,pt4b.getName());
+            rr5.schedule();
+            break;
+        }
+    case 6:{
+            //Testare con timeslice 3
+            SchedulerRR rr6(timeslice,1000);
+            PeriodicTask pt5a("PT4A",170);
+            loaded = rr6.loadTask(pt5a);
+            loadCheck(loaded,pt5a.getName());
+            PeriodicTask pt5b("PT4B",113,1);
+            loaded = rr6.loadTask(pt5b);
+            loadCheck(loaded,pt5b.getName());
+            rr6.schedule();
+            break;
+        }
     }
-    }
-
-    //Variazione della timeslice con un singolo task sporadico
-
-    //Task composto di 3 job senza priorità (Testare con timeslice 2 e 3)
-    /*
-    Task t("T1");
-    loaded = rr.loadTask(t);
-    loadCheck(loaded,t.getName());
-    */
-
-    //Task composto di 3 job di cui i primi due con priorità 1 (Testare con timeslice 2)
-    /*
-    Task t("T1PR");
-    loaded = rr.loadTask(t);
-    loadCheck(loaded,t.getName());
-    */
-
-
-    //Variazione della priorità dei singoli job
-
-    //Task composto di 3 job senza priorità (Testare con timeslice 3)
-    /*
-    Task t("T2");
-    loaded = rr.loadTask(t);
-    loadCheck(loaded,t.getName());
-    */
-
-    //Task composto di 3 job con priorità crescenti in funzione della criticità (Testare con timeslice 3)
-    /*
-    Task t("T2PR");
-    loaded = rr.loadTask(t);
-    loadCheck(loaded,t.getName());
-    */
-
-
-    //Variazione della timeslice con due task periodici
-
-    //Due task periodici senza priorità (Testare con timeslice 2 e 3)
-    /*
-    PeriodicTask pta("PT3A",170);
-    loaded = rr.loadTask(pta);
-    loadCheck(loaded,pta.getName());
-    utiliz(rr);
-
-    PeriodicTask ptb("PT3B",120);
-    loaded = rr.loadTask(ptb);
-    loadCheck(loaded,ptb.getName());
-    utiliz(rr);
-    */
-
-
-    //Variazione della priorità dei task
-
-    //Due task periodici senza priorità, il job 2 del task 2 ha priorità 1 (Testare con timeslice 3)
-    /*
-    PeriodicTask pta("PT4A",170);
-    loaded = rr.loadTask(pta);
-    loadCheck(loaded,pta.getName());
-    utiliz(rr);
-
-    PeriodicTask ptb("PT4B",113);
-    loaded = rr.loadTask(ptb);
-    loadCheck(loaded,ptb.getName());
-    utiliz(rr);
-    */
-
-    //Due task periodici: il primo senza senza priorità, il secondo con priorità 1,
-    //il job 2 del task 2 ha priorità 1 (che quindi diventa 11 sommandola alla priorità del task) (Testare con timeslice 3)
-    /*
-    PeriodicTask pta("PT4A",170);
-    loaded = rr.loadTask(pta);
-    loadCheck(loaded,pta.getName());
-    utiliz(rr);
-
-    PeriodicTask ptb("PT4B",113,1);
-    loaded = rr.loadTask(ptb);
-    loadCheck(loaded,ptb.getName());
-    utiliz(rr);
-    */
-
-    //rr.schedule();
 
     return 0;
 }
