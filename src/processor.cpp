@@ -27,7 +27,7 @@ Processor::Processor() : clock(0), currentJob(NULL)
 {
     initParam << "DECIMAL_DIGITS 1" << endl;
     initParam << "PALETTE Rainbow" << endl;
-    initParam << "ZOOM_X 4" << endl;
+    initParam << "ZOOM_X 5" << endl;
 }
 
 float Processor::getClock() const{

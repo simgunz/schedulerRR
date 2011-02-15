@@ -27,37 +27,127 @@ using namespace std;
 #include <iostream>
 #include <string>
 
+#define TIMESLICE 2
+
 void loadCheck(int loaded,string name);
+void utiliz(SchedulerRR &rr);
 
 int main (int argc, char *argv[])
 {
-    Processor proc;
-    SchedulerRR rr(2,1000);
-    int loaded;
+    int loaded ;
+    int input = 0;
+
+    cout << "Choose (0 -10)\n\n>>";
+    cin >> input;
+
+    switch(input)
+    {
+    case 0:{
+        SchedulerRR rr0(2,1000);
+        Task t1a("T1");
+        loaded = rr0.loadTask(t1a);
+        loadCheck(loaded,t1a.getName());
+        rr0.schedule();
+        break;
+    }
+    case 1:{
+        SchedulerRR rr1(3,1000);
+        Task t1b("T1");
+        loaded = rr1.loadTask(t1b);
+        loadCheck(loaded,t1b.getName());
+        rr1.schedule();
+        break;
+    }
+    case 2:{
+        SchedulerRR rr2(2,1000);
+        Task t1pr("T1PR");
+        loaded = rr2.loadTask(t1pr);
+        loadCheck(loaded,t1pr.getName());
+        rr2.schedule();
+        break;
+    }
+    }
+
+    //Variazione della timeslice con un singolo task sporadico
+
+    //Task composto di 3 job senza priorità (Testare con timeslice 2 e 3)
+    /*
+    Task t("T1");
+    loaded = rr.loadTask(t);
+    loadCheck(loaded,t.getName());
+    */
+
+    //Task composto di 3 job di cui i primi due con priorità 1 (Testare con timeslice 2)
+    /*
+    Task t("T1PR");
+    loaded = rr.loadTask(t);
+    loadCheck(loaded,t.getName());
+    */
 
 
-    //Insieme di job non correlati
+    //Variazione della priorità dei singoli job
 
-    Task jobs("JOBS");
-    loaded = rr.loadTask(jobs);
-    loadCheck(loaded,jobs.getName());
+    //Task composto di 3 job senza priorità (Testare con timeslice 3)
+    /*
+    Task t("T2");
+    loaded = rr.loadTask(t);
+    loadCheck(loaded,t.getName());
+    */
+
+    //Task composto di 3 job con priorità crescenti in funzione della criticità (Testare con timeslice 3)
+    /*
+    Task t("T2PR");
+    loaded = rr.loadTask(t);
+    loadCheck(loaded,t.getName());
+    */
 
 
+    //Variazione della timeslice con due task periodici
+
+    //Due task periodici senza priorità (Testare con timeslice 2 e 3)
+    /*
+    PeriodicTask pta("PT3A",170);
+    loaded = rr.loadTask(pta);
+    loadCheck(loaded,pta.getName());
+    utiliz(rr);
+
+    PeriodicTask ptb("PT3B",120);
+    loaded = rr.loadTask(ptb);
+    loadCheck(loaded,ptb.getName());
+    utiliz(rr);
+    */
 
 
-    //PeriodicTask pt1("PT1",120);
-    //PeriodicTask pt2("PT1",50);
-    //PeriodicTask pt3("PT3",10);
+    //Variazione della priorità dei task
 
+    //Due task periodici senza priorità, il job 2 del task 2 ha priorità 1 (Testare con timeslice 3)
+    /*
+    PeriodicTask pta("PT4A",170);
+    loaded = rr.loadTask(pta);
+    loadCheck(loaded,pta.getName());
+    utiliz(rr);
 
-    //loaded = rr.loadTask(pt2);
-    //loadCheck(loaded,rr.getUtilization());
-    //loaded = rr.loadTask(pt1);
-    //loadCheck(loaded,rr.getUtilization());
-    //loaded = rr.loadTask(pt3);
-    //loadCheck(loaded,rr.getUtilization());
+    PeriodicTask ptb("PT4B",113);
+    loaded = rr.loadTask(ptb);
+    loadCheck(loaded,ptb.getName());
+    utiliz(rr);
+    */
 
-    rr.schedule();
+    //Due task periodici: il primo senza senza priorità, il secondo con priorità 1,
+    //il job 2 del task 2 ha priorità 1 (che quindi diventa 11 sommandola alla priorità del task) (Testare con timeslice 3)
+    /*
+    PeriodicTask pta("PT4A",170);
+    loaded = rr.loadTask(pta);
+    loadCheck(loaded,pta.getName());
+    utiliz(rr);
+
+    PeriodicTask ptb("PT4B",113,1);
+    loaded = rr.loadTask(ptb);
+    loadCheck(loaded,ptb.getName());
+    utiliz(rr);
+    */
+
+    //rr.schedule();
 
     return 0;
 }
@@ -75,4 +165,9 @@ void loadCheck(int loaded, string name)
     case 2:
         cout << " non inserito, sistema sovraccarico" << endl;break;
     }
+}
+
+void utiliz(SchedulerRR &rr)
+{
+    cout << "Carico del processore: " << rr.getUtilization()*100 << "%" << endl;
 }

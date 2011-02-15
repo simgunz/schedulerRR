@@ -77,16 +77,16 @@ void Job::incElapsedTime(float EL)
     el += EL;
 }
 
-bool Job::isValid(float p)
+bool Job::isValid(float period)
 {
     float dead = d;
-    if (p > 0)
-        dead = min(d,p);
+    if (period > 0)
+        dead = min(d,period);
 
     bool valid = (r >= 0);                              //Il release time deve essere maggiore di zero
     valid = valid && (e > 0);                           //Il tempo di esecuzione deve essere maggiore di zero
     valid = valid && (d >= 0);                          //La deadline deve essere non negativa
-    valid = valid && (p >= 0 && p <= 9);                //La priorità deve essere compresa tra 0 e 9
-    valid = valid && ((d == 0) || (e < (dead - r)));    //Controllo che il job possa terminare in tempo se è l'unico a essere eseguito
+    valid = valid && (p >= 0);               //La priorità deve essere compresa tra 0 e 9
+    valid = valid && ((d == 0) || (e <= (dead - r)));    //Controllo che il job possa terminare in tempo se è l'unico a essere eseguito
     return valid;
 }

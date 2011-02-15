@@ -52,7 +52,7 @@ public:
     float getElapsedTime() const;               //Restituisce il tempo in cui il job è già stato processato
     void setID(int ID);                         //Imposta l'ID del job
     void incElapsedTime(float EL);              //Incrementa il tempo in cui il job è già stato processato
-    bool isValid(float p = 0);                  //Controlla che il job sia valido, ovvero che i paramentri siano ben definiti
+    bool isValid(float period = 0);                  //Controlla che il job sia valido, ovvero che i paramentri siano ben definiti
 
 private:
     int id;     //Job ID
