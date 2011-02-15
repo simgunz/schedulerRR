@@ -23,7 +23,7 @@
 #include <algorithm>
 
 
-Processor::Processor() : clock(0), currentJob(NULL)
+Processor::Processor() : clock(0), currentJob(NULL), maxdeadline(0)
 {
     initParam << "DECIMAL_DIGITS 1" << endl;
     initParam << "PALETTE Rainbow" << endl;
