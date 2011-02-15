@@ -110,6 +110,8 @@ int SchedulerRR::loadTask(PeriodicTask t)
 
     U += u;
 
+    D = max(D,t.getPeriod()*5);
+
     stringstream ss;
     ss << "EOP" << taskID;
 

@@ -34,7 +34,7 @@ using namespace std;
 class SchedulerRR
 {
 public:    
-    SchedulerRR(float timeslice = 3,float duration = 50);
+    SchedulerRR(float timeslice = 3,float duration = 200);
     int loadTask(Task t, bool periodic = false);
     int loadTask(PeriodicTask t);
     void schedule();

@@ -21,10 +21,11 @@
 
 #include <algorithm>
 
-
 Job::Job(): id(-1), p(0), r(-1), d(0), e(0), el(0) {}
 
+
 Job::Job(float R, float D, float E,int P): id(-1), p(P), r(R), d(D), e(E), el(0) {}
+
 
 bool Job::operator>(const Job &j) const
 {
@@ -82,10 +83,10 @@ bool Job::isValid(float p)
     if (p > 0)
         dead = min(d,p);
 
-    bool valid = (r >= 0);
-    valid = valid && (e > 0);
-    valid = valid && (d >= 0);
-    valid = valid && (p >= 0);
-    valid = valid && ((d == 0) || (r < (dead - e)));
+    bool valid = (r >= 0);                              //Il release time deve essere maggiore di zero
+    valid = valid && (e > 0);                           //Il tempo di esecuzione deve essere maggiore di zero
+    valid = valid && (d >= 0);                          //La deadline deve essere non negativa
+    valid = valid && (p >= 0 && p <= 9);                //La priorità deve essere compresa tra 0 e 9
+    valid = valid && ((d == 0) || (e < (dead - r)));    //Controllo che il job possa terminare in tempo se è l'unico a essere eseguito
     return valid;
 }

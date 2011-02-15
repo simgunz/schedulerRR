@@ -23,6 +23,7 @@
 using namespace std;
 
 
+//Nuovo tipo di dato ch epuò assumere i valori necessari a descrivere gli stati di kiwi
 enum JobState{
         START,
         STOP,
@@ -39,19 +40,19 @@ enum JobState{
 class Job
 {
 public:
-    Job();
-    Job(float R, float D, float E,int P=0);
-    bool operator>(const Job &j) const;  //Utilizzato per confrontare i release time
-    bool operator<(const Job &j) const;  //Utilizzato per confrontare le deadline
-    int getID() const;
-    int getPriority() const;
-    float getReleaseTime() const;
-    float getDeadline() const;
-    float getExecTime() const;
-    float getElapsedTime() const;
-    void setID(int ID);
-    void incElapsedTime(float EL);
-    bool isValid(float p = 0);
+    Job();                                      //Costruttore senza parametri, usato per dichiarare variabili non inizializzate
+    Job(float R, float D, float E,int P=0);     //Costruttore con parametri, utilizzato per creare il job
+    bool operator>(const Job &j) const;         //Operatore utilizzato per confrontare i release time di due job
+    bool operator<(const Job &j) const;         //Operatore utilizzato per confrontare le deadline
+    int getID() const;                          //Restituisce l'ID del job
+    int getPriority() const;                    //Restituisce la priorità del job
+    float getReleaseTime() const;               //Restituisce il release time del job
+    float getDeadline() const;                  //Restituisce la deadline del job
+    float getExecTime() const;                  //Restituisce il tempo di esecuzione del job
+    float getElapsedTime() const;               //Restituisce il tempo in cui il job è già stato processato
+    void setID(int ID);                         //Imposta l'ID del job
+    void incElapsedTime(float EL);              //Incrementa il tempo in cui il job è già stato processato
+    bool isValid(float p = 0);                  //Controlla che il job sia valido, ovvero che i paramentri siano ben definiti
 
 private:
     int id;     //Job ID

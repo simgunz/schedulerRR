@@ -97,7 +97,7 @@ void Processor::print(JobState state, int jobID, float time, string text, bool r
     stringstream sout(outStr);
     if(time == -1)
         time = clock;
-    sout << time << " " << state << " ";
+    sout << time/10 << " " << state << " ";
     if(jobID != -1)
         sout << jobID << " ";
     sout << text << endl;

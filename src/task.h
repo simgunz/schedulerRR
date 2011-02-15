@@ -33,15 +33,16 @@ class Task
 public:
     Task(const string &fileName, float priority = 0);
     Task(const vector<Job> &newjobs, float priority = 0);
-    Job getJob(int i) const;
+    Job getJob(int i) const;    
     int size();
+    string getName();
     virtual bool isValid(float p = 0);
 
 private:
     Job makeJob(const string &data);
-
     vector<Job> jobs;
     float pr;
+    string name;
 };
 
 #endif // TASK_H

@@ -39,6 +39,7 @@ Task::Task(const string &fileName, float priority) : pr(priority)
             jobs.push_back(makeJob(data));
     }
     file.close();
+    name = fileName;
 }
 
 Task::Task(const vector<Job> &newjobs, float priority) : pr(priority)
@@ -69,6 +70,10 @@ Job Task::getJob(int i) const{
     return jobs[i];
 }
 
+string Task::getName()
+{
+    return name;
+}
 int Task::size(){
     return jobs.size();
 }

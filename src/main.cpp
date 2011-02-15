@@ -25,36 +25,54 @@ using namespace std;
 #include "schedulerRR.h"
 
 #include <iostream>
+#include <string>
 
-void loadCheck(int loaded,int utilization);
+void loadCheck(int loaded,string name);
 
 int main (int argc, char *argv[])
 {
     Processor proc;
-    SchedulerRR rr(3,1000);
+    SchedulerRR rr(2,1000);
     int loaded;
 
-    PeriodicTask pt1("PT1",120);
-    PeriodicTask pt2("PT1",10);
-    PeriodicTask pt3("PT3",10);
+
+    //Insieme di job non correlati
+
+    Task jobs("JOBS");
+    loaded = rr.loadTask(jobs);
+    loadCheck(loaded,jobs.getName());
 
 
-    loaded = rr.loadTask(pt2);
-    loadCheck(loaded,rr.getUtilization());
-    loaded = rr.loadTask(pt1);
-    loadCheck(loaded,rr.getUtilization());
-    loaded = rr.loadTask(pt3);
-    loadCheck(loaded,rr.getUtilization());
+
+
+    //PeriodicTask pt1("PT1",120);
+    //PeriodicTask pt2("PT1",50);
+    //PeriodicTask pt3("PT3",10);
+
+
+    //loaded = rr.loadTask(pt2);
+    //loadCheck(loaded,rr.getUtilization());
+    //loaded = rr.loadTask(pt1);
+    //loadCheck(loaded,rr.getUtilization());
+    //loaded = rr.loadTask(pt3);
+    //loadCheck(loaded,rr.getUtilization());
 
     rr.schedule();
 
     return 0;
 }
 
-void loadCheck(int loaded,int utilization)
+
+void loadCheck(int loaded, string name)
 {
-    if (loaded)
-        cout << "Task not loaded, system overload" << endl;
-    else
-        cout << "Processor utilization: " << utilization << "%" << endl;
+    cout << "Task "<< name;
+    switch(loaded)
+    {
+    case 0:
+        cout << " inserito correttamente" << endl;break;
+    case 1:
+        cout << " non valido" << endl;break;
+    case 2:
+        cout << " non inserito, sistema sovraccarico" << endl;break;
+    }
 }
