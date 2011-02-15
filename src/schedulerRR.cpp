@@ -149,6 +149,7 @@ void SchedulerRR::schedule()
     Job  r,j,*currentJob = NULL;
     int sliceEl = 0;
     int end = -1;
+    string failed("_Failed");
 
     if (waiting.empty() && !ready.empty() && proc.idle())
         return;
@@ -185,7 +186,15 @@ void SchedulerRR::schedule()
                 proc.preempt();
 
                 if(!end)
-                    enqueueJob(*currentJob);
+                {
+                    if ( ( currentJob->getDeadline() != 0 && (currentJob->getDeadline() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) )
+                    {
+                        proc.print(READYE,currentJob->getID(),proc.getClock());
+                        proc.print(TEXTOVER,currentJob->getID(),proc.getClock(),failed);
+                    }
+                    else
+                        enqueueJob(*currentJob);
+                }
 
                 currentJob = NULL;
             }
@@ -193,25 +202,13 @@ void SchedulerRR::schedule()
             if(!ready.empty())
             {
                 sliceEl = T;
-                string failed("_Failed");
                 j = popJob();
                 currentJob = &j;
-                bool d = false, s = false;
 
-                while(currentJob->getDeadline() != 0 && ( ( d = ( currentJob->getDeadline() <= proc.getClock() ) )  || ( s = ( ( currentJob->getDeadline() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) ) ) )
+                while(currentJob->getDeadline() != 0 && ( currentJob->getDeadline() <= proc.getClock() ) )
                 {
-                    if(d)
-                    {
-                        proc.print(READYE,currentJob->getID(),currentJob->getDeadline(),"",true);
-                        proc.print(TEXTOVER,currentJob->getID(),currentJob->getDeadline(),failed);
-                    }
-                    else if(s)
-                    {
-                        proc.print(READYE,currentJob->getID(),proc.getClock());
-                        proc.print(TEXTOVER,currentJob->getID(),proc.getClock(),failed);
-                    }
-
-                    d = s = false;
+                    proc.print(READYE,currentJob->getID(),currentJob->getDeadline(),"",true);
+                    proc.print(TEXTOVER,currentJob->getID(),currentJob->getDeadline(),failed);
 
                     if(!ready.empty())
                     {
