@@ -28,6 +28,7 @@ using namespace std;
 #include <string>
 
 #define TIMESLICE 2
+#define DURATION 100
 
 void loadCheck(int loaded,string name);
 void utiliz(SchedulerRR &rr);
@@ -46,7 +47,7 @@ int main (int argc, char *argv[])
     {
         //Testare con timeslice 2 e 3
     case 0:{
-        SchedulerRR rr0(timeslice,1000);
+        SchedulerRR rr0(timeslice,DURATION);
         Task t1a("T1");
         loaded = rr0.loadTask(t1a);
         loadCheck(loaded,t1a.getName());
@@ -55,7 +56,7 @@ int main (int argc, char *argv[])
         }
         //Testare con timeslice 2
     case 1:{
-        SchedulerRR rr1(timeslice,1000);
+        SchedulerRR rr1(timeslice,DURATION);
         Task t1pr("T1PR");
         loaded = rr1.loadTask(t1pr);
         loadCheck(loaded,t1pr.getName());
@@ -64,7 +65,7 @@ int main (int argc, char *argv[])
         }
     case 2:{
             //Testare con timeslice 3
-            SchedulerRR rr2(timeslice,1000);
+            SchedulerRR rr2(timeslice,DURATION);
             Task t2a("T2");
             loaded = rr2.loadTask(t2a);
             loadCheck(loaded,t2a.getName());
@@ -73,7 +74,7 @@ int main (int argc, char *argv[])
         }
     case 3:{
             //Testare con timeslice 3
-            SchedulerRR rr3(timeslice,1000);
+            SchedulerRR rr3(timeslice,DURATION);
             Task t2b("T2PR");
             loaded = rr3.loadTask(t2b);
             loadCheck(loaded,t2b.getName());
@@ -82,37 +83,43 @@ int main (int argc, char *argv[])
         }
     case 4:{
             //Testare con timeslice 2 e 3
-            SchedulerRR rr4(timeslice,1000);
+            SchedulerRR rr4(timeslice,DURATION);
             PeriodicTask pt3a("PT3A",170);
             loaded = rr4.loadTask(pt3a);
             loadCheck(loaded,pt3a.getName());
+            utiliz(rr4);
             PeriodicTask pt3b("PT3B",120);
             loaded = rr4.loadTask(pt3b);
             loadCheck(loaded,pt3b.getName());
+            utiliz(rr4);
             rr4.schedule();
             break;
         }
     case 5:{
             //Testare con timeslice 3
-            SchedulerRR rr5(timeslice,1000);
+            SchedulerRR rr5(timeslice,DURATION);
             PeriodicTask pt4a("PT4A",170);
             loaded = rr5.loadTask(pt4a);
             loadCheck(loaded,pt4a.getName());
+            utiliz(rr5);
             PeriodicTask pt4b("PT4B",113);
             loaded = rr5.loadTask(pt4b);
             loadCheck(loaded,pt4b.getName());
+            utiliz(rr5);
             rr5.schedule();
             break;
         }
     case 6:{
             //Testare con timeslice 3
-            SchedulerRR rr6(timeslice,1000);
+            SchedulerRR rr6(timeslice,DURATION);
             PeriodicTask pt5a("PT4A",170);
             loaded = rr6.loadTask(pt5a);
             loadCheck(loaded,pt5a.getName());
+            utiliz(rr6);
             PeriodicTask pt5b("PT4B",113,1);
             loaded = rr6.loadTask(pt5b);
             loadCheck(loaded,pt5b.getName());
+            utiliz(rr6);
             rr6.schedule();
             break;
         }

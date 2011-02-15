@@ -22,6 +22,7 @@
 #include <sstream>
 #include <algorithm>
 
+#define REPETITION 2
 
 SchedulerRR::SchedulerRR(float timeslice, float duration): T(timeslice), D(duration), U(0), jobID(0), taskID(0){}
 
@@ -110,7 +111,7 @@ int SchedulerRR::loadTask(PeriodicTask t)
 
     U += u;
 
-    D = max(D,t.getPeriod()*5);
+    D = max(D,t.getPeriod()*REPETITION);
 
     stringstream ss;
     ss << "EOP" << taskID;
