@@ -34,6 +34,7 @@ float Processor::getClock() const{
     return clock;
 }
 
+
 int Processor::execute(Job *j)
 {
     //Se il metodo è chiamato senza parametri eseguo un passo "idle" di processore

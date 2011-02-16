@@ -35,10 +35,10 @@ class SchedulerRR
 {
 public:    
     SchedulerRR(float timeslice = 3,float duration = 200);
-    int loadTask(Task t, bool periodic = false);
-    int loadTask(PeriodicTask t);
-    void schedule();
-    float getUtilization();
+    int loadTask(Task t, bool periodic = false);                //Permette di caricare un task aperiodico/sporadico
+    int loadTask(PeriodicTask t);                               //Permette di caricare un task periodico
+    void schedule();                                            //Simula l'esecuzione ed effettua la schedulazione
+    float getUtilization();                             //Restituisce l'utilizzazione
 
 private:
     void enqueueJob(Job& j);
@@ -50,7 +50,7 @@ private:
     Processor proc;
     float T; //Timeslice
     float D; //Duration
-    float U; //Utilization
+    float U;                        //Utilizazzione del processore
     int jobID;
     int taskID;
 };
