@@ -28,7 +28,7 @@ using namespace std;
 #include <string>
 
 #define TIMESLICE 2
-#define DURATION 100
+#define DURATION 10000
 
 void loadCheck(int loaded,string name);
 void utiliz(SchedulerRR &rr);

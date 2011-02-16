@@ -35,24 +35,24 @@ class SchedulerRR
 {
 public:    
     SchedulerRR(float timeslice = 3,float duration = 200);
-    int loadTask(Task t, bool periodic = false);                //Permette di caricare un task aperiodico/sporadico
+    int loadTask(Task t, bool periodic = false);                //Permette di caricare un task non periodici
     int loadTask(PeriodicTask t);                               //Permette di caricare un task periodico
-    void schedule();                                            //Simula l'esecuzione ed effettua la schedulazione
-    float getUtilization();                             //Restituisce l'utilizzazione
+    int schedule();                                            //Simula l'esecuzione ed effettua la schedulazione
+    float getUtilization();                                     //Restituisce l'utilizzazione del processore
 
 private:
-    void enqueueJob(Job& j);
-    Job popJob();
-    void taskLabel(bool periodic, int id, int size);
+    void enqueueJob(Job& j);                                    //Inserisce un job in coda alla coda
+    Job popJob();                                               //Estrae un job dalla testa della coda
+    void taskLabel(bool periodic, int id, int size);            //Assegna un etichetta ad ogni riga dell'ouput di kiwi
 
-    priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //LISTA priority_queue< Job,deque<Job>,greater<Job> > ready;
-    list<Job> ready;
-    Processor proc;
-    float T; //Timeslice
-    float D; //Duration
+    priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //Lista dei job in attesa di essere rilasciati
+    list<Job> ready;                                          //Lista dei job in pronti a essere eseguiti
+    Processor proc;                                           //Processore associato allo scheduler
+    float T;                        //Timeslice
+    float D;                        //Duration
     float U;                        //Utilizazzione del processore
-    int jobID;
-    int taskID;
+    int jobID;                      //ID da assegnare al prossimo nuovo job
+    int taskID;                     //ID da assegnare al prossimo nuovo task
 };
 
 

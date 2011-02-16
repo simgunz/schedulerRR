@@ -36,6 +36,10 @@ void SchedulerRR::enqueueJob(Job& j)
     list<Job>::reverse_iterator rit;
     list<Job>::iterator it;
 
+    /*
+    Scorro la lista dei job ready finchè non trovo la testa della coda o un job di priorità maggiore o uguale
+    a quello che sto inserendo, in quella posizione inserisco il job
+    */
     rit = ready.rbegin();
     while(rit != ready.rend() && j.getPriority() > rit->getPriority())
         rit++;
@@ -68,18 +72,30 @@ void SchedulerRR::taskLabel(bool periodic, int id, int size)
     proc.rowLabel(id,"A");
 }
 
+
 int SchedulerRR::loadTask(Task t, bool periodic)
 {
+    //Se il task non è valido, termino e segnalo al chiamante
     if(!t.isValid())
         return 1;
 
     Job j;
 
+    /*
+    Stampo le etichette sulle righe di kiwi (solo se la funzione non è stata chiamata dal
+    metodo per caricare i task periodici)
+    */
     if(!periodic)
     {
         taskLabel(periodic,jobID,t.size());
     }
 
+    /*
+    Per ogni job del task: imposto l'id univoco, lo accodo nella coda waiting e stampo le deadline sull'output.
+    La coda waiting è una coda a priorità che utilizza un vettore dinamico di Job come struttura dati.
+    L'operazione di push effettua l'inserimento dei Job utilizzando l'operatore > della classe Job per effettuare il test
+    di prioritaà tra i vari Job
+    */
     for (int i = 0; i < t.size(); i++)
     {
         j = t.getJob(i);
@@ -97,25 +113,34 @@ int SchedulerRR::loadTask(Task t, bool periodic)
     return 0;
 }
 
+
 int SchedulerRR::loadTask(PeriodicTask t)
 {
-    //Job non valido
+    //Se il task non è valido, termino e segnalo al chiamante
     if(!t.isValid())
         return 1;
 
     float u = t.getExecTime() / t.getPeriod();
 
-    //Total utilization grater then 1: system overload
+    //Se inserendo il task sforo l'utilizzazione massima del processore, non lo inserisco e segnalo al chimante
     if (u + U > 1)
         return 2;
 
     U += u;
 
+    /*
+    Assegno alla durata massima di esecuzione il massimo tra la durata attuale e il periodo del task ripetuto
+    REPETITION volte
+    */
     D = max(D,t.getPeriod()*REPETITION);
 
     stringstream ss;
     ss << "EOP" << taskID;
 
+    /*
+    "Clono" i job del mio task tante volte quante ne stanno nella durata totale della simulazione (simulando il loro
+    ripetersi) e li inserisco nella coda dei processi in attesa chiamando il metodo loadTask per task non periodici
+    */
     for (float q = 0; q < D; q+=t.getPeriod())
     {
         vector<Job> newJobs;
@@ -145,33 +170,38 @@ int SchedulerRR::loadTask(PeriodicTask t)
     return 0;
 }
 
-void SchedulerRR::schedule()
+
+int SchedulerRR::schedule()
 {
     Job  r,j,*currentJob = NULL;
     int sliceEl = 0;
     int end = -1;
     string failed("_Failed");
 
-    if (waiting.empty() && !ready.empty() && proc.idle())
-        return;
+    //Se non ci sono job nella coda dei job in attesa, termino
+    if (waiting.empty())
+        return 1;
 
     do
     {
-        //Controlla se ci sono processi Ready e li accoda
+
         vector<Job> vct;
 
         //Fine della timeslice o processorre idle
         if(sliceEl == 0)
         {
+            //Controllo se ci sono processi READY e li inserisco in un vettore temporaneo
             while(!waiting.empty() && (r = waiting.top()).getReleaseTime() <= proc.getClock())
             {
                 vct.push_back(r);
                 waiting.pop();
             }
 
+            //Ordino i job appena rilasciati decondo deadline crescenti, utilizzando l'operatore < della classe Job
             if(!vct.empty())
                 sort(vct.begin(),vct.end());
 
+            //Accodo i job appena rilasciati ordinati e stampo su output
             for (int i = 0; i < vct.size(); i++)
             {
                 enqueueJob(vct[i]);
@@ -181,11 +211,19 @@ void SchedulerRR::schedule()
 
             }
 
+            /*
+            Se il processore non è idle significa che è terminato il timeslicen o che il job ha terminato in anticipo la
+            la sua esecuzione
+            */
             if(!proc.idle())
             {
-                //Forza il preempt del processore visto che la time slice è finita
+                //Forzo il preempt dal processore del job corrente
                 proc.preempt();
 
+                /*
+                Se sono al termine del timeslice (e non al terimine dell'esecuzione del job) calcolo lo slack time
+                e se minore di zero non riaccodo il job e segnalo un deadline miss, altrimenti riaccodo il job
+                */
                 if(!end)
                 {
                     if ( ( currentJob->getDeadline() != 0 && (currentJob->getDeadline() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) )
@@ -197,9 +235,17 @@ void SchedulerRR::schedule()
                         enqueueJob(*currentJob);
                 }
 
+                //Imposto il job corrente a NULL
                 currentJob = NULL;
             }
 
+            /*
+            Se ci sono processi READY in attesa di essere eseguiti li estraggo uno alla volta dalla lista e controllo
+            se hanno mancato la deadline segnalandolo finchè non ne trovo uno che possa essere
+            eseguito o finchè la lista non è vuota. Se tutti hanno mancato la deadline imposto a NULL il job corrente
+            e imposto sliceEl a zero indicando che il processore è libero altrimenti imposto il job corrente con quello
+            estratto dalla lista
+            */
             if(!ready.empty())
             {
                 sliceEl = T;
@@ -241,5 +287,8 @@ void SchedulerRR::schedule()
 
     }while(!waiting.empty() || !ready.empty() || !proc.idle());
 
+    //Stampo su file tutto l'output generato
     proc.filePrint();
+
+    return 0;
 }
