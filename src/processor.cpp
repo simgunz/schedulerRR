@@ -36,6 +36,9 @@ float Processor::getClock() const{
 
 int Processor::execute(Job *j)
 {
+    //Se il metodo è chiamato senza parametri eseguo un passo "idle" di processore
+    //Se il metodo è chiamato con un parametro, prelevo il job corrente e lo sostituisco con il nuovo job se questo è diverso
+    //segnalandolo sull'output
     if(j != NULL)
     {
         if (j != currentJob)
@@ -46,11 +49,14 @@ int Processor::execute(Job *j)
         }
     }
 
+    //Incremento il tempo trascorso di esecuzione al job
     if(currentJob != NULL)
         currentJob->incElapsedTime(STEP);
 
+
     clock+=STEP;
 
+    //Se il job ha teminato la sua esecuzione lo prelevo, lo segnalo su output e lo segnalo al chiamante
     if (currentJob != NULL && currentJob->getElapsedTime() == currentJob->getExecTime())
     {
         print(READYE,currentJob->getID());
@@ -59,18 +65,10 @@ int Processor::execute(Job *j)
         return 1;
     }
 
-//    if (currentJob != NULL && currentJob->getDeadline() == clock)
-//    {
-//        print(READYE,currentJob->getID());
-//        string failed("_Failed");
-//        print(TEXTOVER,currentJob->getID(),currentJob->getDeadline(),failed);
-//        preempt();
-//        return 2;
-//    }
-
     return 0;
 }
 
+//Libera il processore e segnala la preemption
 void Processor::preempt()
 {
     if (currentJob != NULL)
@@ -91,6 +89,13 @@ void Processor::setMaxDeadline(float deadline)
         maxdeadline = deadline;
 }
 
+/*
+La mappa out è composta da una chiave che corrisponde al tempo in cui avviene l'evento e un valore stringa
+che contiene tutti gli eventi avvenuti in quel tempo. Il tutto è in un formato leggibile da kiwi.
+Tramite la mappa è possibile fare un output non ordinato, l'ordinazione sarà successiva.
+Il metodo è chiamabile con più o meno parametri in base al tipo di evento da segnalare
+
+*/
 void Processor::print(JobState state, int jobID, float time, string text, bool reverse)
 {
     string outStr = "";
@@ -108,6 +113,7 @@ void Processor::print(JobState state, int jobID, float time, string text, bool r
         out[time] = outStr + out[time];
 }
 
+//Stampa l'output su file ordinatamente e in formato leggibile da kiwi
 void Processor::filePrint()
 {
     initParam << endl;

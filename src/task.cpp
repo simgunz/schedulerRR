@@ -66,7 +66,8 @@ Job Task::makeJob(const string& data)
     return Job(r,d,e,p + pr*10);
 }
 
-Job Task::getJob(int i) const{
+Job Task::getJob(int i) const
+{
     return jobs[i];
 }
 
@@ -74,7 +75,9 @@ string Task::getName()
 {
     return name;
 }
-int Task::size(){
+
+int Task::size()
+{
     return jobs.size();
 }
 

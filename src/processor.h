@@ -33,22 +33,22 @@ using namespace std;
 class Processor
 {
 public:
-    Processor();
-    float getClock() const;
-    int execute(Job *j = NULL);
-    void preempt();
-    bool idle() const;
-    void setMaxDeadline(float deadline);
-    void print(JobState state, int jobID, float time = -1, string text = "", bool reverse = false);
-    void filePrint();
-    void rowLabel(int line,string label);
+    Processor();                                        //Costruttore
+    float getClock() const;                             //Restituisce il tempo di clock del processore
+    int execute(Job *j = NULL);                         //Esegue un nuovo job o il job corrente
+    void preempt();                                     //Esegue il preemption del job corrente
+    bool idle() const;                                  //Verifica se il processore è nello stato di idle
+    void setMaxDeadline(float deadline);                //Imposta la deadline massima
+    void print(JobState state, int jobID, float time = -1, string text = "", bool reverse = false); //Stampa un nuovo stato di kiwi
+    void filePrint();                                   //Stampa su file
+    void rowLabel(int line,string label);               //Imposta le etichette dei job sull'output di kiwi
 
 private:
-    float clock;
-    stringstream initParam;
-    Job *currentJob;
-    float maxdeadline;
-    map<float,string> out;
+    float clock;                    //Clock del processore
+    stringstream initParam;         //Parametri per inizializzare l'output per kiwi
+    Job *currentJob;                //Puntatore al job in esecuzione sul processore
+    float maxdeadline;              //Deadline massima, necessaria per effettuare correttamente la stampa su file
+    map<float,string> out;          //Mappa che contiene tutti gli stati di esecuzione
 };
 
 #endif // PROCESSOR_H

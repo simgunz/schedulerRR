@@ -26,7 +26,7 @@ PeriodicTask::PeriodicTask(const string &fileName, float period, float priority)
         e += getJob(i).getExecTime();
     }
 
-    //Se i job non sono eseguibili entro il periodo il job viene marcato come non valido
+    //Se i job non sono eseguibili entro il periodo il job viene marcato come non valido ( p = 0 )
     if(e <= period)
         p = period;
     else

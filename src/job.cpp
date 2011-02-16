@@ -86,7 +86,7 @@ bool Job::isValid(float period)
     bool valid = (r >= 0);                              //Il release time deve essere maggiore di zero
     valid = valid && (e > 0);                           //Il tempo di esecuzione deve essere maggiore di zero
     valid = valid && (d >= 0);                          //La deadline deve essere non negativa
-    valid = valid && (p >= 0);               //La priorità deve essere compresa tra 0 e 9
-    valid = valid && ((d == 0) || (e <= (dead - r)));    //Controllo che il job possa terminare in tempo se è l'unico a essere eseguito
+    valid = valid && (p >= 0);                          //La priorità deve essere maggiore di zero
+    valid = valid && ((d == 0) || (e <= (dead - r)));   //Controllo che la deadline relativa sia maggiore del tempo di esecuzione
     return valid;
 }
