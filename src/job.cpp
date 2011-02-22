@@ -21,10 +21,10 @@
 
 #include <algorithm>
 
-Job::Job(): id(-1), p(0), r(-1), d(0), e(0), el(0) {}
+Job::Job(): id(-1), tid(-1), p(0), r(-1), e(0), d(0), el(0) {}
 
 
-Job::Job(float R, float D, float E,int P): id(-1), p(P), r(R), d(D), e(E), el(0) {}
+Job::Job(float R, float E, float D, int P,int ID): id(ID), tid(-1), p(P), r(R), e(E), d(D), el(0) {}
 
 
 bool Job::operator>(const Job &j) const
@@ -40,6 +40,11 @@ bool Job::operator<(const Job &j) const
 int Job::getID() const
 {
     return id;
+}
+
+int Job::getTID() const
+{
+    return tid;
 }
 
 int Job::getPriority() const
@@ -70,6 +75,11 @@ float Job::getElapsedTime() const
 void Job::setID(int ID)
 {
     id = ID;
+}
+
+void Job::setTID(int TID)
+{
+    tid = TID;
 }
 
 void Job::incElapsedTime(float EL)

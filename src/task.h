@@ -39,7 +39,7 @@ public:
     virtual bool isValid(float p = 0);                          //Controlla che il task sia valido, ovvero che ogni suo job sia valido
 
 private:
-    Job makeJob(const string &data);                            //Crea un nuovo job dalla stringa di dati
+    Job makeJob(const string &data,int JobID);                            //Crea un nuovo job dalla stringa di dati
     vector<Job> jobs;                                           //Vettore dinamico dei job
     float pr;                                                   //Priorità del task
     string name;                                                //Nome del task

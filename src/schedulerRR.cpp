@@ -56,11 +56,11 @@ Job SchedulerRR::popJob()
    return j;
 }
 
-void SchedulerRR::taskLabel(bool periodic, int id, int size)
+void SchedulerRR::taskLabel(int id, int size)
 {
     stringstream ss;
-    string type =  (periodic) ? "PT" : "T";
-    ss << type << taskID++ << "-";
+    //string type =  (periodic) ? "PT" : "T";
+    ss << "T" << taskID << "-";
     string taskLabel = ss.str();
     for (int i = 0; i < size; i++)
     {
@@ -85,10 +85,12 @@ int SchedulerRR::loadTask(Task t, bool periodic)
     Stampo le etichette sulle righe di kiwi (solo se la funzione non è stata chiamata dal
     metodo per caricare i task periodici)
     */
-    if(!periodic)
-    {
-        taskLabel(periodic,jobID,t.size());
-    }
+//    if(!periodic)
+//    {
+//        //taskLabel(jobID,t.size());
+
+//        taskID++;
+//    }
 
     /*
     Per ogni job del task: imposto l'id univoco, lo accodo nella coda waiting e stampo le deadline sull'output.
@@ -99,17 +101,21 @@ int SchedulerRR::loadTask(Task t, bool periodic)
     for (int i = 0; i < t.size(); i++)
     {
         j = t.getJob(i);
-        j.setID(jobID++);
+        j.setTID(taskID);
+        //j.setID(jobID++);
 
         waiting.push(j);
 
         if(j.getDeadline() != 0)
         {
-            proc.print(DEADLINE,j.getID(),j.getDeadline());
+            stringstream ss;
+            ss << "d" << j.getTID() << "," << j.getID();
+            proc.print(DEADLINE,j.getTID(),j.getDeadline(),ss.str());
             proc.setMaxDeadline(j.getDeadline());
         }
     }
-    jobID++;
+    jobID++;//??
+    taskID++;
     return 0;
 }
 
@@ -141,18 +147,19 @@ int SchedulerRR::loadTask(PeriodicTask t)
     "Clono" i job del mio task tante volte quante ne stanno nella durata totale della simulazione (simulando il loro
     ripetersi) e li inserisco nella coda dei processi in attesa chiamando il metodo loadTask per task non periodici
     */
-    for (float q = 0; q < D; q+=t.getPeriod())
-    {
+
         vector<Job> newJobs;
-        for (int i=0; i < t.size(); i++)
+        Job j = t.getJob(0);
+
+        for (float q = j.getReleaseTime(); q < D; q+=t.getPeriod())
         {
-            Job j = t.getJob(i);
             float dead = t.getPeriod()+q;
             if(j.getDeadline() != 0)
                 dead = min(dead,j.getDeadline()+q);
 
-            Job nw(j.getReleaseTime()+q,dead,j.getExecTime(),j.getPriority());
+            Job nw(q,j.getExecTime(),dead,j.getPriority());
             newJobs.push_back(nw);
+
         }
         Task newTask(newJobs);
 
@@ -161,9 +168,9 @@ int SchedulerRR::loadTask(PeriodicTask t)
         jobID-=t.size()+1;
 
         //proc.print(VLINE,-1,t.getPeriod()+q,ss.str());
-    }
 
-    taskLabel(true,jobID,t.size());
+
+    //taskLabel(true,jobID,t.size());
 
     jobID+=t.size()+1;
 
@@ -206,9 +213,12 @@ int SchedulerRR::schedule()
             {
                 enqueueJob(vct[i]);
 
-                proc.print(ARROWUP,vct[i].getID(),vct[i].getReleaseTime());
-                proc.print(READYB,vct[i].getID(),vct[i].getReleaseTime());
-                proc.print(START,vct[i].getID(),vct[i].getReleaseTime());
+                int tid = vct[i].getTID(), rel = vct[i].getReleaseTime();
+                stringstream ss;
+                ss << "r" << tid << "," << vct[i].getID();
+                proc.print(ARROWUP,tid,rel,ss.str());
+                proc.print(READYB,tid,rel);
+                proc.print(START,tid,rel);
 
             }
 
@@ -255,8 +265,8 @@ int SchedulerRR::schedule()
 
                 while(currentJob->getDeadline() != 0 && ( currentJob->getDeadline() <= proc.getClock() ) )
                 {
-                    proc.print(READYE,currentJob->getID(),currentJob->getDeadline(),"",true);
-                    proc.print(TEXTOVER,currentJob->getID(),currentJob->getDeadline(),failed);
+                    proc.print(READYE,currentJob->getTID(),currentJob->getDeadline(),"",true);
+                    proc.print(TEXTOVER,currentJob->getTID(),currentJob->getDeadline(),failed);
 
                     if(!ready.empty())
                     {

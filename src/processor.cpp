@@ -49,7 +49,7 @@ int Processor::execute(Job *j)
         {
             preempt();
             currentJob = j;
-            print(EXECB,currentJob->getID());
+            print(EXECB,currentJob->getTID());
         }
     }
 
@@ -63,8 +63,8 @@ int Processor::execute(Job *j)
     //Se il job ha teminato la sua esecuzione lo prelevo, lo segnalo su output e lo segnalo al chiamante
     if (currentJob != NULL && currentJob->getElapsedTime() == currentJob->getExecTime())
     {
-        print(READYE,currentJob->getID());
-        print(STOP,currentJob->getID());
+        print(READYE,currentJob->getTID());
+        print(STOP,currentJob->getTID());
         preempt();
         return 1;
     }
@@ -77,7 +77,7 @@ void Processor::preempt()
 {
     if (currentJob != NULL)
     {
-        print(EXECE,currentJob->getID());
+        print(EXECE,currentJob->getTID());
         currentJob = NULL;
     }
 }

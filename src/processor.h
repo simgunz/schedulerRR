@@ -32,12 +32,13 @@ using namespace std;
 enum JobState{
         START,
         STOP,
-        DEADLINE,
+        DEADLINETMP,
         EXECB,
         EXECE,
         READYB,
         READYE,
-        ARROWDOWN = 9,
+        DEADLINE = 9,
+        //ARROWDOWN = 9,
         ARROWUP = 10,
         //VLINE = 12,
         TEXTOVER = 13

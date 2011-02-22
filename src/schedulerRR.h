@@ -43,7 +43,7 @@ public:
 private:
     void enqueueJob(Job& j);                                    //Inserisce un job in coda alla coda
     Job popJob();                                               //Estrae un job dalla testa della coda
-    void taskLabel(bool periodic, int id, int size);            //Assegna un etichetta ad ogni riga dell'ouput di kiwi
+    void taskLabel(int id, int size);            //Assegna un etichetta ad ogni riga dell'ouput di kiwi
 
     priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //Lista dei job in attesa di essere rilasciati
     list<Job> ready;                                          //Lista dei job in pronti a essere eseguiti

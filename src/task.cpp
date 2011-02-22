@@ -28,7 +28,7 @@ Task::Task(string &fileName, float priority) : pr(priority)
     ifstream file(fileName.c_str());
 
     string data;
-
+    int jobID = 1;
     getline(file,data);
     getline(file,data);
 
@@ -36,7 +36,7 @@ Task::Task(string &fileName, float priority) : pr(priority)
     {
         getline(file,data);
         if (!data.empty())
-            jobs.push_back(makeJob(data));
+            jobs.push_back(makeJob(data,jobID++));
     }
     file.close();
     name = fileName;
@@ -45,9 +45,13 @@ Task::Task(string &fileName, float priority) : pr(priority)
 Task::Task(const vector<Job> &newjobs, float priority) : pr(priority)
 {
     jobs = newjobs;
+    for (int i=0;i < size();i++)
+    {
+        jobs[i].setID(i+1);
+    }
 }
 
-Job Task::makeJob(const string& data)
+Job Task::makeJob(const string& data,int jobID)
 {
     stringstream ss(data);
     float token;
@@ -63,7 +67,7 @@ Job Task::makeJob(const string& data)
     if ( ss >> token )
        p = token;
 
-    return Job(r,d,e,p + pr*10);
+    return Job(r,e,d,p,jobID);
 }
 
 Job Task::getJob(int i) const
