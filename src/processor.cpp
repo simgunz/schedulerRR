@@ -21,13 +21,15 @@
 
 #include <fstream>
 #include <algorithm>
+#include <cmath>
 
+#include <iostream>
 
 Processor::Processor() : clock(0), currentJob(NULL), maxdeadline(0)
 {
     initParam << "DECIMAL_DIGITS 1" << endl;
     initParam << "PALETTE Rainbow" << endl;
-    initParam << "ZOOM_X 5" << endl;
+    //initParam << "ZOOM_X 5" << endl;
     initParam << "ZOOM_Y 20" << endl;
 }
 
@@ -118,13 +120,18 @@ void Processor::print(JobState state, int jobID, float time, string text, bool r
 //Stampa l'output su file ordinatamente e in formato leggibile da kiwi
 void Processor::filePrint()
 {
+    float end = max(clock,maxdeadline);
+    float zoom = log(576/end)/log(2) + 1;
+    zoom = floor(zoom);
+
+    initParam << "ZOOM_X " << zoom << endl;
     initParam << endl;
 
     ofstream output("output.ktr");
 
     output << initParam.str();
 
-    for (int i = 0; i <= max(clock,maxdeadline); i++)
+    for (int i = 0; i <= end; i++)
     {
         output << out[i];
     }

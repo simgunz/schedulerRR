@@ -22,7 +22,7 @@
 #include <sstream>
 #include <algorithm>
 
-#define REPETITION 2
+#define REPETITION 3
 
 SchedulerRR::SchedulerRR(float timeslice, float duration): T(timeslice), D(duration), U(0), jobID(0), taskID(0){}
 
@@ -227,12 +227,12 @@ int SchedulerRR::schedule()
                 */
                 if(!end)
                 {
-                    if ( ( currentJob->getDeadline() != 0 && (currentJob->getDeadline() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) )
-                    {
-                        proc.print(READYE,currentJob->getID(),proc.getClock());
-                        proc.print(TEXTOVER,currentJob->getID(),proc.getClock(),failed);
-                    }
-                    else
+//                    if ( ( currentJob->getDeadline() != 0 && (currentJob->getDeadline() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) )
+//                    {
+//                        proc.print(READYE,currentJob->getID(),proc.getClock());
+//                        proc.print(TEXTOVER,currentJob->getID(),proc.getClock(),failed);
+//                    }
+//                    else
                         enqueueJob(*currentJob);
                 }
 

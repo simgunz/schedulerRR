@@ -34,7 +34,7 @@ using namespace std;
 class SchedulerRR
 {
 public:    
-    SchedulerRR(float timeslice = 3,float duration = 200);
+    SchedulerRR(float timeslice = 3,float duration = 0);
     int loadTask(Task t, bool periodic = false);                //Permette di caricare un task non periodici
     int loadTask(PeriodicTask t);                               //Permette di caricare un task periodico
     int schedule();                                            //Simula l'esecuzione ed effettua la schedulazione
