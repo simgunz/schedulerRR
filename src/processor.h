@@ -28,7 +28,22 @@ using namespace std;
 #include <sstream>
 #include <map>
 
-#define STEP 1
+//Nuovo tipo di dato che può assumere i valori necessari a descrivere gli stati di kiwi
+enum JobState{
+        START,
+        STOP,
+        DEADLINE,
+        EXECB,
+        EXECE,
+        READYB,
+        READYE,
+        ARROWDOWN = 9,
+        ARROWUP = 10,
+        //VLINE = 12,
+        TEXTOVER = 13
+};
+
+#define STEP 1 //1 nanosecondo (1Ghz)
 
 class Processor
 {

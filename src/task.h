@@ -31,7 +31,7 @@ using namespace std;
 class Task
 {
 public:
-    Task(const string &fileName, float priority = 0);           //Costruttore che prende il valori da file
+    Task(string &fileName, float priority = 0);           //Costruttore che prende il valori da file
     Task(const vector<Job> &newjobs, float priority = 0);       //Costruttore che prende un vettore di job
     Job getJob(int i) const;                                    //Restituisce l'i-esimo job del task
     int size();                                                 //Restituisce il numero di job nel task

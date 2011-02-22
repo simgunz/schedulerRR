@@ -28,6 +28,7 @@ Processor::Processor() : clock(0), currentJob(NULL), maxdeadline(0)
     initParam << "DECIMAL_DIGITS 1" << endl;
     initParam << "PALETTE Rainbow" << endl;
     initParam << "ZOOM_X 5" << endl;
+    initParam << "ZOOM_Y 20" << endl;
 }
 
 float Processor::getClock() const{
@@ -103,7 +104,7 @@ void Processor::print(JobState state, int jobID, float time, string text, bool r
     stringstream sout(outStr);
     if(time == -1)
         time = clock;
-    sout << time/10 << " " << state << " ";
+    sout << time << " " << state << " ";
     if(jobID != -1)
         sout << jobID << " ";
     sout << text << endl;

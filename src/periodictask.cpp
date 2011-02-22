@@ -19,7 +19,7 @@
 
 #include "periodictask.h"
 
-PeriodicTask::PeriodicTask(const string &fileName, float period, float priority) : Task(fileName,priority), e(0)
+PeriodicTask::PeriodicTask(string &fileName, float period, float priority) : Task(fileName,priority), e(0)
 {
     for (int i = 0; i < size(); i++)
     {

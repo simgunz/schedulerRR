@@ -22,21 +22,6 @@
 
 using namespace std;
 
-
-//Nuovo tipo di dato che può assumere i valori necessari a descrivere gli stati di kiwi
-enum JobState{
-        START,
-        STOP,
-        DEADLINE,
-        EXECB,
-        EXECE,
-        READYB,
-        READYE,
-        VLINE = 12,
-        TEXTOVER = 13
-};
-
-
 class Job
 {
 public:

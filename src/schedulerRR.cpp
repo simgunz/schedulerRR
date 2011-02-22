@@ -160,7 +160,7 @@ int SchedulerRR::loadTask(PeriodicTask t)
 
         jobID-=t.size()+1;
 
-        proc.print(VLINE,-1,t.getPeriod()+q,ss.str());
+        //proc.print(VLINE,-1,t.getPeriod()+q,ss.str());
     }
 
     taskLabel(true,jobID,t.size());
@@ -206,8 +206,9 @@ int SchedulerRR::schedule()
             {
                 enqueueJob(vct[i]);
 
-                proc.print(READYB,vct[i].getID());
-                proc.print(START,vct[i].getID());
+                proc.print(ARROWUP,vct[i].getID(),vct[i].getReleaseTime());
+                proc.print(READYB,vct[i].getID(),vct[i].getReleaseTime());
+                proc.print(START,vct[i].getID(),vct[i].getReleaseTime());
 
             }
 

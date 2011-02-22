@@ -23,7 +23,7 @@
 #include <fstream>
 
 
-Task::Task(const string &fileName, float priority) : pr(priority)
+Task::Task(string &fileName, float priority) : pr(priority)
 {
     ifstream file(fileName.c_str());
 
