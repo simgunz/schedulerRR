@@ -60,7 +60,7 @@ int main (int argc, char *argv[])
     }
     for (int i=0; i<tasks.size(); i++)
     {
-        pt = new PeriodicTask(ptasks[i],30);
+        pt = new PeriodicTask(ptasks[i]);
         loaded = rr.loadTask(*pt);
         loadCheck(loaded,(*pt).getName());
         utiliz(rr);

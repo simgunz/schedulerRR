@@ -23,12 +23,18 @@
 #include <fstream>
 
 
-Task::Task(string &fileName, float priority) : pr(priority)
+Task::Task(string &fileName) : pr(0)
 {
     ifstream file(fileName.c_str());
-
-    string data;
     int jobID = 1;
+    string data;
+    float token;
+
+    getline(file,data);
+    getline(file,data);
+    stringstream ss(data);
+    if ( ss >> token )
+        pr = token;
     getline(file,data);
     getline(file,data);
 
@@ -56,7 +62,6 @@ Job Task::makeJob(const string& data,int jobID)
     stringstream ss(data);
     float token;
     float r=-1,e=0,d=0;
-    int p=0;
 
     if ( ss >> token )
        r = token;
@@ -64,10 +69,9 @@ Job Task::makeJob(const string& data,int jobID)
        e = token;
     if ( ss >> token )
        d = token;
-    if ( ss >> token )
-       p = token;
 
-    return Job(r,e,d,p,jobID);
+
+    return Job(r,e,d,pr,jobID);
 }
 
 Job Task::getJob(int i) const

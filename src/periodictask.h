@@ -25,7 +25,7 @@
 class PeriodicTask : public Task
 {
 public:
-    PeriodicTask(string &fileName, float period, float priority = 0);     //Costruttore che prende il valori da file
+    PeriodicTask(string &fileName);     //Costruttore che prende il valori da file
     float getPeriod() const;                                                    //Restituisce il periodo del task
     float getExecTime() const;                                                  //Restituisce la il tempo di esecuzione del task
     bool isValid();                                                             //Controlla che il task sia valido

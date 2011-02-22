@@ -19,17 +19,26 @@
 
 #include "periodictask.h"
 
-PeriodicTask::PeriodicTask(string &fileName, float period, float priority) : Task(fileName,priority), e(0)
+#include <fstream>
+#include <sstream>
+
+PeriodicTask::PeriodicTask(string &fileName) : Task(fileName), p(0), e(0)
 {
-    for (int i = 0; i < size(); i++)
-    {
-        e += getJob(i).getExecTime();
-    }
+    ifstream file(fileName.c_str());
+    string data;
+    float token;
+    getline(file,data);
+    getline(file,data);
+    stringstream ss(data);
+    if ( ss >> token )
+        if ( ss >> token )
+            p = token;
+    file.close();
+
+    e += getJob(0).getExecTime();
 
     //Se i job non sono eseguibili entro il periodo il job viene marcato come non valido ( p = 0 )
-    if(e <= period)
-        p = period;
-    else
+    if(e > p)
         p = 0;
 }
 
