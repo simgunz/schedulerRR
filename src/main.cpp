@@ -48,12 +48,12 @@ int main (int argc, char *argv[])
     vector<string> tasks;
     vector<string> ptasks;
 
-    tasks.push_back("T1");
-    tasks.push_back("T2");
+    //tasks.push_back("T1");
+    //tasks.push_back("T2");
 
     ptasks.push_back("TP1");
     ptasks.push_back("TP2");
-    ptasks.push_back("TP3");
+    //ptasks.push_back("TP3");
 
     SchedulerRR rr(timeslice,DURATION);
 

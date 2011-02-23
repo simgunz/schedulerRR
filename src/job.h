@@ -20,28 +20,26 @@
 #ifndef JOB_H
 #define JOB_H
 
-
 using namespace std;
 
 class Job
 {
 public:
-    Job();                                      //Costruttore senza parametri, usato per dichiarare variabili non inizializzate
+    Job() { e = -1;}                                     //Costruttore senza parametri, usato per dichiarare variabili non inizializzate
     Job(float R, float E, float D,int P=0,int ID=0);     //Costruttore con parametri, utilizzato per creare il job
-    bool operator>(const Job &j) const;         //Operatore utilizzato per confrontare i release time di due job
-    bool operator<(const Job &j) const;         //Operatore utilizzato per confrontare le deadline di due job
-    int getID() const;                          //Restituisce l'ID del job
-    int getTID() const;                         //Restituisce l'ID del task a cui appartiene il job
-    int getPriority() const;                    //Restituisce la priorità del job
-    float getReleaseTime() const;               //Restituisce il release time del job
-    float getDeadline() const;                  //Restituisce la deadline del job
-    float getExecTime() const;                  //Restituisce il tempo di esecuzione del job
-    float getElapsedTime() const;               //Restituisce il tempo in cui il job è già stato processato
-    void setID(int ID);                         //Imposta l'ID del job
-    void setTID(int TID);                         //Imposta l'ID del task a cui appartiene il job
-    void setDeadline(float D);                         //Imposta la deadline del job
-    void incElapsedTime(float EL);              //Incrementa il tempo in cui il job è già stato processato
-    bool isValid();          //Controlla che il job sia valido, ovvero che i paramentri siano ben definiti
+    bool operator>(const Job &j) const;                  //Operatore utilizzato per confrontare i release time di due job
+    inline int getID() const { return id; }              //Restituisce l'ID del job
+    inline int getTID() const { return tid; }            //Restituisce l'ID del task a cui appartiene il job
+    inline int getPriority() const { return p; }         //Restituisce la priorità del job
+    inline float getReleaseTime() const { return r; }    //Restituisce il release time del job
+    inline float getExecTime() const { return e; }       //Restituisce il tempo di esecuzione del job
+    inline float getDeadline() const { return d; }       //Restituisce la deadline del job
+    inline float getElapsedTime() const { return el; }   //Restituisce il tempo in cui il job è già stato processato
+    inline void setID(int ID) { id = ID; }               //Imposta l'ID del job
+    inline void setTID(int TID) { tid = TID; }           //Imposta l'ID del task a cui appartiene il job
+    inline void setDeadline(float D) { d = D; }          //Imposta la deadline del job
+    inline void incElapsedTime(float EL) { el += EL; }   //Incrementa il tempo in cui il job è già stato processato
+    bool isValid();                                      //Controlla che il job sia valido, ovvero che i paramentri siano ben definiti
 
 private:
     int id;     //Job ID
@@ -49,7 +47,7 @@ private:
     int p;      //Priority
     float r;    //Release time
     float e;    //Execution time
-    float d;    //Deadline relativa
+    float d;    //Relative deadline
     float el;   //Elapsed time
 };
 

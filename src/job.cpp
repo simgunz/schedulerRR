@@ -19,78 +19,10 @@
 
 #include "job.h"
 
-#include <algorithm>
-
-Job::Job(): id(-1), tid(-1), p(0), r(-1), e(0), d(0), el(0) {}
-
-
 Job::Job(float R, float E, float D, int P,int ID): id(ID), tid(-1), p(P), r(R), e(E), d(D), el(0) {}
 
-
 bool Job::operator>(const Job &j) const
-{
-    return (r > j.r);
-}
-
-bool Job::operator<(const Job &j) const
-{
-    return (d < j.d);
-}
-
-int Job::getID() const
-{
-    return id;
-}
-
-int Job::getTID() const
-{
-    return tid;
-}
-
-int Job::getPriority() const
-{
-    return p;
-}
-
-float Job::getReleaseTime() const
-{
-    return r;
-}
-
-float Job::getDeadline() const
-{
-    return d;
-}
-
-float Job::getExecTime() const
-{
-    return e;
-}
-
-float Job::getElapsedTime() const
-{
-    return el;
-}
-
-void Job::setID(int ID)
-{
-    id = ID;
-}
-
-void Job::setTID(int TID)
-{
-    tid = TID;
-}
-
-void Job::setDeadline(float D)
-{
-    d = D;
-}
-
-void Job::incElapsedTime(float EL)
-{
-    el += EL;
-}
+{ return (r > j.r); }
 
 bool Job::isValid()
 {
@@ -98,6 +30,5 @@ bool Job::isValid()
     valid = valid && (e > 0);                           //Il tempo di esecuzione deve essere maggiore di zero
     valid = valid && (d >= 0);                          //La deadline deve essere non negativa
     valid = valid && (p >= 0);                          //La priorità deve essere maggiore di zero
-    //valid = valid && ((d == 0) || (e <= (d - r)));   //Controllo che la deadline relativa sia maggiore o uguale al tempo di esecuzione
     return valid;
 }
