@@ -35,11 +35,7 @@ PeriodicTask::PeriodicTask(string &fileName) : Task(fileName), p(0), e(0)
             p = token;
     file.close();
 
-    e += getJob(0).getExecTime();
-
-    //Se i job non sono eseguibili entro il periodo il job viene marcato come non valido ( p = 0 )
-    if(e > p)
-        p = 0;
+    e = getJob(0).getExecTime();
 }
 
 float PeriodicTask::getPeriod() const
@@ -54,5 +50,5 @@ float PeriodicTask::getExecTime() const
 
 bool PeriodicTask::isValid()
 {
-    return ((p > 0) && Task::isValid(p));
+    return ((p > 0) && (e <= p) && (size() == 1) && Task::isValid());
 }

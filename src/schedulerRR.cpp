@@ -98,24 +98,10 @@ bool SchedulerRR::checkdeadline()
     return 1;
 }
 
-void SchedulerRR::taskLabel(int id, int size)
-{
-    stringstream ss;
-    //string type =  (periodic) ? "PT" : "T";
-    ss << "T" << taskID << "-";
-    string taskLabel = ss.str();
-    for (int i = 0; i < size; i++)
-    {
-        ss.str(taskLabel);
-        ss.seekp(0,ios::end);
-        ss << id;
-        proc.rowLabel(id++,ss.str());
-    }
-    proc.rowLabel(id,"A");
-}
 
 
-int SchedulerRR::loadTask(Task t, bool periodic)
+
+int SchedulerRR::loadTask(Task t)
 {
     //Se il task non è valido, termino e segnalo al chiamante
     if(!t.isValid())
@@ -205,7 +191,7 @@ int SchedulerRR::loadTask(PeriodicTask t)
         }
         Task newTask(newJobs);
 
-        loadTask(newTask,true);
+        loadTask(newTask);
 
         jobID-=t.size()+1;
 

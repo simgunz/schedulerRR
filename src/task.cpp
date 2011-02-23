@@ -45,7 +45,6 @@ Task::Task(string &fileName) : pr(0)
             jobs.push_back(makeJob(data,jobID++));
     }
     file.close();
-    name = fileName;
 }
 
 Task::Task(const vector<Job> &newjobs, float priority) : pr(priority)
@@ -70,7 +69,6 @@ Job Task::makeJob(const string& data,int jobID)
     if ( ss >> token )
        d = token;
 
-
     return Job(r,e,d,pr,jobID);
 }
 
@@ -79,22 +77,18 @@ Job Task::getJob(int i) const
     return jobs[i];
 }
 
-string Task::getName()
-{
-    return name;
-}
-
 int Task::size()
 {
     return jobs.size();
 }
 
-bool Task::isValid(float p)
+bool Task::isValid()
 {
-    bool valid = true;
-    for (int i = 0; i < size(); i++)
+    bool valid = jobs[0].isValid();
+    for (int i = 1; valid && (i < size()); i++)
     {
-        valid = valid && jobs[i].isValid(p);
+        valid = jobs[i].isValid() && (jobs[i].getReleaseTime() >= jobs[i-1].getDeadline());
+
     }
     return valid;
 }

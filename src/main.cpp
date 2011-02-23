@@ -40,7 +40,8 @@ void utiliz(SchedulerRR &rr);
 int main (int argc, char *argv[])
 {
     int loaded ;
-    int input, timeslice=TIMESLICE;
+    //int input,
+    int timeslice=TIMESLICE;
 
     Task *t = NULL;
     PeriodicTask *pt = NULL;
@@ -58,14 +59,14 @@ int main (int argc, char *argv[])
     {
         t = new Task(tasks[i]);
         loaded = rr.loadTask(*t);
-        loadCheck(loaded,(*t).getName());
+        loadCheck(loaded,tasks[i]);
         utiliz(rr);
     }
     for (int i=0; i<ptasks.size(); i++)
     {
         pt = new PeriodicTask(ptasks[i]);
         loaded = rr.loadTask(*pt);
-        loadCheck(loaded,(*pt).getName());
+        loadCheck(loaded,ptasks[i]);
         utiliz(rr);
     }
 

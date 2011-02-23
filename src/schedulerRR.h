@@ -38,7 +38,7 @@ class SchedulerRR
 {
 public:    
     SchedulerRR(float timeslice = 3,float duration = 100);
-    int loadTask(Task t, bool periodic = false);                //Permette di caricare un task non periodici
+    int loadTask(Task t);                //Permette di caricare un task non periodici
     int loadTask(PeriodicTask t);                               //Permette di caricare un task periodico
     int schedule();                                            //Simula l'esecuzione ed effettua la schedulazione
     float getUtilization();                                     //Restituisce l'utilizzazione del processore
@@ -48,7 +48,7 @@ private:
     int popJob(Job &j);                                               //Estrae un job dalla testa della coda
     bool readyempty();
     bool checkdeadline();
-    void taskLabel(int id, int size);            //Assegna un etichetta ad ogni riga dell'ouput di kiwi
+
 
     priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //Lista dei job in attesa di essere rilasciati
     list<Job> ready[MAXPRLEVEL+1];                                          //Lista dei job in pronti a essere eseguiti

@@ -82,21 +82,22 @@ void Job::setTID(int TID)
     tid = TID;
 }
 
+void Job::setDeadline(float D)
+{
+    d = D;
+}
+
 void Job::incElapsedTime(float EL)
 {
     el += EL;
 }
 
-bool Job::isValid(float period)
+bool Job::isValid()
 {
-    float dead = d;
-    if (period > 0)
-        dead = min(d,period);
-
     bool valid = (r >= 0);                              //Il release time deve essere maggiore di zero
     valid = valid && (e > 0);                           //Il tempo di esecuzione deve essere maggiore di zero
     valid = valid && (d >= 0);                          //La deadline deve essere non negativa
     valid = valid && (p >= 0);                          //La priorità deve essere maggiore di zero
-    valid = valid && ((d == 0) || (e <= (dead - r)));   //Controllo che la deadline relativa sia maggiore del tempo di esecuzione
+    valid = valid && ((d == 0) || (e <= (d - r)));   //Controllo che la deadline relativa sia maggiore o uguale al tempo di esecuzione
     return valid;
 }

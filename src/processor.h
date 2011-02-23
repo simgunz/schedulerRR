@@ -57,7 +57,6 @@ public:
     void setMaxDeadline(float deadline);                //Imposta la deadline massima
     void print(JobState state, int jobID, float time = -1, string text = "", bool reverse = false); //Stampa un nuovo stato di kiwi
     void filePrint();                                   //Stampa su file
-    void rowLabel(int line,string label);               //Imposta le etichette dei job sull'output di kiwi
 
 private:
     float clock;                    //Clock del processore

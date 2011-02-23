@@ -20,6 +20,7 @@
 #ifndef JOB_H
 #define JOB_H
 
+
 using namespace std;
 
 class Job
@@ -38,8 +39,9 @@ public:
     float getElapsedTime() const;               //Restituisce il tempo in cui il job è già stato processato
     void setID(int ID);                         //Imposta l'ID del job
     void setTID(int TID);                         //Imposta l'ID del task a cui appartiene il job
+    void setDeadline(float D);                         //Imposta la deadline del job
     void incElapsedTime(float EL);              //Incrementa il tempo in cui il job è già stato processato
-    bool isValid(float period    = 0);          //Controlla che il job sia valido, ovvero che i paramentri siano ben definiti
+    bool isValid();          //Controlla che il job sia valido, ovvero che i paramentri siano ben definiti
 
 private:
     int id;     //Job ID

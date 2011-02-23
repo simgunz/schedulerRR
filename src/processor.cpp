@@ -148,8 +148,3 @@ void Processor::filePrint()
     output.flush();
     output.close();
 }
-
-void Processor::rowLabel(int line, string label)
-{
-    initParam << "LINE_NAME " << line << " " << label << endl;
-}
