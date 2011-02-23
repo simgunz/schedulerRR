@@ -23,8 +23,13 @@
 #include <fstream>
 
 
-Task::Task(string &fileName) : pr(0)
+Task::Task(string &fileName) : pr(-1)
 {
+    /*
+     Se il file non esiste il codice non viene eseguito.
+     Se il file non è ben formattato vengono impostati dei valori di default al job.
+     In entrambi i casi il task è invalido e il metodo isValid lo rileva.
+    */
     ifstream file(fileName.c_str());
     if(!file.fail())
     {
@@ -59,21 +64,6 @@ Task::Task(const vector<Job> &newjobs, float priority) : pr(priority)
     }
 }
 
-Job Task::makeJob(const string& data,int jobID)
-{
-    stringstream ss(data);
-    float token;
-    float r=-1,e=0,d=0;
-
-    if ( ss >> token )
-       r = token;
-    if ( ss >> token )
-       e = token;
-    if ( ss >> token )
-       d = token;
-
-    return Job(r,e,d,pr,jobID);
-}
 
 Job Task::getJob(int i) const
 {
@@ -96,4 +86,25 @@ bool Task::isValid()
         valid = jobs[i].isValid() && (jobs[i].getReleaseTime() >= jobs[i-1].getReleaseTime() + jobs[i-1].getExecTime());
     }
     return valid;
+}
+
+Job Task::makeJob(const string& data,int jobID)
+{
+    /*
+    StringStream permette di ottenere dati bene formattati, nel caso i dati siano mal formattati
+    l'if non viene eseguito e se il parametro non è facoltativo il job creato non è valido
+    e di conseguenze neanche il task. Si evita però di avere comportamenti anomali del programma.
+    */
+    stringstream ss(data);
+    float token;
+    float r=-1,e=0,d=0;
+
+    if ( ss >> token )
+       r = token;
+    if ( ss >> token )
+       e = token;
+    if ( ss >> token )
+       d = token;
+
+    return Job(r,e,d,pr,jobID);
 }

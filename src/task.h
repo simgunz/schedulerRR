@@ -33,10 +33,8 @@ public:
     Task(string &fileName);                                     //Costruttore che prende il valori da file
     Task(const vector<Job> &newjobs, float priority = 0);       //Costruttore che prende un vettore di job
     Job getJob(int i) const;                                    //Restituisce l'i-esimo job del task
-    virtual bool isValid();                          //Controlla che il task sia valido, ovvero che ogni suo job sia valido
     int size();                                                 //Restituisce il numero di job nel task
-    string getName();                                           //Restituisce il nome del task
-
+    virtual bool isValid();                                     //Controlla che ogni job sia valido e che il task non sia vuoto
 
 private:
     Job makeJob(const string &data,int JobID);                  //Crea un nuovo job dalla stringa di dati

@@ -19,6 +19,7 @@
 
 #include "job.h"
 
+
 Job::Job(float R, float E, float D, int P,int ID): id(ID), tid(-1), p(P), r(R), e(E), d(D), el(0) {}
 
 bool Job::operator>(const Job &j) const
