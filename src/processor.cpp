@@ -69,6 +69,15 @@ int Processor::execute(Job *j)
         return 1;
     }
 
+    if (currentJob != NULL && clock == currentJob->getDeadline())
+    {
+        string failed("____F");
+        print(READYE,currentJob->getTID());
+        print(TEXTOVER,currentJob->getTID(),currentJob->getDeadline(),failed);
+        preempt();
+        return 2;
+    }
+
     return 0;
 }
 

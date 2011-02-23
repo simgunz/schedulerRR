@@ -22,7 +22,7 @@
 #include <sstream>
 #include <algorithm>
 
-#define REPETITION 3
+#define REPETITION 5
 
 SchedulerRR::SchedulerRR(float timeslice, float duration): T(timeslice), D(duration), U(0), jobID(0), taskID(0){}
 
@@ -183,7 +183,7 @@ int SchedulerRR::schedule()
     Job  r,j,*currentJob = NULL;
     int sliceEl = 0;
     int end = -1;
-    string failed("_Failed");
+    string failed("____F");
 
     //Se non ci sono job nella coda dei job in attesa, termino
     if (waiting.empty())
@@ -219,7 +219,6 @@ int SchedulerRR::schedule()
                 proc.print(ARROWUP,tid,rel,ss.str());
                 proc.print(READYB,tid,rel);
                 proc.print(START,tid,rel);
-
             }
 
             /*
