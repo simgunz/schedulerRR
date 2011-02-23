@@ -30,6 +30,8 @@ using namespace std;
 #include <queue>
 #include <list>
 
+#include <iostream>
+
 #define MAXPRLEVEL 3
 
 class SchedulerRR
@@ -45,6 +47,7 @@ private:
     void enqueueJob(Job& j);                                    //Inserisce un job in coda alla coda
     int popJob(Job &j);                                               //Estrae un job dalla testa della coda
     bool readyempty();
+    bool checkdeadline();
     void taskLabel(int id, int size);            //Assegna un etichetta ad ogni riga dell'ouput di kiwi
 
     priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //Lista dei job in attesa di essere rilasciati

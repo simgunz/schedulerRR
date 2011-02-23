@@ -24,6 +24,8 @@
 
 #define REPETITION 5
 
+string failed("____F");
+
 SchedulerRR::SchedulerRR(float timeslice, float duration): T(timeslice), D(duration), U(0), jobID(0), taskID(0){}
 
 float SchedulerRR::getUtilization()
@@ -60,6 +62,32 @@ bool SchedulerRR::readyempty()
     {
         if(!ready[i].empty())
             return 0;
+    }
+    return 1;
+}
+
+bool SchedulerRR::checkdeadline()
+{
+    for(int i=MAXPRLEVEL; i>=0; i--)
+    {
+        if(!ready[i].empty())
+        {
+            list<Job>::iterator it;
+            it = ready[i].begin();
+            while(it != ready[i].end())
+            {
+
+                if ((*it).getDeadline() != 0 && ( (*it).getDeadline() <= proc.getClock() ) )
+                {
+
+                    proc.print(READYE,(*it).getTID(),(*it).getDeadline(),"",true);
+                    proc.print(TEXTOVER,(*it).getTID(),(*it).getDeadline(),failed);
+                    it = ready[i].erase(it);
+                }
+                else
+                    it++;
+            }
+        }
     }
     return 1;
 }
@@ -191,7 +219,6 @@ int SchedulerRR::schedule()
     Job  r,j,*currentJob = NULL;
     int sliceEl = 0;
     int end = -1;
-    string failed("____F");
 
     //Se non ci sono job nella coda dei job in attesa, termino
     if (waiting.empty())
@@ -232,32 +259,19 @@ int SchedulerRR::schedule()
             }
 
             /*
-            Se il processore non è idle significa che è terminato il timeslicen o che il job ha terminato in anticipo la
-            la sua esecuzione
+            Se il processore non è idle significa che è terminato il timeslice o che il job ha terminato in anticipo la
+            la sua esecuzione, quindi forzo il preempt e se il job corrente non ha terminato la sua esecuzione lo riaccodo
             */
             if(!proc.idle())
             {
-                //Forzo il preempt dal processore del job corrente
                 proc.preempt();
 
-                /*
-                Se sono al termine del timeslice (e non al terimine dell'esecuzione del job) calcolo lo slack time
-                e se minore di zero non riaccodo il job e segnalo un deadline miss, altrimenti riaccodo il job
-                */
                 if(!end)
-                {
-//                    if ( ( currentJob->getDeadline() != 0 && (currentJob->getDeadline() - proc.getClock() ) < ( currentJob->getExecTime() - currentJob->getElapsedTime() ) ) )
-//                    {
-//                        proc.print(READYE,currentJob->getID(),proc.getClock());
-//                        proc.print(TEXTOVER,currentJob->getID(),proc.getClock(),failed);
-//                    }
-//                    else
-                        enqueueJob(*currentJob);
-                }
+                    enqueueJob(*currentJob);
 
-                //Imposto il job corrente a NULL
                 currentJob = NULL;
             }
+
 
             /*
             Se ci sono processi READY in attesa di essere eseguiti li estraggo uno alla volta dalla lista e controllo
@@ -266,48 +280,27 @@ int SchedulerRR::schedule()
             e imposto sliceEl a zero indicando che il processore è libero altrimenti imposto il job corrente con quello
             estratto dalla lista
             */
-//            if(popJob(j))
+            checkdeadline();
+
+//            while(popJob(j))
 //            {
-//                sliceEl = T;
-//                currentJob = &j;
-
-//                while(currentJob->getDeadline() != 0 && ( currentJob->getDeadline() <= proc.getClock() ) )
+//                if (j.getDeadline() != 0 && ( j.getDeadline() <= proc.getClock() ) )
 //                {
-//                    proc.print(READYE,currentJob->getTID(),currentJob->getDeadline(),"",true);
-//                    proc.print(TEXTOVER,currentJob->getTID(),currentJob->getDeadline(),failed);
-
-//                    if(popJob(j))
-//                    {
-//                        currentJob = &j;
-//                    }
-//                    else
-//                    {
-//                        currentJob = NULL;
-//                        sliceEl = 0;
-//                        break;
-//                    }
+//                    proc.print(READYE,j.getTID(),j.getDeadline(),"",true);
+//                    proc.print(TEXTOVER,j.getTID(),j.getDeadline(),failed);
+//                }
+//                else
+//                {
+//                    sliceEl = T;
+//                    currentJob = &j;
+//                    break;
 //                }
 //            }
-
-
-            while(popJob(j))
+            if(popJob(j))
             {
-                if (j.getDeadline() != 0 && ( j.getDeadline() <= proc.getClock() ) )
-                {
-                    proc.print(READYE,j.getTID(),j.getDeadline(),"",true);
-                    proc.print(TEXTOVER,j.getTID(),j.getDeadline(),failed);
-                    //sliceEl = 0;
-                }
-                else
-                {
-                    sliceEl = T;
-                    currentJob = &j;
-                    break;
-                }
+                sliceEl = T;
+                currentJob = &j;
             }
-
-
-
 
         }
 
