@@ -33,12 +33,18 @@ float SchedulerRR::getUtilization()
     return U;
 }
 
-void SchedulerRR::enqueueJob(Job& j)
+int SchedulerRR::enqueueJob(Job& j)
 {
-    try{
+
+    if (j.getPriority() > MAXPRLEVEL)
+    {
+        ready[MAXPRLEVEL].push_back(j);
+        return 1;
+    }
+    else
+    {
         ready[j.getPriority()].push_back(j);
-    }catch(std::exception& ex){
-        ready[0].push_back(j);
+        return 0;
     }
 }
 
@@ -220,6 +226,7 @@ int SchedulerRR::schedule()
     int sliceEl = 0;
     int end = -1;
 
+
     //Se non ci sono job nella coda dei job in attesa, termino
     if (waiting.empty())
         return 1;
@@ -232,6 +239,9 @@ int SchedulerRR::schedule()
         //Fine della timeslice o processorre idle
         if(sliceEl == 0)
         {
+            checkdeadline();
+
+
             //Controllo se ci sono processi READY e li inserisco in un vettore temporaneo
             while(!waiting.empty() && (r = waiting.top()).getReleaseTime() <= proc.getClock())
             {
@@ -280,22 +290,8 @@ int SchedulerRR::schedule()
             e imposto sliceEl a zero indicando che il processore è libero altrimenti imposto il job corrente con quello
             estratto dalla lista
             */
-            checkdeadline();
 
-//            while(popJob(j))
-//            {
-//                if (j.getDeadline() != 0 && ( j.getDeadline() <= proc.getClock() ) )
-//                {
-//                    proc.print(READYE,j.getTID(),j.getDeadline(),"",true);
-//                    proc.print(TEXTOVER,j.getTID(),j.getDeadline(),failed);
-//                }
-//                else
-//                {
-//                    sliceEl = T;
-//                    currentJob = &j;
-//                    break;
-//                }
-//            }
+
             if(popJob(j))
             {
                 sliceEl = T;

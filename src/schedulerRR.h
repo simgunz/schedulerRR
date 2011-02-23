@@ -44,7 +44,7 @@ public:
     float getUtilization();                                     //Restituisce l'utilizzazione del processore
 
 private:
-    void enqueueJob(Job& j);                                    //Inserisce un job in coda alla coda
+    int enqueueJob(Job& j);                                    //Inserisce un job in coda alla coda
     int popJob(Job &j);                                               //Estrae un job dalla testa della coda
     bool readyempty();
     bool checkdeadline();
