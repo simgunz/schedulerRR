@@ -48,10 +48,10 @@ int SchedulerRR::popJob(Job &j)
         {
             j = ready[i].front();
             ready[i].pop_front();
-            return 0;
+            return 1;
         }
     }
-    return 1;
+    return 0;
 }
 
 bool SchedulerRR::readyempty()
@@ -266,28 +266,49 @@ int SchedulerRR::schedule()
             e imposto sliceEl a zero indicando che il processore è libero altrimenti imposto il job corrente con quello
             estratto dalla lista
             */
-            if(!popJob(j))
+//            if(popJob(j))
+//            {
+//                sliceEl = T;
+//                currentJob = &j;
+
+//                while(currentJob->getDeadline() != 0 && ( currentJob->getDeadline() <= proc.getClock() ) )
+//                {
+//                    proc.print(READYE,currentJob->getTID(),currentJob->getDeadline(),"",true);
+//                    proc.print(TEXTOVER,currentJob->getTID(),currentJob->getDeadline(),failed);
+
+//                    if(popJob(j))
+//                    {
+//                        currentJob = &j;
+//                    }
+//                    else
+//                    {
+//                        currentJob = NULL;
+//                        sliceEl = 0;
+//                        break;
+//                    }
+//                }
+//            }
+
+
+            while(popJob(j))
             {
-                sliceEl = T;
-                currentJob = &j;
-
-                while(currentJob->getDeadline() != 0 && ( currentJob->getDeadline() <= proc.getClock() ) )
+                if (j.getDeadline() != 0 && ( j.getDeadline() <= proc.getClock() ) )
                 {
-                    proc.print(READYE,currentJob->getTID(),currentJob->getDeadline(),"",true);
-                    proc.print(TEXTOVER,currentJob->getTID(),currentJob->getDeadline(),failed);
-
-                    if(!popJob(j))
-                    {
-                        currentJob = &j;
-                    }
-                    else
-                    {
-                        currentJob = NULL;
-                        sliceEl = 0;
-                        break;
-                    }
+                    proc.print(READYE,j.getTID(),j.getDeadline(),"",true);
+                    proc.print(TEXTOVER,j.getTID(),j.getDeadline(),failed);
+                    //sliceEl = 0;
+                }
+                else
+                {
+                    sliceEl = T;
+                    currentJob = &j;
+                    break;
                 }
             }
+
+
+
+
         }
 
         //Eseguo un passo del processore e decremento il tempo di slice corrente solo se il processore non è idle
