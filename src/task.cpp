@@ -26,25 +26,28 @@
 Task::Task(string &fileName) : pr(0)
 {
     ifstream file(fileName.c_str());
-    int jobID = 1;
-    string data;
-    float token;
-
-    getline(file,data);
-    getline(file,data);
-    stringstream ss(data);
-    if ( ss >> token )
-        pr = token;
-    getline(file,data);
-    getline(file,data);
-
-    while (!file.eof())
+    if(!file.fail())
     {
+        int jobID = 1;
+        string data;
+        float token;
+
         getline(file,data);
-        if (!data.empty())
-            jobs.push_back(makeJob(data,jobID++));
+        getline(file,data);
+        stringstream ss(data);
+        if ( ss >> token )
+            pr = token;
+        getline(file,data);
+        getline(file,data);
+
+        while (!file.eof())
+        {
+            getline(file,data);
+            if (!data.empty())
+                jobs.push_back(makeJob(data,jobID++));
+        }
+        file.close();
     }
-    file.close();
 }
 
 Task::Task(const vector<Job> &newjobs, float priority) : pr(priority)
@@ -84,11 +87,13 @@ int Task::size()
 
 bool Task::isValid()
 {
+    if(size() == 0)
+        return 0;
+
     bool valid = jobs[0].isValid();
     for (int i = 1; valid && (i < size()); i++)
     {
-        valid = jobs[i].isValid() && (jobs[i].getReleaseTime() >= jobs[i-1].getDeadline());
-
+        valid = jobs[i].isValid() && (jobs[i].getReleaseTime() >= jobs[i-1].getReleaseTime() + jobs[i-1].getExecTime());
     }
     return valid;
 }

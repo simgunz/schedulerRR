@@ -107,6 +107,9 @@ int SchedulerRR::loadTask(Task t)
     if(!t.isValid())
         return 1;
 
+    if (U == 1)
+        return 2;
+
     Job j;
 
     /*
@@ -160,7 +163,7 @@ int SchedulerRR::loadTask(PeriodicTask t)
     if (u + U > 1)
         return 2;
 
-    U += u;
+
 
     /*
     Assegno alla durata massima di esecuzione il massimo tra la durata attuale e il periodo del task ripetuto
@@ -168,39 +171,42 @@ int SchedulerRR::loadTask(PeriodicTask t)
     */
     //D = max(D,t.getPeriod()*REPETITION);
 
-    stringstream ss;
-    ss << "EOP" << taskID;
+//    stringstream ss;
+//    ss << "EOP" << taskID;
 
     /*
     "Clono" i job del mio task tante volte quante ne stanno nella durata totale della simulazione (simulando il loro
     ripetersi) e li inserisco nella coda dei processi in attesa chiamando il metodo loadTask per task non periodici
     */
 
-        vector<Job> newJobs;
-        Job j = t.getJob(0);
+    vector<Job> newJobs;
+    Job j = t.getJob(0);
+    int r = j.getReleaseTime(), e = j.getExecTime(), d = j.getDeadline();
+    int p = t.getPeriod(), pr = j.getPriority();
+    float dead = p;
 
-        for (float q = j.getReleaseTime(); q < D; q+=t.getPeriod())
-        {
-            float dead = t.getPeriod()+q;
-            if(j.getDeadline() != 0)
-                dead = min(dead,j.getDeadline()+q);
+    if (d>0 && d<p)
+        dead = d;
 
-            Job nw(q,j.getExecTime(),dead,j.getPriority());
-            newJobs.push_back(nw);
+    for (float i = r; i < D; i+=p)
+    {
+        Job nw(i,e,i+dead,pr);
+        newJobs.push_back(nw);
+    }
 
-        }
-        Task newTask(newJobs);
+    Task newTask(newJobs);
 
-        loadTask(newTask);
+    loadTask(newTask);
 
-        jobID-=t.size()+1;
+    U += u;
+//        jobID-=t.size()+1;
 
         //proc.print(VLINE,-1,t.getPeriod()+q,ss.str());
 
 
     //taskLabel(true,jobID,t.size());
 
-    jobID+=t.size()+1;
+//    jobID+=t.size()+1;
 
     return 0;
 }
@@ -220,38 +226,25 @@ int SchedulerRR::schedule()
     do
     {
 
-        vector<Job> vct;
+
 
         //Fine della timeslice o processorre idle
         if(sliceEl == 0)
         {
             checkdeadline();
 
-
             //Controllo se ci sono processi READY e li inserisco in un vettore temporaneo
             while(!waiting.empty() && (r = waiting.top()).getReleaseTime() <= proc.getClock())
             {
-
-
-                vct.push_back(r);
-                waiting.pop();
-            }
-
-            //Ordino i job appena rilasciati decondo deadline crescenti, utilizzando l'operatore < della classe Job
-            if(!vct.empty())
-                sort(vct.begin(),vct.end());
-
-            //Accodo i job appena rilasciati ordinati e stampo su output
-            for (int i = 0; i < vct.size(); i++)
-            {
-                enqueueJob(vct[i]);
-
-                int tid = vct[i].getTID(), rel = vct[i].getReleaseTime();
+                int tid = r.getTID(), rel = r.getReleaseTime();
                 stringstream ss;
-                ss << "r" << tid << "," << vct[i].getID();
+                ss << "r" << tid << "," << r.getID();
                 proc.print(ARROWUP,tid,rel,ss.str());
                 proc.print(READYB,tid,rel);
                 proc.print(START,tid,rel);
+
+                enqueueJob(r);
+                waiting.pop();
             }
 
             /*

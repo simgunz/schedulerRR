@@ -49,7 +49,7 @@ private:
     int p;      //Priority
     float r;    //Release time
     float e;    //Execution time
-    float d;    //Deadline
+    float d;    //Deadline relativa
     float el;   //Elapsed time
 };
 

@@ -25,17 +25,20 @@
 PeriodicTask::PeriodicTask(string &fileName) : Task(fileName), p(0), e(0)
 {
     ifstream file(fileName.c_str());
-    string data;
-    float token;
-    getline(file,data);
-    getline(file,data);
-    stringstream ss(data);
-    if ( ss >> token )
+    if(!file.fail())
+    {
+        string data;
+        float token;
+        getline(file,data);
+        getline(file,data);
+        stringstream ss(data);
         if ( ss >> token )
-            p = token;
-    file.close();
+            if ( ss >> token )
+                p = token;
+        file.close();
 
-    e = getJob(0).getExecTime();
+        e = getJob(0).getExecTime();
+    }
 }
 
 float PeriodicTask::getPeriod() const
@@ -50,5 +53,11 @@ float PeriodicTask::getExecTime() const
 
 bool PeriodicTask::isValid()
 {
-    return ((p > 0) && (e <= p) && (size() == 1) && Task::isValid());
+    if(!Task::isValid())
+        return 0;
+
+    float d = getJob(0).getDeadline(), dead = p;
+    if(d>0 && d<p)
+        dead = d;
+    return ((size() == 1) && (p > 0) && (e <= dead));
 }

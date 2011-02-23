@@ -31,7 +31,7 @@ using namespace std;
 //Durata in nanosecondi
 //Step processore 1 nanosecondo (1GHz)
 
-#define TIMESLICE 3
+#define TIMESLICE 1
 #define DURATION 250
 
 void loadCheck(int loaded,string name);
@@ -47,27 +47,29 @@ int main (int argc, char *argv[])
     PeriodicTask *pt = NULL;
     vector<string> tasks;
     vector<string> ptasks;
+
     tasks.push_back("T1");
     tasks.push_back("T2");
 
     ptasks.push_back("TP1");
     ptasks.push_back("TP2");
+    ptasks.push_back("TP3");
 
     SchedulerRR rr(timeslice,DURATION);
 
-    for (int i=0; i<tasks.size(); i++)
-    {
-        t = new Task(tasks[i]);
-        loaded = rr.loadTask(*t);
-        loadCheck(loaded,tasks[i]);
-        utiliz(rr);
-    }
     for (int i=0; i<ptasks.size(); i++)
     {
         pt = new PeriodicTask(ptasks[i]);
         loaded = rr.loadTask(*pt);
         loadCheck(loaded,ptasks[i]);
         utiliz(rr);
+    }
+
+    for (int i=0; i<tasks.size(); i++)
+    {
+        t = new Task(tasks[i]);
+        loaded = rr.loadTask(*t);
+        loadCheck(loaded,tasks[i]);
     }
 
     rr.schedule();
