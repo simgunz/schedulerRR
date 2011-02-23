@@ -27,9 +27,5 @@ bool Job::operator>(const Job &j) const
 
 bool Job::isValid()
 {
-    bool valid = (r >= 0);                              //Il release time deve essere maggiore di zero
-    valid = valid && (e > 0);                           //Il tempo di esecuzione deve essere maggiore di zero
-    valid = valid && (d >= 0);                          //La deadline deve essere non negativa
-    valid = valid && (p >= 0);                          //La priorità deve essere maggiore di zero
-    return valid;
+    return ((r >= 0) && (e > 0) && (d >= 0) && (p >= 0));
 }

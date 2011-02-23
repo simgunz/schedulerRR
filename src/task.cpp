@@ -51,8 +51,8 @@ Task::Task(string &fileName) : pr(-1)
             if (!data.empty())
                 jobs.push_back(makeJob(data,jobID++));
         }
-        file.close();
     }
+    file.close();
 }
 
 Task::Task(const vector<Job> &newjobs, float priority) : pr(priority)

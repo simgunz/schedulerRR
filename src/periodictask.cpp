@@ -25,7 +25,7 @@
 PeriodicTask::PeriodicTask(string &fileName) : Task(fileName), p(0), e(0)
 {
     ifstream file(fileName.c_str());
-    if(!file.fail())
+    if(Task::isValid() && !file.fail())
     {
         string data;
         float token;
@@ -35,20 +35,10 @@ PeriodicTask::PeriodicTask(string &fileName) : Task(fileName), p(0), e(0)
         if ( ss >> token )
             if ( ss >> token )
                 p = token;
-        file.close();
 
         e = getJob(0).getExecTime();
     }
-}
-
-float PeriodicTask::getPeriod() const
-{
-    return p;
-}
-
-float PeriodicTask::getExecTime() const
-{
-    return e;
+    file.close();
 }
 
 bool PeriodicTask::isValid()
