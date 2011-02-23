@@ -32,7 +32,7 @@ using namespace std;
 //Step processore 1 nanosecondo (1GHz)
 
 #define TIMESLICE 3
-#define DURATION 20
+#define DURATION 250
 
 void loadCheck(int loaded,string name);
 void utiliz(SchedulerRR &rr);
@@ -52,7 +52,7 @@ int main (int argc, char *argv[])
     ptasks.push_back("TP1");
     ptasks.push_back("TP2");
 
-    SchedulerRR rr(timeslice);
+    SchedulerRR rr(timeslice,DURATION);
 
     for (int i=0; i<tasks.size(); i++)
     {

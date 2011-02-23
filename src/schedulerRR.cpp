@@ -33,27 +33,35 @@ float SchedulerRR::getUtilization()
 
 void SchedulerRR::enqueueJob(Job& j)
 {
-    list<Job>::reverse_iterator rit;
-    list<Job>::iterator it;
-
-    /*
-    Scorro la lista dei job ready finchè non trovo la testa della coda o un job di priorità maggiore o uguale
-    a quello che sto inserendo, in quella posizione inserisco il job
-    */
-    rit = ready.rbegin();
-    while(rit != ready.rend() && j.getPriority() > rit->getPriority())
-        rit++;
-
-    it = rit.base();
-
-    ready.insert(it,j);
+    try{
+        ready[j.getPriority()].push_back(j);
+    }catch(std::exception& ex){
+        ready[0].push_back(j);
+    }
 }
 
-Job SchedulerRR::popJob()
+int SchedulerRR::popJob(Job &j)
 {
-   Job j = ready.front();
-   ready.pop_front();
-   return j;
+    for(int i=MAXPRLEVEL; i>=0; i--)
+    {
+        if(!ready[i].empty())
+        {
+            j = ready[i].front();
+            ready[i].pop_front();
+            return 0;
+        }
+    }
+    return 1;
+}
+
+bool SchedulerRR::readyempty()
+{
+    for(int i=MAXPRLEVEL; i>=0; i--)
+    {
+        if(!ready[i].empty())
+            return 0;
+    }
+    return 1;
 }
 
 void SchedulerRR::taskLabel(int id, int size)
@@ -138,7 +146,7 @@ int SchedulerRR::loadTask(PeriodicTask t)
     Assegno alla durata massima di esecuzione il massimo tra la durata attuale e il periodo del task ripetuto
     REPETITION volte
     */
-    D = max(D,t.getPeriod()*REPETITION);
+    //D = max(D,t.getPeriod()*REPETITION);
 
     stringstream ss;
     ss << "EOP" << taskID;
@@ -200,6 +208,8 @@ int SchedulerRR::schedule()
             //Controllo se ci sono processi READY e li inserisco in un vettore temporaneo
             while(!waiting.empty() && (r = waiting.top()).getReleaseTime() <= proc.getClock())
             {
+
+
                 vct.push_back(r);
                 waiting.pop();
             }
@@ -256,10 +266,9 @@ int SchedulerRR::schedule()
             e imposto sliceEl a zero indicando che il processore è libero altrimenti imposto il job corrente con quello
             estratto dalla lista
             */
-            if(!ready.empty())
+            if(!popJob(j))
             {
                 sliceEl = T;
-                j = popJob();
                 currentJob = &j;
 
                 while(currentJob->getDeadline() != 0 && ( currentJob->getDeadline() <= proc.getClock() ) )
@@ -267,9 +276,8 @@ int SchedulerRR::schedule()
                     proc.print(READYE,currentJob->getTID(),currentJob->getDeadline(),"",true);
                     proc.print(TEXTOVER,currentJob->getTID(),currentJob->getDeadline(),failed);
 
-                    if(!ready.empty())
+                    if(!popJob(j))
                     {
-                        j = popJob();
                         currentJob = &j;
                     }
                     else
@@ -295,7 +303,7 @@ int SchedulerRR::schedule()
             currentJob = NULL;
         }
 
-    }while(!waiting.empty() || !ready.empty() || !proc.idle());
+    }while(!waiting.empty() || !readyempty() || !proc.idle());
 
     //Stampo su file tutto l'output generato
     proc.filePrint();
