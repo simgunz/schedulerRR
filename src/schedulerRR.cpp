@@ -22,20 +22,16 @@
 #include <sstream>
 #include <algorithm>
 
-#define REPETITION 5
 
-string failed("____F");
+SchedulerRR::SchedulerRR(float timeslice, float duration): T(timeslice), D(duration), U(0), taskID(0) {}
 
-SchedulerRR::SchedulerRR(float timeslice, float duration): T(timeslice), D(duration), U(0), jobID(0), taskID(0){}
-
-float SchedulerRR::getUtilization()
-{
-    return U;
-}
-
+/*
+ Permette di inserire il job di priorità N nella corrispondente coda di priorità N.
+ Se la priorità del job è superiore al massimo livello di priorità ammesso dallo Scheduler il job
+ viene inserito nella coda di priorità massima
+*/
 int SchedulerRR::enqueueJob(Job& j)
 {
-
     if (j.getPriority() > MAXPRLEVEL)
     {
         ready[MAXPRLEVEL].push_back(j);
@@ -48,6 +44,10 @@ int SchedulerRR::enqueueJob(Job& j)
     }
 }
 
+/*
+ Estrae il job in cima alla prima lista più prioritaria non vuota
+ Ritorna 1 se l'estrazione è andata a buon fine o 0 se tutte le liste sono vuote
+*/
 int SchedulerRR::popJob(Job &j)
 {
     for(int i=MAXPRLEVEL; i>=0; i--)
@@ -62,6 +62,7 @@ int SchedulerRR::popJob(Job &j)
     return 0;
 }
 
+//Controlla se tutte le liste sono vuote
 bool SchedulerRR::readyempty()
 {
     for(int i=MAXPRLEVEL; i>=0; i--)
@@ -72,71 +73,57 @@ bool SchedulerRR::readyempty()
     return 1;
 }
 
+
+//Scansiona tutte le liste ed elimino tutti i job che hanno mancato la deadline
 bool SchedulerRR::checkdeadline()
 {
     for(int i=MAXPRLEVEL; i>=0; i--)
     {
-        if(!ready[i].empty())
+        list<Job>::iterator it;
+        it = ready[i].begin();
+        while(it != ready[i].end())
         {
-            list<Job>::iterator it;
-            it = ready[i].begin();
-            while(it != ready[i].end())
+            if ((*it).getDeadline() != 0 && ( (*it).getDeadline() <= proc.getClock() ) )
             {
 
-                if ((*it).getDeadline() != 0 && ( (*it).getDeadline() <= proc.getClock() ) )
-                {
-
-                    proc.print(READYE,(*it).getTID(),(*it).getDeadline(),"",true);
-                    proc.print(TEXTOVER,(*it).getTID(),(*it).getDeadline(),failed);
-                    it = ready[i].erase(it);
-                }
-                else
-                    it++;
+                proc.print(READYE,(*it).getTID(),(*it).getDeadline(),"",true);
+                proc.print(TEXTOVER,(*it).getTID(),(*it).getDeadline(),"____F");
+                it = ready[i].erase(it);
             }
+            else
+                it++;
         }
+
     }
     return 1;
 }
 
 
-
-
 int SchedulerRR::loadTask(Task t)
 {
-    //Se il task non è valido, termino e segnalo al chiamante
+    Job j;
+
+    //Se il task non è valido o se l'utilizzazione del processore è 1, termino e segnalo al chiamante
     if(!t.isValid())
         return 1;
 
     if (U == 1)
         return 2;
 
-    Job j;
-
     /*
-    Stampo le etichette sulle righe di kiwi (solo se la funzione non è stata chiamata dal
-    metodo per caricare i task periodici)
-    */
-//    if(!periodic)
-//    {
-//        //taskLabel(jobID,t.size());
-
-//        taskID++;
-//    }
-
-    /*
-    Per ogni job del task: imposto l'id univoco, lo accodo nella coda waiting e stampo le deadline sull'output.
+    Per ogni job del task: imposto l'id del task a cui appartiene, lo accodo nella coda waiting e stampo le deadline sull'output.
     La coda waiting è una coda a priorità che utilizza un vettore dinamico di Job come struttura dati.
     L'operazione di push effettua l'inserimento dei Job utilizzando l'operatore > della classe Job per effettuare il test
-    di prioritaà tra i vari Job
+    di priorità tra i vari Job. Un job è più prioritario se il suo release time è minore.
     */
     for (int i = 0; i < t.size(); i++)
     {
         j = t.getJob(i);
         j.setTID(taskID);
-        //j.setID(jobID++);
 
         waiting.push(j);
 
+        //Stampo le deadline
         if(j.getDeadline() != 0)
         {
             stringstream ss;
@@ -145,7 +132,6 @@ int SchedulerRR::loadTask(Task t)
             proc.setMaxDeadline(j.getDeadline());
         }
     }
-    jobID++;//??
     taskID++;
     return 0;
 }
@@ -153,26 +139,17 @@ int SchedulerRR::loadTask(Task t)
 
 int SchedulerRR::loadTask(PeriodicTask t)
 {
+    Job j;
+
     //Se il task non è valido, termino e segnalo al chiamante
     if(!t.isValid())
         return 1;
 
     float u = t.getExecTime() / t.getPeriod();
 
-    //Se inserendo il task sforo l'utilizzazione massima del processore, non lo inserisco e segnalo al chimante
+    //Se inserendo il task sforo l'utilizzazione massima del processore, non lo inserisco e segnalo al chiamante
     if (u + U > 1)
         return 2;
-
-
-
-    /*
-    Assegno alla durata massima di esecuzione il massimo tra la durata attuale e il periodo del task ripetuto
-    REPETITION volte
-    */
-    //D = max(D,t.getPeriod()*REPETITION);
-
-//    stringstream ss;
-//    ss << "EOP" << taskID;
 
     /*
     "Clono" i job del mio task tante volte quante ne stanno nella durata totale della simulazione (simulando il loro
@@ -180,7 +157,7 @@ int SchedulerRR::loadTask(PeriodicTask t)
     */
 
     vector<Job> newJobs;
-    Job j = t.getJob(0);
+    j = t.getJob(0);
     int r = j.getReleaseTime(), e = j.getExecTime(), d = j.getDeadline();
     int p = t.getPeriod(), pr = j.getPriority();
     float dead = p;
@@ -198,15 +175,8 @@ int SchedulerRR::loadTask(PeriodicTask t)
 
     loadTask(newTask);
 
+    //Incremento l'utilizzazione del processore
     U += u;
-//        jobID-=t.size()+1;
-
-        //proc.print(VLINE,-1,t.getPeriod()+q,ss.str());
-
-
-    //taskLabel(true,jobID,t.size());
-
-//    jobID+=t.size()+1;
 
     return 0;
 }
@@ -225,15 +195,17 @@ int SchedulerRR::schedule()
 
     do
     {
-
-
-
-        //Fine della timeslice o processorre idle
+        /*
+        Fine della timeslice o processorre idle.
+        Lo scheduler si attiva solo quando sliceEl==0
+        All'interno di questo if avviene la schedulazione vera e propria.
+        */
         if(sliceEl == 0)
         {
+            //Controllo se i job in coda hanno mancato la deadline
             checkdeadline();
 
-            //Controllo se ci sono processi READY e li inserisco in un vettore temporaneo
+            //Controllo se ci sono stati rilasciati nuovi job, li accoda nell'opportuna coda dei job ready e stampo
             while(!waiting.empty() && (r = waiting.top()).getReleaseTime() <= proc.getClock())
             {
                 int tid = r.getTID(), rel = r.getReleaseTime();
@@ -253,8 +225,7 @@ int SchedulerRR::schedule()
             */
             if(!proc.idle())
             {
-                //if(!readyempty())
-                    proc.preempt();
+                proc.preempt();
 
                 if(!end)
                     enqueueJob(*currentJob);
@@ -263,15 +234,7 @@ int SchedulerRR::schedule()
             }
 
 
-            /*
-            Se ci sono processi READY in attesa di essere eseguiti li estraggo uno alla volta dalla lista e controllo
-            se hanno mancato la deadline segnalandolo finchè non ne trovo uno che possa essere
-            eseguito o finchè la lista non è vuota. Se tutti hanno mancato la deadline imposto a NULL il job corrente
-            e imposto sliceEl a zero indicando che il processore è libero altrimenti imposto il job corrente con quello
-            estratto dalla lista
-            */
-
-
+            //Estraggo il job in testa alla coda opportuna e lo imposto come job corrente, se la coda è vuota non faccio niente
             if(popJob(j))
             {
                 sliceEl = T;
@@ -280,13 +243,13 @@ int SchedulerRR::schedule()
 
         }
 
-        //Eseguo un passo del processore e decremento il tempo di slice corrente solo se il processore non è idle
+        //Eseguo un passo del processore e decremento il tempo di slice corrente solo se il processore non è idle (currentJob = NULL)
         end = proc.execute(currentJob);
 
         if (currentJob != NULL)
             sliceEl--;
 
-        //Se il processo termina prima della fine della timeslice libero il processore
+        //Se il processo termina prima della fine della timeslice mi preparo a schedulare un nuovo job
         if(end)
         {
             sliceEl = 0;

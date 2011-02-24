@@ -57,7 +57,7 @@ int main (int argc, char *argv[])
 
     SchedulerRR rr(timeslice,DURATION);
 
-    for (int i=0; i<ptasks.size(); i++)
+    for (unsigned int i=0; i<ptasks.size(); i++)
     {
         pt = new PeriodicTask(ptasks[i]);
         loaded = rr.loadTask(*pt);
@@ -65,7 +65,7 @@ int main (int argc, char *argv[])
         utiliz(rr);
     }
 
-    for (int i=0; i<tasks.size(); i++)
+    for (unsigned int i=0; i<tasks.size(); i++)
     {
         t = new Task(tasks[i]);
         loaded = rr.loadTask(*t);

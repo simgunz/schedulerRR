@@ -30,36 +30,31 @@ using namespace std;
 #include <queue>
 #include <list>
 
-#include <iostream>
-
 #define MAXPRLEVEL 3
 
 class SchedulerRR
 {
 public:    
     SchedulerRR(float timeslice = 3,float duration = 100);
-    int loadTask(Task t);                //Permette di caricare un task non periodici
+    int loadTask(Task t);                                       //Permette di caricare un task   aperiodico/sporadico
     int loadTask(PeriodicTask t);                               //Permette di caricare un task periodico
-    int schedule();                                            //Simula l'esecuzione ed effettua la schedulazione
-    float getUtilization();                                     //Restituisce l'utilizzazione del processore
+    int schedule();                                             //Simula l'esecuzione ed effettua la schedulazione
+    inline float getUtilization() { return U; }                 //Restituisce l'utilizzazione del processore
 
 private:
-    int enqueueJob(Job& j);                                    //Inserisce un job in coda alla coda
-    int popJob(Job &j);                                               //Estrae un job dalla testa della coda
-    bool readyempty();
-    bool checkdeadline();
+    int enqueueJob(Job& j);                                     //Inserisce un job in alla fine della coda appropriata
+    int popJob(Job &j);                                         //Estrae un job dalla testa della coda appropriata
+    bool readyempty();                                          //Verifica se tutte le code sono vuote
+    bool checkdeadline();                                       //Verifica se i job ready hanno mancato la deadline
 
 
     priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //Lista dei job in attesa di essere rilasciati
-    list<Job> ready[MAXPRLEVEL+1];                                          //Lista dei job in pronti a essere eseguiti
+    list<Job> ready[MAXPRLEVEL+1];                            //Array di liste a diversa priorità contenenti i job in pronti a essere eseguiti
     Processor proc;                                           //Processore associato allo scheduler
     float T;                        //Timeslice
     float D;                        //Duration
-    float U;                        //Utilizazzione del processore
-    int jobID;                      //ID da assegnare al prossimo nuovo job
+    float U;                        //Processor utilization
     int taskID;                     //ID da assegnare al prossimo nuovo task
 };
-
-
 
 #endif // SCHEDULERRR_H

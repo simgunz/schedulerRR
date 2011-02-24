@@ -37,7 +37,6 @@ public:
     inline float getElapsedTime() const { return el; }   //Restituisce il tempo in cui il job è già stato processato
     inline void setID(int ID) { id = ID; }               //Imposta l'ID del job
     inline void setTID(int TID) { tid = TID; }           //Imposta l'ID del task a cui appartiene il job
-    inline void setDeadline(float D) { d = D; }          //Imposta la deadline del job
     inline void incElapsedTime(float EL) { el += EL; }   //Incrementa il tempo in cui il job è già stato processato
     bool isValid();                                      //Controlla che il job sia valido, ovvero che i paramentri siano ben definiti
 
