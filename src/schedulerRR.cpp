@@ -253,7 +253,8 @@ int SchedulerRR::schedule()
             */
             if(!proc.idle())
             {
-                proc.preempt();
+                //if(!readyempty())
+                    proc.preempt();
 
                 if(!end)
                     enqueueJob(*currentJob);

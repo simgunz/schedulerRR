@@ -32,8 +32,8 @@ class Task
 public:
     Task(string &fileName);                                     //Costruttore che prende il valori da file
     Task(const vector<Job> &newjobs, float priority = 0);       //Costruttore che prende un vettore di job
-    Job getJob(int i) const;                                    //Restituisce l'i-esimo job del task
-    int size();                                                 //Restituisce il numero di job nel task
+    inline Job getJob(int i) const { return jobs[i]; }          //Restituisce l'i-esimo job del task
+    inline int size() { return jobs.size(); }                   //Restituisce il numero di job nel task
     virtual bool isValid();                                     //Controlla che ogni job sia valido e che il task non sia vuoto
 
 private:

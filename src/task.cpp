@@ -64,17 +64,6 @@ Task::Task(const vector<Job> &newjobs, float priority) : pr(priority)
     }
 }
 
-
-Job Task::getJob(int i) const
-{
-    return jobs[i];
-}
-
-int Task::size()
-{
-    return jobs.size();
-}
-
 bool Task::isValid()
 {
     if(size() == 0)

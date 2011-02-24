@@ -31,7 +31,7 @@ using namespace std;
 //Durata in nanosecondi
 //Step processore 1 nanosecondo (1GHz)
 
-#define TIMESLICE 1
+#define TIMESLICE 3
 #define DURATION 250
 
 void loadCheck(int loaded,string name);
@@ -48,8 +48,8 @@ int main (int argc, char *argv[])
     vector<string> tasks;
     vector<string> ptasks;
 
-    //tasks.push_back("T1");
-    tasks.push_back("T2");
+    tasks.push_back("T1");
+    //tasks.push_back("T2");
 
     ptasks.push_back("TP1");
     ptasks.push_back("TP2");

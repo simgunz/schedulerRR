@@ -32,31 +32,28 @@ using namespace std;
 enum JobState{
         START,
         STOP,
-        DEADLINETMP,
-        EXECB,
+        EXECB = 3,
         EXECE,
         READYB,
         READYE,
         DEADLINE = 9,
-        //ARROWDOWN = 9,
-        ARROWUP = 10,
-        //VLINE = 12,
+        ARROWUP,
         TEXTOVER = 13
 };
 
-#define STEP 1 //1 nanosecondo (1Ghz)
+#define STEP 1 //Step del clock del processore (Potrebbe essere 1 ns)
 
 class Processor
 {
 public:
-    Processor();                                        //Costruttore
-    float getClock() const;                             //Restituisce il tempo di clock del processore
-    int execute(Job *j = NULL);                         //Esegue un nuovo job o il job corrente
-    void preempt();                                     //Esegue il preemption del job corrente
-    bool idle() const;                                  //Verifica se il processore è nello stato di idle
-    void setMaxDeadline(float deadline);                //Imposta la deadline massima
+    Processor();                                                //Costruttore
+    inline float getClock() const { return clock; }             //Restituisce il tempo di clock del processore
+    inline bool idle() const { return (currentJob == NULL); }   //Verifica se il processore è nello stato di idle
+    int execute(Job *j = NULL);                                 //Esegue un nuovo job o il job corrente
+    void preempt();                                             //Esegue il preemption del job corrente
+    void setMaxDeadline(float deadline);                        //Imposta la deadline massima
     void print(JobState state, int jobID, float time = -1, string text = "", bool reverse = false); //Stampa un nuovo stato di kiwi
-    void filePrint();                                   //Stampa su file
+    void filePrint();                                           //Stampa su file
 
 private:
     float clock;                    //Clock del processore

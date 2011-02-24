@@ -23,26 +23,20 @@
 #include <algorithm>
 #include <cmath>
 
-#include <iostream>
-
 Processor::Processor() : clock(0), currentJob(NULL), maxdeadline(0)
 {
-    initParam << "DECIMAL_DIGITS 1" << endl;
+    initParam << "DECIMAL_DIGITS 0" << endl;
     initParam << "PALETTE Rainbow" << endl;
-    //initParam << "ZOOM_X 5" << endl;
     initParam << "ZOOM_Y 20" << endl;
 }
 
-float Processor::getClock() const{
-    return clock;
-}
-
-
 int Processor::execute(Job *j)
 {
-    //Se il metodo è chiamato senza parametri eseguo un passo "idle" di processore
-    //Se il metodo è chiamato con un parametro, prelevo il job corrente e lo sostituisco con il nuovo job se questo è diverso
-    //segnalandolo sull'output
+    /*
+    Se il metodo è chiamato senza parametri eseguo un passo "idle" di processore
+    Se il metodo è chiamato con un parametro, prelevo il job corrente e lo sostituisco con il nuovo job se questo è diverso
+    segnalandolo sull'output
+    */
     if(j != NULL)
     {
         if (j != currentJob)
@@ -53,10 +47,9 @@ int Processor::execute(Job *j)
         }
     }
 
-    //Incremento il tempo trascorso di esecuzione al job
+    //Incremento il tempo di esecuzione trascorso del job
     if(currentJob != NULL)
         currentJob->incElapsedTime(STEP);
-
 
     clock+=STEP;
 
@@ -69,15 +62,17 @@ int Processor::execute(Job *j)
         return 1;
     }
 
+    /*
+    Se il job non ha teminato la sua esecuzione e ha raggiunto la deadline lo prelevo,
+    lo segnalo su output e lo segnalo al chiamante
+    */
     if (currentJob != NULL && clock == currentJob->getDeadline())
     {
-        string failed("____F");
         print(READYE,currentJob->getTID());
-        print(TEXTOVER,currentJob->getTID(),currentJob->getDeadline(),failed);
+        print(TEXTOVER,currentJob->getTID(),currentJob->getDeadline(),"____F");
         preempt();
         return 2;
     }
-
     return 0;
 }
 
@@ -89,11 +84,6 @@ void Processor::preempt()
         print(EXECE,currentJob->getTID());
         currentJob = NULL;
     }
-}
-
-bool Processor::idle() const
-{
-    return (currentJob == NULL);
 }
 
 void Processor::setMaxDeadline(float deadline)
@@ -131,7 +121,10 @@ void Processor::filePrint()
 {
     float end = max(clock,maxdeadline);
     float zoom = log(576/end)/log(2) + 1;
-    zoom = floor(zoom);
+    if((zoom - floor(zoom)) < 0.5)
+        zoom = floor(zoom);
+    else
+        zoom = floor(zoom) + 0.5;
 
     initParam << "ZOOM_X " << zoom << endl;
     initParam << endl;
