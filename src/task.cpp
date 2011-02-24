@@ -23,7 +23,7 @@
 #include <fstream>
 
 
-Task::Task(string &fileName) : pr(-1)
+Task::Task(string &fileName) : pr(0)
 {
     /*
      Se il file non esiste il codice non viene eseguito.
@@ -80,18 +80,18 @@ bool Task::isValid()
 Job Task::makeJob(const string& data,int jobID)
 {
     /*
-    StringStream permette di ottenere dati bene formattati, nel caso i dati siano mal formattati
-    l'if non viene eseguito e se il parametro non è facoltativo il job creato non è valido
-    e di conseguenze neanche il task. Si evita però di avere comportamenti anomali del programma.
+    StringStream permette di ottenere dati bene formattati. Nel caso i dati siano mal formattati
+    l'if non viene eseguito. Se il parametro non è facoltativo il job creato non è valido
+    e di conseguenze neanche il task. Si evita così di avere comportamenti anomali del programma.
     */
     stringstream ss(data);
     float token;
-    float r=-1,e=0,d=0;
+    float e=0,r=0,d=0;
 
     if ( ss >> token )
-       r = token;
-    if ( ss >> token )
        e = token;
+    if ( ss >> token )
+       r = token;
     if ( ss >> token )
        d = token;
 

@@ -49,5 +49,5 @@ bool PeriodicTask::isValid()
     float d = getJob(0).getDeadline(), dead = p;
     if(d>0 && d<p)
         dead = d;
-    return ((size() == 1) && (p > 0) && (e <= dead));
+    return ((size() == 1) && (e <= dead));
 }

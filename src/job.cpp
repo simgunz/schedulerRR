@@ -20,12 +20,12 @@
 #include "job.h"
 
 
-Job::Job(float R, float E, float D, int P,int ID): id(ID), tid(-1), p(P), r(R), e(E), d(D), el(0) {}
+Job::Job(float R, float E, float D, int PR,int ID): id(ID), tid(-1), pr(PR), r(R), e(E), d(D), el(0) {}
 
 bool Job::operator>(const Job &j) const
 { return (r > j.r); }
 
 bool Job::isValid()
 {
-    return ((r >= 0) && (e > 0) && (d >= 0) && (p >= 0));
+    return ((r >= 0) && (e > 0) && (d >= 0) && (pr >= 0));
 }

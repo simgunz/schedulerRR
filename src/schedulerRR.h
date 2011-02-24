@@ -30,7 +30,7 @@ using namespace std;
 #include <queue>
 #include <list>
 
-#define MAXPRLEVEL 3
+#define MAXPRLEVEL 4
 
 class SchedulerRR
 {

@@ -31,7 +31,7 @@ using namespace std;
 //Durata in nanosecondi
 //Step processore 1 nanosecondo (1GHz)
 
-#define TIMESLICE 3
+#define TIMESLICE 2
 #define DURATION 250
 
 void loadCheck(int loaded,string name);
@@ -40,45 +40,51 @@ void utiliz(SchedulerRR &rr);
 int main (int argc, char *argv[])
 {
     int loaded,input;
-    float timeslice=TIMESLICE;
-    float duration=DURATION;
+    float timeslice;
 
     vector<string> tasks;
     vector<string> ptasks;
 
-//    cout << "Choose test (0 - 6)" << endl << ">>";
-//    cin >> input;
-//    cout << endl << "Timeslice" << endl << ">>";
-//    cin >> timeslice;
-//    cout << endl << "Timeslice" << endl << ">>";
-//    cin >> duration;
+    cout << "Choose test (0 - 6)" << endl << ">>";
+    cin >> input;
+    cout << endl << "Timeslice" << endl << ">>";
+    cin >> timeslice;
 
-//    switch(input)
-//    {
-//    case 0:
-//        {
-//            ptasks.push_back("TP1");
-//            ptasks.push_back("TP2");
-//            break;
-//        }
-//    case 1:
-//        {
-//            tasks.push_back("T1");
-//            tasks.push_back("T2");
-//            break;
-//        }
-//    }
+    switch(input)
+    {
+    case 0:
+        {
+            tasks.push_back("S1");
+            tasks.push_back("S2");
+            tasks.push_back("S3");
+            break;
+        }
+    case 1:
+        {
+            tasks.push_back("S1");
+            tasks.push_back("S2PR");
+            tasks.push_back("S3");
+            break;
+        }
+    case 2:
+        {
+            ptasks.push_back("T1");
+            ptasks.push_back("T2");
+            ptasks.push_back("T3");
+            break;
+        }
+    case 3:
+        {
+            ptasks.push_back("T4");
+            ptasks.push_back("T5");
+            tasks.push_back("A7");
+            ptasks.push_back("T6");
+            break;
+        }
+    }
 
-    //Carico i nomi dei file che rappresentano task aperiodici/sporadici
-    tasks.push_back("T1");
-    tasks.push_back("T2");
 
-    //Carico i nomi dei file che rappresentano task periodici
-    ptasks.push_back("TP1");
-    ptasks.push_back("TP2");
-    ptasks.push_back("TP3");
-
-    SchedulerRR rr(timeslice,duration);
+    SchedulerRR rr(timeslice,DURATION);
 
     for (unsigned int i=0; i<ptasks.size(); i++)
     {

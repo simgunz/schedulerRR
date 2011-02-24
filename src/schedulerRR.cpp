@@ -202,9 +202,6 @@ int SchedulerRR::schedule()
         */
         if(sliceEl == 0)
         {
-            //Controllo se i job in coda hanno mancato la deadline
-            checkdeadline();
-
             //Controllo se ci sono stati rilasciati nuovi job, li accoda nell'opportuna coda dei job ready e stampo
             while(!waiting.empty() && (r = waiting.top()).getReleaseTime() <= proc.getClock())
             {
@@ -233,6 +230,8 @@ int SchedulerRR::schedule()
                 currentJob = NULL;
             }
 
+            //Controllo se i job in coda hanno mancato la deadline
+            checkdeadline();
 
             //Estraggo il job in testa alla coda opportuna e lo imposto come job corrente, se la coda è vuota non faccio niente
             if(popJob(j))

@@ -26,11 +26,11 @@ class Job
 {
 public:
     Job() { e = -1;}                                     //Costruttore senza parametri, usato per dichiarare variabili non inizializzate
-    Job(float R, float E, float D,int P=0,int ID=0);     //Costruttore con parametri, utilizzato per creare il job
+    Job(float R, float E, float D,int PR=0,int ID=0);     //Costruttore con parametri, utilizzato per creare il job
     bool operator>(const Job &j) const;                  //Operatore utilizzato per confrontare i release time di due job
     inline int getID() const { return id; }              //Restituisce l'ID del job
     inline int getTID() const { return tid; }            //Restituisce l'ID del task a cui appartiene il job
-    inline int getPriority() const { return p; }         //Restituisce la priorità del job
+    inline int getPriority() const { return pr; }         //Restituisce la priorità del job
     inline float getReleaseTime() const { return r; }    //Restituisce il release time del job
     inline float getExecTime() const { return e; }       //Restituisce il tempo di esecuzione del job
     inline float getDeadline() const { return d; }       //Restituisce la deadline del job
@@ -43,7 +43,7 @@ public:
 private:
     int id;     //Job ID
     int tid;    //Task ID
-    int p;      //Priority
+    int pr;      //Priority
     float r;    //Release time
     float e;    //Execution time
     float d;    //Relative deadline

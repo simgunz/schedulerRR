@@ -122,9 +122,9 @@ void Processor::filePrint()
     float end = max(clock,maxdeadline);
     float zoom = log(576/end)/log(2) + 1;
     if((zoom - floor(zoom)) < 0.5)
-        zoom = floor(zoom);
+        zoom = floor(zoom)-0.1;
     else
-        zoom = floor(zoom) + 0.5;
+        zoom = floor(zoom) + 0.4;
 
     initParam << "ZOOM_X " << zoom << endl;
     initParam << endl;
