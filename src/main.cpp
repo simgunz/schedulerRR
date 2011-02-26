@@ -81,6 +81,14 @@ int main (int argc, char *argv[])
             ptasks.push_back("T6");
             break;
         }
+    case 4:
+        {
+            ptasks.push_back("T1");
+            ptasks.push_back("T2");
+            ptasks.push_back("T3");
+            ptasks.push_back("T4");
+            break;
+        }
     }
 
 
