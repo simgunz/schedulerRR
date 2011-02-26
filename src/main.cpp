@@ -32,15 +32,15 @@ using namespace std;
 //Step processore 1 nanosecondo (1GHz)
 
 #define TIMESLICE 2
-#define DURATION 250
+#define DURATION 1000
 
 void loadCheck(int loaded,string name);
 void utiliz(SchedulerRR &rr);
 
 int main (int argc, char *argv[])
 {
-    int loaded,input;
-    float timeslice;
+    int loaded,input=3;
+    float timeslice=TIMESLICE;
 
     vector<string> tasks;
     vector<string> ptasks;

@@ -88,6 +88,7 @@ bool SchedulerRR::checkdeadline()
 
                 proc.print(READYE,(*it).getTID(),(*it).getDeadline(),"",true);
                 proc.print(TEXTOVER,(*it).getTID(),(*it).getDeadline(),"____F");
+                bl[(*it).getTID()]=0;
                 it = ready[i].erase(it);
             }
             else
@@ -160,14 +161,13 @@ int SchedulerRR::loadTask(PeriodicTask t)
     j = t.getJob(0);
     int r = j.getReleaseTime(), e = j.getExecTime(), d = j.getDeadline();
     int p = t.getPeriod(), pr = j.getPriority();
-    float dead = p;
 
-    if (d>0 && d<p)
-        dead = d;
+    if(d == 0)
+        d = p;
 
     for (float i = r; i < D; i+=p)
     {
-        Job nw(i,e,i+dead,pr);
+        Job nw(i,e,i+d,pr);
         newJobs.push_back(nw);
     }
 
@@ -187,7 +187,9 @@ int SchedulerRR::schedule()
     Job  r,j,*currentJob = NULL;
     int sliceEl = 0;
     int end = -1;
+    int tid,rel;
 
+    list<Job> blocked;
 
     //Se non ci sono job nella coda dei job in attesa, termino
     if (waiting.empty())
@@ -202,19 +204,54 @@ int SchedulerRR::schedule()
         */
         if(sliceEl == 0)
         {
+
+            //Controllo se i job in coda hanno mancato la deadline
+            checkdeadline();
+
+            for (int i=0; i<blocked.size();i++)
+            {
+                r = blocked.front();
+                blocked.pop_front();
+                tid = r.getTID();
+                rel = r.getReleaseTime();
+
+                if(bl[tid]==0)
+                {
+                    proc.print(READYB,tid,proc.getClock());
+                    proc.print(START,tid,proc.getClock());
+                    enqueueJob(r);
+                    bl[tid]=1;
+                }
+                else
+                    blocked.push_back(r);
+            }
+
             //Controllo se ci sono stati rilasciati nuovi job, li accoda nell'opportuna coda dei job ready e stampo
             while(!waiting.empty() && (r = waiting.top()).getReleaseTime() <= proc.getClock())
             {
-                int tid = r.getTID(), rel = r.getReleaseTime();
+                tid = r.getTID();
+                rel = r.getReleaseTime();
+
                 stringstream ss;
                 ss << "r" << tid << "," << r.getID();
                 proc.print(ARROWUP,tid,rel,ss.str());
-                proc.print(READYB,tid,rel);
-                proc.print(START,tid,rel);
 
-                enqueueJob(r);
+                if(bl[tid]==0)
+                {
+                    proc.print(READYB,tid,rel);
+                    proc.print(START,tid,rel);
+                    enqueueJob(r);
+                    bl[tid]=1;
+                }
+                else
+                {
+                    blocked.push_back(r);
+                }
+
                 waiting.pop();
             }
+
+
 
             /*
             Se il processore non è idle significa che è terminato il timeslice o che il job ha terminato in anticipo la
@@ -230,11 +267,9 @@ int SchedulerRR::schedule()
                 currentJob = NULL;
             }
 
-            //Controllo se i job in coda hanno mancato la deadline
-            checkdeadline();
 
             //Estraggo il job in testa alla coda opportuna e lo imposto come job corrente, se la coda è vuota non faccio niente
-            if(popJob(j))
+            if(popJob(j) && (j.getDeadline()==0 || proc.getClock() < j.getDeadline()))
             {
                 sliceEl = T;
                 currentJob = &j;
@@ -252,10 +287,11 @@ int SchedulerRR::schedule()
         if(end)
         {
             sliceEl = 0;
+            bl[currentJob->getTID()]=0;
             currentJob = NULL;
         }
 
-    }while(!waiting.empty() || !readyempty() || !proc.idle());
+    }while(!waiting.empty() || !readyempty() || !proc.idle() || !blocked.empty());
 
     //Stampo su file tutto l'output generato
     proc.filePrint();
