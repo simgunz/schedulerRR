@@ -51,7 +51,7 @@ private:
     priority_queue<Job,vector<Job> ,greater<Job> > waiting;   //Lista dei job in attesa di essere rilasciati
     list<Job> ready[MAXPRLEVEL+1];                            //Array di liste a diversa priorità contenenti i job in pronti a essere eseguiti
     Processor proc;                                           //Processore associato allo scheduler
-    map<float,bool> bl;
+    map<float,bool> taskActive;                               //Tiene traccia di quali task stiano eseguendo un job
     float T;                        //Timeslice
     float D;                        //Duration
     float U;                        //Processor utilization

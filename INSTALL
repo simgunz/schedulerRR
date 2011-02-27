@@ -8,6 +8,7 @@ Remove object files with:
 
   make -C ./src clean
 
-Run with:
+Run:
 
+  cd simulazioni
   ./schedulerRR

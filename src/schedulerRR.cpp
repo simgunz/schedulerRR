@@ -88,7 +88,7 @@ bool SchedulerRR::checkdeadline()
 
                 proc.print(READYE,(*it).getTID(),(*it).getDeadline(),"",true);
                 proc.print(TEXTOVER,(*it).getTID(),(*it).getDeadline(),"____F");
-                bl[(*it).getTID()]=0;
+                taskActive[(*it).getTID()]=0;
                 it = ready[i].erase(it);
             }
             else
@@ -208,6 +208,7 @@ int SchedulerRR::schedule()
             //Controllo se i job in coda hanno mancato la deadline
             checkdeadline();
 
+            //Controllo se i job nella coda blocked possono essere accodati nella coda appropriata dei processi ready
             for (int i=0; i<blocked.size();i++)
             {
                 r = blocked.front();
@@ -215,18 +216,25 @@ int SchedulerRR::schedule()
                 tid = r.getTID();
                 rel = r.getReleaseTime();
 
-                if(bl[tid]==0)
+                if(taskActive[tid]==0)
                 {
                     proc.print(READYB,tid,proc.getClock());
                     proc.print(START,tid,proc.getClock());
                     enqueueJob(r);
-                    bl[tid]=1;
+                    taskActive[tid]=1;
                 }
                 else
                     blocked.push_back(r);
             }
 
-            //Controllo se ci sono stati rilasciati nuovi job, li accoda nell'opportuna coda dei job ready e stampo
+            /*
+            Controllo se ci sono stati rilasciati nuovi job. Se un task periodico rilascia un nuovo job prima
+            che il precedente job abbia terminato o raggiunto la propria deadline (D > p) lo inserisco in una coda
+            blocked di processi in attesa di diventare ready. Il controllo è fatto attraverso la mappa taskActive,
+            il cui elemento con chiave tid del job è 0 se nessun job di quel task è nella coda dei processi ready
+            o 1 in caso contrario. Se non mi trovo in questo caso accodo il job rilasciato
+            nella coda corrispondente alla sua priorità
+            */
             while(!waiting.empty() && (r = waiting.top()).getReleaseTime() <= proc.getClock())
             {
                 tid = r.getTID();
@@ -236,12 +244,12 @@ int SchedulerRR::schedule()
                 ss << "r" << tid << "," << r.getID();
                 proc.print(ARROWUP,tid,rel,ss.str());
 
-                if(bl[tid]==0)
+                if(taskActive[tid]==0)
                 {
                     proc.print(READYB,tid,rel);
                     proc.print(START,tid,rel);
                     enqueueJob(r);
-                    bl[tid]=1;
+                    taskActive[tid]=1;
                 }
                 else
                 {
@@ -287,7 +295,7 @@ int SchedulerRR::schedule()
         if(end)
         {
             sliceEl = 0;
-            bl[currentJob->getTID()]=0;
+            taskActive[currentJob->getTID()]=0;
             currentJob = NULL;
         }
 

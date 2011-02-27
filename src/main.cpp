@@ -114,14 +114,14 @@ int main (int argc, char *argv[])
 
     SchedulerRR rr(timeslice,duration);
 
-    for (unsigned int i=0; i<ptasks.size(); i++)
+    for (int i=0; i<ptasks.size(); i++)
     {
         loaded = rr.loadTask(PeriodicTask(ptasks[i]));
         loadCheck(loaded,ptasks[i]);
         utiliz(rr);
     }
 
-    for (unsigned int i=0; i<tasks.size(); i++)
+    for (int i=0; i<tasks.size(); i++)
     {
         loaded = rr.loadTask(Task(tasks[i]));
         loadCheck(loaded,tasks[i]);

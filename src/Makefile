@@ -14,7 +14,7 @@ SchedulerRR.o:
 	$(CXX) -c schedulerRR.cpp
 
 SchedulerRR:SchedulerRR.o Processor.o PeriodicTask.o Task.o Job.o
-	$(CXX) -o ../schedulerRR main.cpp schedulerRR.o processor.o periodictask.o task.o job.o
+	$(CXX) -o ../simulazioni/schedulerRR main.cpp schedulerRR.o processor.o periodictask.o task.o job.o
 
 all: SchedulerRR
 
