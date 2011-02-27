@@ -32,67 +32,87 @@ using namespace std;
 //Step processore 1 nanosecondo (1GHz)
 
 #define TIMESLICE 2
-#define DURATION 1000
+#define DURATION 250
 
 void loadCheck(int loaded,string name);
 void utiliz(SchedulerRR &rr);
+float getTimeslice();
 
 int main (int argc, char *argv[])
 {
     int loaded,input=3;
-    float timeslice=TIMESLICE;
+    float timeslice=TIMESLICE,duration=DURATION;
 
     vector<string> tasks;
     vector<string> ptasks;
 
     cout << "Choose test (0 - 6)" << endl << ">>";
     cin >> input;
-    cout << endl << "Timeslice" << endl << ">>";
-    cin >> timeslice;
 
     switch(input)
     {
     case 0:
         {
-            tasks.push_back("S1");
-            tasks.push_back("S2");
-            tasks.push_back("S3");
+            //Testare con timeslice 2 e 3
+            tasks.push_back("0/S1");
+            tasks.push_back("0/S2");
+            tasks.push_back("0/S3");
+            timeslice = getTimeslice();
             break;
         }
     case 1:
         {
-            tasks.push_back("S1");
-            tasks.push_back("S2PR");
-            tasks.push_back("S3");
+            //Testare con timeslice 2
+            tasks.push_back("1/S1");
+            tasks.push_back("1/S2");
+            tasks.push_back("1/S3");
+            timeslice = 2;
             break;
         }
     case 2:
         {
-            ptasks.push_back("T1");
-            ptasks.push_back("T2");
-            ptasks.push_back("T3");
+            //Testare con timeslice 2 e 3
+            ptasks.push_back("2/T0");
+            ptasks.push_back("2/T1");
+            ptasks.push_back("2/T2");
+            duration = 210;
+            timeslice = getTimeslice();
             break;
         }
     case 3:
         {
-            ptasks.push_back("T4");
-            ptasks.push_back("T5");
-            tasks.push_back("A7");
-            ptasks.push_back("T6");
+            //Testare con timeslice 2
+            ptasks.push_back("3/T0");
+            ptasks.push_back("3/T1");
+            ptasks.push_back("3/T2");
+            tasks.push_back("3/A1");
+            timeslice = 2;
             break;
         }
     case 4:
         {
-            ptasks.push_back("T1");
-            ptasks.push_back("T2");
-            ptasks.push_back("T3");
-            ptasks.push_back("T4");
+            ptasks.push_back("4/T0");
+            ptasks.push_back("4/T1");
+            ptasks.push_back("4/T2");
+            ptasks.push_back("4/T3");
+            duration = 110;
+            timeslice = 1;
+            break;
+        }
+    case 5:
+        {
+            //Deferrable server, esercizio 7.4 prima parte
+            tasks.push_back("5/A1");
+            ptasks.push_back("5/T0");
+            ptasks.push_back("5/T1");
+            duration = 90;
+            timeslice = 1;
             break;
         }
     }
 
 
-    SchedulerRR rr(timeslice,DURATION);
+    SchedulerRR rr(timeslice,duration);
 
     for (unsigned int i=0; i<ptasks.size(); i++)
     {
@@ -130,4 +150,12 @@ void loadCheck(int loaded, string name)
 void utiliz(SchedulerRR &rr)
 {
     cout << "Carico del processore: " << rr.getUtilization()*100 << "%" << endl;
+}
+
+float getTimeslice()
+{
+    float timeslice;
+    cout << endl << "Timeslice" << endl << ">>";
+    cin >> timeslice;
+    return timeslice;
 }
