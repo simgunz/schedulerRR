@@ -91,21 +91,31 @@ int main (int argc, char *argv[])
         }
     case 4:
         {
+            //Deferrable server, esercizio 7.4 prima parte
+            tasks.push_back("4/A1");
             ptasks.push_back("4/T0");
             ptasks.push_back("4/T1");
-            ptasks.push_back("4/T2");
-            ptasks.push_back("4/T3");
-            duration = 110;
+            duration = 90;
             timeslice = 1;
             break;
         }
     case 5:
         {
-            //Deferrable server, esercizio 7.4 prima parte
-            tasks.push_back("5/A1");
             ptasks.push_back("5/T0");
             ptasks.push_back("5/T1");
-            duration = 90;
+            ptasks.push_back("5/T2");
+            ptasks.push_back("5/T3");
+            duration = 110;
+            timeslice = 1;
+            break;
+        }
+    case 6:
+        {
+            ptasks.push_back("6/T0");
+            ptasks.push_back("6/T1");
+            ptasks.push_back("6/T2");
+            ptasks.push_back("6/T3");
+            duration = 510;
             timeslice = 1;
             break;
         }
